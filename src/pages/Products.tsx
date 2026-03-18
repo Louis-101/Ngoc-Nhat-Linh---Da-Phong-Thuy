@@ -24,19 +24,7 @@ export default function Products() {
 
   const menhOptions = ['Tất cả', 'Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'];
 
-  // Add product form states
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    description: '',
-    price: '',
-    image_url: '',
-    images: '',
-    category: '',
-    menh: '',
-    meaning: ''
-  });
-  const [isAdding, setIsAdding] = useState(false);
-  const [addMessage, setAddMessage] = useState('');
+  // No add product form needed
 
   const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật'];
   const priceRanges = ['Tất cả', 'Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'];
@@ -87,78 +75,12 @@ export default function Products() {
   }, [activeCategory, activeMenh, priceRange, searchQuery]);
 
 
-  const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsAdding(true);
-    setAddMessage('');
 
-    const priceNumber = Number(newProduct.price);
-    if (!newProduct.name || !newProduct.category || !priceNumber || !newProduct.image_url) {
-      setAddMessage('Điền đầy đủ tên, thể loại, giá và đường dẫn ảnh.');
-      setIsAdding(false);
-      return;
-    }
-
-    try {
-      const secondaryImages = newProduct.images
-        .split(',')
-        .map((src: string) => src.trim())
-        .filter((src: string) => src);
-
-      const { data, error } = await supabase
-        .from('products')
-        .insert([{
-          name: newProduct.name,
-          description: newProduct.description,
-          price: priceNumber,
-          image_url: newProduct.image_url,
-          images: secondaryImages,
-          category: newProduct.category,
-          menh: newProduct.menh,
-          meaning: newProduct.meaning
-        }]);
-
-      if (error) throw error;
-      setAddMessage('Thêm sản phẩm thành công!');
-      setNewProduct({ name: '', description: '', price: '', image_url: '', images: '', category: '', menh: '', meaning: '' });
-      if (data) {
-        setProducts(prev => [data[0], ...prev]);
-      }
-    } catch (err: any) {
-      console.error('Add product error', err);
-      setAddMessage('Lỗi khi thêm sản phẩm: ' + (err?.message || 'Không xác định'));
-    } finally {
-      setIsAdding(false);
-    }
-  };
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 p-6 bg-white rounded-3xl shadow-sm border border-accent/20">
-          <h2 className="text-xl font-bold text-secondary mb-4">Thêm sản phẩm mới</h2>
-          <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} placeholder="Tên sản phẩm" className="p-3 border rounded" required />
-            <select value={newProduct.menh} onChange={(e) => setNewProduct({...newProduct, menh: e.target.value})} className="p-3 border rounded" required>
-              <option value="">Chọn mệnh</option>
-              <option value="Kim">Kim</option>
-              <option value="Mộc">Mộc</option>
-              <option value="Thủy">Thủy</option>
-              <option value="Hỏa">Hỏa</option>
-              <option value="Thổ">Thổ</option>
-            </select>
-            <input value={newProduct.category} onChange={(e) => setNewProduct({...newProduct, category: e.target.value})} placeholder="Thể loại" className="p-3 border rounded" required />
-            <input value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} placeholder="Giá (VND)" type="number" className="p-3 border rounded" required />
-            <input value={newProduct.image_url} onChange={(e) => setNewProduct({...newProduct, image_url: e.target.value})} placeholder="URL ảnh chính" className="p-3 border rounded" required />
-            <input value={newProduct.images} onChange={(e) => setNewProduct({...newProduct, images: e.target.value})} placeholder="Ảnh phụ (comma-separated URLs)" className="p-3 border rounded" />
-            <input value={newProduct.meaning} onChange={(e) => setNewProduct({...newProduct, meaning: e.target.value})} placeholder="Ý nghĩa" className="p-3 border rounded md:col-span-2" />
-            <textarea value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} placeholder="Mô tả" className="p-3 border rounded md:col-span-2" rows={3} />
-            <button type="submit" disabled={isAdding} className="md:col-span-2 bg-primary text-white px-4 py-3 rounded font-bold hover:opacity-90 transition">
-              {isAdding ? 'Đang thêm...' : 'Thêm sản phẩm'}
-            </button>
-          </form>
-          {addMessage && <p className="mt-3 text-sm text-secondary">{addMessage}</p>}
-        </div>
+
 
         {/* Header */}
         <div className="text-center mb-16">
