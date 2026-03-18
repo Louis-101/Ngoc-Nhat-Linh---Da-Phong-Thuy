@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Facebook, Instagram, MessageCircle, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -10,6 +10,8 @@ export default function Navbar() {
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -219,11 +221,21 @@ export default function Navbar() {
               <div className="max-w-4xl mx-auto">
                 <div className="relative group">
                   <Search size={32} className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" />
-                  <input 
-                    autoFocus
-                    type="text" 
-                    placeholder="Tìm kiếm sản phẩm, bài viết..." 
+                  <input
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const q = searchText.trim();
+                        if (q.length > 0) {
+                          setIsSearchOpen(false);
+                          navigate(`/products?search=${encodeURIComponent(q)}`);
+                        }
+                      }
+                    }}
                     className="w-full bg-transparent border-b-2 border-gray-100 py-6 pl-14 text-3xl md:text-5xl font-serif focus:outline-none focus:border-primary transition-all placeholder:text-gray-200"
+                    placeholder="Tìm kiếm sản phẩm, mệnh, ý nghĩa..."
                   />
                 </div>
                 
@@ -232,7 +244,15 @@ export default function Navbar() {
                     <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">Gợi ý tìm kiếm</h4>
                     <div className="flex flex-wrap gap-3">
                       {['Vòng tay', 'Thạch anh', 'Mệnh Kim', 'Tỳ hưu', 'Nhẫn nam'].map(tag => (
-                        <button key={tag} className="px-5 py-2 rounded-full bg-gray-50 text-sm hover:bg-primary hover:text-white transition-all">
+                        <button
+                          key={tag}
+                          onClick={() => {
+                            setSearchText(tag);
+                            setIsSearchOpen(false);
+                            navigate(`/products?search=${encodeURIComponent(tag)}`);
+                          }}
+                          className="px-5 py-2 rounded-full bg-gray-50 text-sm hover:bg-primary hover:text-white transition-all"
+                        >
                           {tag}
                         </button>
                       ))}

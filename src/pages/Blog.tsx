@@ -7,55 +7,97 @@ import { supabase } from '../service/supabaseClient';
 export default function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const [newPost, setNewPost] = useState<any>({
+    title: '',
+    slug: '',
+    content: '',
+    author: '',
+    category: '',
+    image_url: '',
+    imageFile: null
+  });
+  const [isAdding, setIsAdding] = useState(false);
+  const [addMessage, setAddMessage] = useState('');
 
   useEffect(() => {
     async function fetchPosts() {
+      setLoading(true);
+      setErrorMsg('');
       try {
         const { data, error } = await supabase
           .from('posts')
           .select('*')
           .order('created_at', { ascending: false });
-        
-        if (error) throw error;
+
+        console.log('Supabase posts query:', { data, error });
+
+        if (error) {
+          throw error;
+        }
+
         setPosts(data || []);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching posts:', err);
-        // Fallback mock data
-        setPosts([
-          { 
-            id: '1', 
-            title: 'Cách chọn vòng tay phong thủy theo mệnh Kim, Mộc, Thủy, Hỏa, Thổ', 
-            excerpt: 'Việc lựa chọn vòng tay phong thủy không chỉ dựa trên sở thích mà còn cần tuân theo quy luật ngũ hành để mang lại may mắn...',
-            image_url: 'https://picsum.photos/seed/blog1/800/500',
-            created_at: '2024-03-15T00:00:00Z',
-            author: 'Ngọc Nhất Linh',
-            slug: 'cach-chon-vong-tay-phong-thuy'
-          },
-          { 
-            id: '2', 
-            title: 'Ý nghĩa của Thạch Anh Tóc Vàng trong kinh doanh và tài lộc', 
-            excerpt: 'Thạch anh tóc vàng được mệnh danh là viên đá của doanh nhân. Hãy cùng tìm hiểu tại sao nó lại được ưa chuộng đến vậy...',
-            image_url: 'https://picsum.photos/seed/blog2/800/500',
-            created_at: '2024-03-10T00:00:00Z',
-            author: 'Chuyên gia Phong Thủy',
-            slug: 'y-nghia-thach-anh-toc-vang'
-          },
-          { 
-            id: '3', 
-            title: '5 vật phẩm phong thủy để bàn làm việc giúp thăng tiến sự nghiệp', 
-            excerpt: 'Bố trí bàn làm việc đúng phong thủy sẽ giúp bạn tập trung hơn, giảm căng thẳng và thu hút những cơ hội mới...',
-            image_url: 'https://picsum.photos/seed/blog3/800/500',
-            created_at: '2024-03-05T00:00:00Z',
-            author: 'Ngọc Nhất Linh',
-            slug: 'vat-pham-phong-thuy-ban-lam-viec'
-          }
-        ]);
+        setPosts([]);
+        setErrorMsg('Không thể tải bài viết. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
       }
     }
     fetchPosts();
   }, []);
+
+  const handleAddPost = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsAdding(true);
+    setAddMessage('');
+
+    if (!newPost.title || !newPost.slug || !newPost.content || !newPost.author) {
+      setAddMessage('Vui lòng điền đầy đủ thông tin bài viết.');
+      setIsAdding(false);
+      return;
+    }
+
+    try {
+      // Upload image to Supabase Storage nếu có (bucket phải tạo sẵn tên blog-images)
+      let imageUrl = newPost.image_url;
+      if (newPost.imageFile) {
+        const file = newPost.imageFile;
+        const fileName = `${Date.now()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('blog-images')
+          .upload(fileName, file, { upsert: true });
+        if (uploadError) throw uploadError;
+        const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(fileName);
+        imageUrl = urlData.publicUrl;
+      }
+
+      const insertResult = await supabase.from('posts').insert([{
+        title: newPost.title,
+        slug: newPost.slug,
+        content: newPost.content,
+        author: newPost.author,
+        category: newPost.category,
+        image_url: typeof imageUrl === 'string' ? imageUrl : ''
+      }]);
+
+      if (insertResult.error) throw insertResult.error;
+
+      setAddMessage('Thêm bài viết mới thành công!');
+      setNewPost({ title: '', slug: '', content: '', author: '', category: '', image_url: '', imageFile: null });
+      const inserted = (insertResult.data as any[] | null)?.[0];
+      if (inserted) {
+        setPosts((prev) => [inserted, ...prev]);
+      }
+    } catch (err: any) {
+      console.error('Add post error', err);
+      setAddMessage('Lỗi khi thêm bài viết: ' + (err.message || err));
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
@@ -87,6 +129,24 @@ export default function Blog() {
           </div>
         </div>
 
+        {/* Add Blog Post (Admin/Owner) */}
+        <div className="mb-12 p-6 bg-white rounded-3xl shadow-sm border border-accent/20">
+          <h2 className="text-xl font-bold text-secondary mb-4">Thêm bài viết mới</h2>
+          <form onSubmit={handleAddPost} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input value={newPost.title} onChange={(e) => setNewPost({...newPost, title: e.target.value})} placeholder="Tiêu đề" className="p-3 border rounded" required />
+            <input value={newPost.slug} onChange={(e) => setNewPost({...newPost, slug: e.target.value})} placeholder="Slug (url)" className="p-3 border rounded" required />
+            <input value={newPost.author} onChange={(e) => setNewPost({...newPost, author: e.target.value})} placeholder="Tác giả" className="p-3 border rounded" required />
+            <input value={newPost.category} onChange={(e) => setNewPost({...newPost, category: e.target.value})} placeholder="Chuyên mục" className="p-3 border rounded" required />
+            <input value={newPost.image_url as string} onChange={(e) => setNewPost({...newPost, image_url: e.target.value})} placeholder="URL ảnh (hoặc chọn file)" className="p-3 border rounded md:col-span-2" />
+            <input type="file" accept="image/*" onChange={(e) => setNewPost({...newPost, imageFile: e.target.files?.[0] || null})} className="p-3 border rounded md:col-span-2" />
+            <textarea value={newPost.content} onChange={(e) => setNewPost({...newPost, content: e.target.value})} placeholder="Nội dung Markdown" className="p-3 border rounded md:col-span-2" rows={4} required />
+            <button type="submit" disabled={isAdding} className="md:col-span-2 bg-primary text-white px-4 py-3 rounded font-bold hover:opacity-90 transition">
+              {isAdding ? 'Đang thêm...' : 'Thêm bài viết'}
+            </button>
+          </form>
+          {addMessage && <p className="mt-3 text-sm text-secondary">{addMessage}</p>}
+        </div>
+
         {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {loading ? (
@@ -97,6 +157,16 @@ export default function Blog() {
                 <div className="h-4 bg-accent/20 rounded w-1/2"></div>
               </div>
             ))
+          ) : errorMsg ? (
+            <div className="col-span-full py-20 text-center">
+              <p className="text-red-600 font-bold text-lg mb-2">{errorMsg}</p>
+              <p className="text-secondary/70">Kiểm tra kết nối hoặc cấu hình Supabase.</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="col-span-full py-20 text-center">
+              <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Chưa có bài viết</h3>
+              <p className="text-gray-500">Hiện chưa có bài viết nào. Vui lòng quay lại sau.</p>
+            </div>
           ) : (
             posts.map((post) => (
               <motion.article 

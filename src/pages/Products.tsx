@@ -2,72 +2,164 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Filter, ChevronDown, Search, X } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 
 export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tất cả');
+  const [activeMenh, setActiveMenh] = useState('Tất cả');
+  const [priceRange, setPriceRange] = useState('Tất cả');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const q = searchParams.get('search') || '';
+    setSearchQuery(q);
+  }, [searchParams]);
+
+  const menhOptions = ['Tất cả', 'Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'];
+
+  // Add product form states
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    description: '',
+    price: '',
+    image_url: '',
+    images: '',
+    category: '',
+    menh: '',
+    meaning: ''
+  });
+  const [isAdding, setIsAdding] = useState(false);
+  const [addMessage, setAddMessage] = useState('');
+
   const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật'];
+  const priceRanges = ['Tất cả', 'Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'];
 
   useEffect(() => {
     async function fetchProducts() {
       setLoading(true);
+      setErrorMsg('');
+
       try {
         let query = supabase.from('products').select('*');
-        
+
         if (activeCategory !== 'Tất cả') {
           query = query.eq('category', activeCategory);
         }
-
+        if (activeMenh !== 'Tất cả') {
+          query = query.eq('menh', activeMenh);
+        }
         if (searchQuery.trim()) {
-          // Filter by name or description
-          query = query.or(`name.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+          query = query.or(`name.ilike.%${searchQuery.trim()}%,description.ilike.%${searchQuery.trim()}%`);
+        }
+
+        if (priceRange !== 'Tất cả') {
+          if (priceRange === 'Dưới 1 triệu') query = query.lte('price', 1000000);
+          if (priceRange === '1 - 5 triệu') query = query.gte('price', 1000000).lte('price', 5000000);
+          if (priceRange === '5 - 10 triệu') query = query.gte('price', 5000000).lte('price', 10000000);
+          if (priceRange === 'Trên 10 triệu') query = query.gte('price', 10000000);
         }
 
         const { data, error } = await query;
-        if (error) throw error;
-        setProducts(data || []);
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        // Fallback mock data with filtering for demo purposes
-        const mockProducts = [
-          { id: '1', name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly', description: 'Đá tự nhiên cao cấp', price: 4500000, image_url: 'https://picsum.photos/seed/gem1/600/600', category: 'Vòng tay' },
-          { id: '2', name: 'Mặt Dây Chuyền Cẩm Thạch Sơn Thủy', description: 'Ngọc cẩm thạch sơn thủy', price: 12800000, image_url: 'https://picsum.photos/seed/gem2/600/600', category: 'Mặt dây' },
-          { id: '3', name: 'Vòng Tay Aquamarine Hải Lam Ngọc', description: 'Đá Aquamarine xanh biển', price: 6200000, image_url: 'https://picsum.photos/seed/gem3/600/600', category: 'Vòng tay' },
-          { id: '4', name: 'Thiềm Thừ Ngọc Hoàng Long Tự Nhiên', description: 'Linh vật chiêu tài', price: 25000000, image_url: 'https://picsum.photos/seed/gem4/600/600', category: 'Linh vật' },
-          { id: '5', name: 'Vòng Tay Thạch Anh Tím Khói', description: 'Thạch anh tím tự nhiên', price: 3200000, image_url: 'https://picsum.photos/seed/gem5/600/600', category: 'Vòng tay' },
-          { id: '6', name: 'Tượng Di Lặc Đá Citrine', description: 'Tượng phật di lặc may mắn', price: 8500000, image_url: 'https://picsum.photos/seed/gem6/600/600', category: 'Tượng phật' },
-        ];
+        console.log('Supabase products query:', { data, error });
 
-        let filtered = mockProducts;
-        if (activeCategory !== 'Tất cả') {
-          filtered = filtered.filter(p => p.category === activeCategory);
+        if (error) {
+          throw error;
         }
-        if (searchQuery.trim()) {
-          const q = searchQuery.toLowerCase();
-          filtered = filtered.filter(p => 
-            p.name.toLowerCase().includes(q) || 
-            (p.description && p.description.toLowerCase().includes(q))
-          );
-        }
-        setProducts(filtered);
+
+        setProducts(data || []);
+      } catch (err: any) {
+        console.error('Error fetching products:', err);
+        setProducts([]);
+        setErrorMsg('Không thể tải sản phẩm. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
       }
     }
-    
-    const timeoutId = setTimeout(fetchProducts, searchQuery.trim() ? 300 : 0);
-    return () => clearTimeout(timeoutId);
-  }, [activeCategory, searchQuery]);
+
+    fetchProducts();
+  }, [activeCategory, activeMenh, priceRange, searchQuery]);
+
+
+  const handleAddProduct = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsAdding(true);
+    setAddMessage('');
+
+    const priceNumber = Number(newProduct.price);
+    if (!newProduct.name || !newProduct.category || !priceNumber || !newProduct.image_url) {
+      setAddMessage('Điền đầy đủ tên, thể loại, giá và đường dẫn ảnh.');
+      setIsAdding(false);
+      return;
+    }
+
+    try {
+      const secondaryImages = newProduct.images
+        .split(',')
+        .map((src: string) => src.trim())
+        .filter((src: string) => src);
+
+      const { data, error } = await supabase
+        .from('products')
+        .insert([{
+          name: newProduct.name,
+          description: newProduct.description,
+          price: priceNumber,
+          image_url: newProduct.image_url,
+          images: secondaryImages,
+          category: newProduct.category,
+          menh: newProduct.menh,
+          meaning: newProduct.meaning
+        }]);
+
+      if (error) throw error;
+      setAddMessage('Thêm sản phẩm thành công!');
+      setNewProduct({ name: '', description: '', price: '', image_url: '', images: '', category: '', menh: '', meaning: '' });
+      if (data) {
+        setProducts(prev => [data[0], ...prev]);
+      }
+    } catch (err: any) {
+      console.error('Add product error', err);
+      setAddMessage('Lỗi khi thêm sản phẩm: ' + (err?.message || 'Không xác định'));
+    } finally {
+      setIsAdding(false);
+    }
+  };
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 p-6 bg-white rounded-3xl shadow-sm border border-accent/20">
+          <h2 className="text-xl font-bold text-secondary mb-4">Thêm sản phẩm mới</h2>
+          <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input value={newProduct.name} onChange={(e) => setNewProduct({...newProduct, name: e.target.value})} placeholder="Tên sản phẩm" className="p-3 border rounded" required />
+            <select value={newProduct.menh} onChange={(e) => setNewProduct({...newProduct, menh: e.target.value})} className="p-3 border rounded" required>
+              <option value="">Chọn mệnh</option>
+              <option value="Kim">Kim</option>
+              <option value="Mộc">Mộc</option>
+              <option value="Thủy">Thủy</option>
+              <option value="Hỏa">Hỏa</option>
+              <option value="Thổ">Thổ</option>
+            </select>
+            <input value={newProduct.category} onChange={(e) => setNewProduct({...newProduct, category: e.target.value})} placeholder="Thể loại" className="p-3 border rounded" required />
+            <input value={newProduct.price} onChange={(e) => setNewProduct({...newProduct, price: e.target.value})} placeholder="Giá (VND)" type="number" className="p-3 border rounded" required />
+            <input value={newProduct.image_url} onChange={(e) => setNewProduct({...newProduct, image_url: e.target.value})} placeholder="URL ảnh chính" className="p-3 border rounded" required />
+            <input value={newProduct.images} onChange={(e) => setNewProduct({...newProduct, images: e.target.value})} placeholder="Ảnh phụ (comma-separated URLs)" className="p-3 border rounded" />
+            <input value={newProduct.meaning} onChange={(e) => setNewProduct({...newProduct, meaning: e.target.value})} placeholder="Ý nghĩa" className="p-3 border rounded md:col-span-2" />
+            <textarea value={newProduct.description} onChange={(e) => setNewProduct({...newProduct, description: e.target.value})} placeholder="Mô tả" className="p-3 border rounded md:col-span-2" rows={3} />
+            <button type="submit" disabled={isAdding} className="md:col-span-2 bg-primary text-white px-4 py-3 rounded font-bold hover:opacity-90 transition">
+              {isAdding ? 'Đang thêm...' : 'Thêm sản phẩm'}
+            </button>
+          </form>
+          {addMessage && <p className="mt-3 text-sm text-secondary">{addMessage}</p>}
+        </div>
+
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-secondary">Danh Mục Sản Phẩm</h1>
@@ -151,11 +243,19 @@ export default function Products() {
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Theo mệnh</h3>
                       <div className="space-y-3">
-                        {['Mệnh Kim', 'Mệnh Mộc', 'Mệnh Thủy', 'Mệnh Hỏa', 'Mệnh Thổ'].map((m) => (
-                          <label key={m} className="flex items-center space-x-3 cursor-pointer group">
-                            <input type="checkbox" className="w-4 h-4 border-accent rounded text-primary focus:ring-primary" />
-                            <span className="text-sm text-secondary/60 group-hover:text-primary transition-colors">{m}</span>
-                          </label>
+                        {menhOptions.map((m) => (
+                          <button
+                            key={m}
+                            onClick={() => {
+                              setActiveMenh(m);
+                              setIsFilterOpen(false);
+                            }}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${
+                              activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                            }`}
+                          >
+                            {m}
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -173,11 +273,14 @@ export default function Products() {
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Theo mệnh</h3>
               <div className="space-y-3">
-                {['Mệnh Kim', 'Mệnh Mộc', 'Mệnh Thủy', 'Mệnh Hỏa', 'Mệnh Thổ'].map((m) => (
-                  <label key={m} className="flex items-center space-x-3 cursor-pointer group">
-                    <input type="checkbox" className="w-4 h-4 border-accent rounded text-primary focus:ring-primary" />
-                    <span className="text-sm text-secondary/60 group-hover:text-primary transition-colors">{m}</span>
-                  </label>
+                {menhOptions.map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setActiveMenh(m)}
+                    className={`block text-sm w-full text-left transition-colors ${activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
+                  >
+                    {m}
+                  </button>
                 ))}
               </div>
             </div>
@@ -251,7 +354,29 @@ export default function Products() {
                     <div className="h-4 bg-accent/20 rounded w-1/2"></div>
                   </div>
                 ))
-              ) : products.length > 0 ? (
+              ) : errorMsg ? (
+                <div className="col-span-full py-20 text-center">
+                  <p className="text-red-600 font-bold text-lg mb-2">{errorMsg}</p>
+                  <p className="text-secondary/70">Kiểm tra kết nối hoặc cấu hình Supabase.</p>
+                </div>
+              ) : products.length === 0 ? (
+                <div className="col-span-full py-20 text-center">
+                  <div className="bg-accent/20 inline-block p-6 rounded-full mb-6">
+                    <Search size={48} className="text-primary/40" />
+                  </div>
+                  <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Không tìm thấy sản phẩm</h3>
+                  <p className="text-gray-500 mb-8">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp với lựa chọn của bạn.</p>
+                  <button 
+                    onClick={() => {
+                      setActiveCategory('Tất cả');
+                      setSearchQuery('');
+                    }}
+                    className="bg-gradient-gold text-secondary px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all"
+                  >
+                    Xem tất cả sản phẩm
+                  </button>
+                </div>
+              ) : (
                 products.map((product) => (
                   <motion.div 
                     key={product.id}
@@ -269,31 +394,21 @@ export default function Products() {
                           referrerPolicy="no-referrer"
                         />
                       </div>
+                      {product.images && Array.isArray(product.images) && product.images.length > 0 && (
+                        <div className="grid grid-cols-3 gap-2 mb-3">
+                          {product.images.slice(0, 3).map((img: string, idx: number) => (
+                            <img key={idx} src={img} alt={`${product.name} ${idx + 1}`} className="h-16 w-full object-cover rounded-md border border-accent/20" referrerPolicy="no-referrer" />
+                          ))}
+                        </div>
+                      )}
                       <div className="space-y-1">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">{product.category}</span>
+                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">{product.category}{product.menh ? ` • ${product.menh}` : ''}</span>
                         <h3 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1 text-secondary">{product.name}</h3>
                         <p className="text-primary font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
                       </div>
                     </Link>
                   </motion.div>
                 ))
-              ) : (
-                <div className="col-span-full py-20 text-center">
-                  <div className="bg-accent/20 inline-block p-6 rounded-full mb-6">
-                    <Search size={48} className="text-primary/40" />
-                  </div>
-                  <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Không tìm thấy sản phẩm</h3>
-                  <p className="text-gray-500 mb-8">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp với lựa chọn của bạn.</p>
-                  <button 
-                    onClick={() => {
-                      setActiveCategory('Tất cả');
-                      setSearchQuery('');
-                    }}
-                    className="bg-gradient-gold text-secondary px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all"
-                  >
-                    Xem tất cả sản phẩm
-                  </button>
-                </div>
               )}
             </div>
 
