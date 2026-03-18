@@ -74,7 +74,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -118,7 +118,7 @@ export default function Navbar() {
                 <MessageCircle size={20} />
               </a>
               <button 
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X size={24} className={getTextColor()} /> : <Menu size={24} className={getTextColor()} />}
@@ -135,7 +135,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 md:hidden"
+                className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 lg:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div

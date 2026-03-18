@@ -29,7 +29,7 @@ export default function About() {
           </div>
           <div className="relative">
             <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-accent/20">
-              <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/651815993_122169936008840821_5944726563328748363_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFTP-sdAfGfDC1Kj6pAzRXNFo_OUG7YREgWj85QbthESLvkkQ6SG_XUfY1inhVeNFB6Tgp3lrS20yoMXCv9zPhP&_nc_ohc=QAj5nh8rKisQ7kNvwEfRm07&_nc_oc=AdmtYmYSr_yJpvpsThs8vz2TJDDdyjKjLtJc4a6CgW1sZ5L_7YSoEG8Ge-EXCFYiQ1M&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=Zrfhl3-aMn3XVPU9CoAmkA&_nc_ss=8&oh=00_AfzkmC_fVXdcy9u8NrN_mnpr35jPwwmQYUvfGH5v1DbMIA&oe=69C0457E" alt="Brand Story" className="w-full h-full object-cover" />
+              <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/651815993_122169936008840821_5944726563328748363_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFTP-sdAfGfDC1Kj6pAzRXNFo_OUG7YREgWj85QbthESLvkkQ6SG_XUfY1inhVeNFB6Tgp3lrS20yoMXCv9zPhP&_nc_ohc=QAj5nh8rKisQ7kNvwEfRm07&_nc_oc=AdmtYmYSr_yJpvpsThs8vz2TJDDdyjKjLtJc4a6CgW1sZ5L_7YSoEG8Ge-EXCFYiQ1M&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=Zrfhl3-aMn3XVPU9CoAmkA&_nc_ss=8&oh=00_AfzkmC_fVXdcy9u8NrN_mnpr35jPwwmQYUvfGH5v1DbMIA&oe=69C0457E" alt="Brand Story" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </div>
             <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-gold rounded-3xl flex flex-col items-center justify-center text-secondary text-center p-6 hidden md:flex shadow-xl">
               <Award size={40} className="mb-4" />
@@ -70,7 +70,7 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
             <div className="aspect-video rounded-3xl overflow-hidden shadow-xl border border-accent/20">
-              <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/505372034_4132967026923831_8812997507424975280_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeEbdgSFzCYBDrjvUh448OxJOT-i8DhFDQ85P6LwOEUND5jq-IL-SyAd-Azx9oBUJYetbLIMXWA32VV9UbsUGeEm&_nc_ohc=fqMG-Q-_v_0Q7kNvwHih_SC&_nc_oc=AdntuvRCxsUPKDmvCxhLWmzMPZC7BUN1kCcdmtNMcIfHSoqJ4PNDWaM6P26NNj6gN5I&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=aguemLs3UtzxV1x1ik2WlA&_nc_ss=8&oh=00_AfzAfCU_hkg7-xAVV20pQMwtdkOlpSIpuhRomPLNIzco6Q&oe=69C02C26" alt="Vision" className="w-full h-full object-cover" />
+              <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/505372034_4132967026923831_8812997507424975280_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeEbdgSFzCYBDrjvUh448OxJOT-i8DhFDQ85P6LwOEUND5jq-IL-SyAd-Azx9oBUJYetbLIMXWA32VV9UbsUGeEm&_nc_ohc=fqMG-Q-_v_0Q7kNvwHih_SC&_nc_oc=AdntuvRCxsUPKDmvCxhLWmzMPZC7BUN1kCcdmtNMcIfHSoqJ4PNDWaM6P26NNj6gN5I&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=aguemLs3UtzxV1x1ik2WlA&_nc_ss=8&oh=00_AfzAfCU_hkg7-xAVV20pQMwtdkOlpSIpuhRomPLNIzco6Q&oe=69C02C26" alt="Vision" className="w-full h-full object-cover" loading="lazy" decoding="async" />
             </div>
           </div>
           <div className="order-1 lg:order-2">
