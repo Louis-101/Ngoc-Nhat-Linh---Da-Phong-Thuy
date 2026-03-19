@@ -151,7 +151,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-className="fixed inset-0 bg-black/80 backdrop-blur-md z-[998] lg:hidden" // Increased z-index, added blur
+className="fixed inset-0 bg-black/80
                 onClick={() => setIsMobileMenuOpen(false)}
               />
 
@@ -160,7 +160,7 @@ className="fixed inset-0 bg-black/80 backdrop-blur-md z-[998] lg:hidden" // Incr
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-[999] lg:hidden shadow-2xl flex flex-col bg-pattern-subtle"
+
                 onAnimationStart={() => setPreventScroll(true)}
 onAnimationComplete={() => setPreventScroll(false)}
               >
