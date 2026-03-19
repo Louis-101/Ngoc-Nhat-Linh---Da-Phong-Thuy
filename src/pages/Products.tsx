@@ -353,13 +353,7 @@ export default function Products() {
                           referrerPolicy="no-referrer"
                         />
                       </div>
-                      {product.images && Array.isArray(product.images) && product.images.length > 0 && (
-                        <div className="grid grid-cols-3 gap-2 mb-3">
-                          {product.images.slice(0, 3).map((img: string, idx: number) => (
-                            <img key={idx} src={img} alt={`${product.name} ${idx + 1}`} className="h-16 w-full object-cover rounded-md border border-accent/20" referrerPolicy="no-referrer" />
-                          ))}
-                        </div>
-                      )}
+
                       <div className="space-y-1">
                         <span className="text-[10px] text-gray-400 uppercase tracking-widest">{product.category}{product.menh ? ` • ${product.menh}` : ''}</span>
                         <h3 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1 text-secondary">{product.name}</h3>

@@ -1,19 +1,7 @@
-# TODO: Fix Home Page Issues & Git Push
+# Task: Fix Buddha Hero Image on Home Page
 
-## UI Steps to Complete (Approved Plan):
-- [x] 1. Update src/index.css: Add hero background CSS vars for Buddha image (changeable). *(assumed in current changes)*
-- [x] 2. Update src/pages/Home.tsx: 
-  - Hero: Add background-image with Buddha + responsive/mobile tweaks (h-[70vh]).
-  - Products: Mobile grid-cols-2, spacing fixes.
-- [x] 3. Update src/components/Navbar.tsx: Mobile menu padding refinements.
-- [ ] 4. Test responsive: `npm run dev` + Chrome DevTools.
-- [ ] 5. Verify page transitions/no bleed.
-
-## Git Push Steps:
-- [ ] 1. git add .
-- [ ] 2. git commit -m "WIP: UI fixes for Home page hero, Navbar mobile, add public/images (buddha-hero). Progress per TODO.md"
-- [ ] 3. git push origin main
-- [ ] 4. Verify: git status && git log --oneline -5
-
-Progress tracked here after each step.
-Complete: attempt_completion.
+- [ ] Step 1: Replace hero image src in src/pages/Home.tsx with /images/buddha-hero.jpg
+- [ ] Step 2: Update alt text for better theme match
+- [ ] Step 3: Test image loading and fallback (npm run dev)
+- [ ] Step 4: Verify on different screen sizes
+- [ ] Step 5: Mark complete
