@@ -151,7 +151,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-className="fixed inset-0 bg-black/80
+                className="fixed inset-0 bg-black/80 z-[49]"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
 
@@ -160,9 +160,9 @@ className="fixed inset-0 bg-black/80
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-
+                className="fixed right-0 top-0 h-screen w-80 bg-white shadow-2xl z-[50] flex flex-col"
                 onAnimationStart={() => setPreventScroll(true)}
-onAnimationComplete={() => setPreventScroll(false)}
+                onAnimationComplete={() => setPreventScroll(false)}
               >
 
                 <div className="p-6 flex justify-between items-center border-b border-accent">

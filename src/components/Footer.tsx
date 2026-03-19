@@ -47,10 +47,10 @@ export default function Footer() {
             <h4 className="text-lg font-serif font-bold mb-6 text-accent">Chính sách</h4>
             <ul className="space-y-4 text-sm text-white/60">
               <li><Link to="/about" className="hover:text-primary transition-colors">Về chúng tôi</Link></li>
-              <li><Link to="/shipping" className="hover:text-primary transition-colors">Vận chuyển & Giao nhận</Link></li>
-              <li><Link to="/returns" className="hover:text-primary transition-colors">Đổi trả & Hoàn tiền</Link></li>
-              <li><Link to="/privacy" className="hover:text-primary transition-colors">Chính sách bảo mật</Link></li>
-              <li><Link to="/faq" className="hover:text-primary transition-colors">Câu hỏi thường gặp</Link></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors">Vận chuyển & Giao nhận</Link></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors">Đổi trả & Hoàn tiền</Link></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors">Chính sách bảo mật</Link></li>
+              <li><Link to="/contact" className="hover:text-primary transition-colors">Câu hỏi thường gặp</Link></li>
             </ul>
           </div>
 
@@ -86,8 +86,8 @@ export default function Footer() {
             © 2024 Ngọc Nhất Linh. All rights reserved.
           </p>
           <div className="flex items-center space-x-6">
-            <Link to="/terms" className="text-xs text-white/40 hover:text-white transition-colors">Điều khoản sử dụng</Link>
-            <Link to="/privacy" className="text-xs text-white/40 hover:text-white transition-colors">Chính sách bảo mật</Link>
+            <Link to="/contact" className="text-xs text-white/40 hover:text-white transition-colors">Điều khoản sử dụng</Link>
+            <Link to="/contact" className="text-xs text-white/40 hover:text-white transition-colors">Chính sách bảo mật</Link>
           </div>
         </div>
       </div>
