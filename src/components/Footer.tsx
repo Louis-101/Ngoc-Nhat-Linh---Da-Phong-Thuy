@@ -24,7 +24,7 @@ export default function Footer() {
               <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
                 <Instagram size={18} />
               </a>
-              <a href="mailto:contact@ngocnhatlinh.vn" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
+              <a href="mailto:daphongthuyngocnhatlinh@gmail.com" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
                 <Mail size={18} />
               </a>
             </div>
@@ -61,7 +61,7 @@ export default function Footer() {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-primary mt-0.5 flex-shrink-0" />
                 <a 
-                  href="https://www.google.com/maps/search/?api=1&query=65+đường+3/2+Hưng+Lợi+Ninh+Kiều+Cần+Thơ" 
+                  href="https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=65%20đường%203/2%2C%20phường%20Hưng%20Lợi%2C%20Quận%20Ninh%20Kiều%2C%20Thành%20phố%20Cần%20Thơ%2C%20Vietnam%2C%2090000&FORM=FBKPL1&mkt=en-GB" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="hover:text-primary transition-colors"
@@ -75,7 +75,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <Mail size={18} className="text-primary flex-shrink-0" />
-                <span>contact@ngocnhatlinh.vn</span>
+                <span>daphongthuyngocnhatlinh@gmail.com</span>
               </li>
             </ul>
           </div>
