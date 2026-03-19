@@ -1,12 +1,20 @@
-# Navbar Tablet Fix - BlackboxAI
+# TODO: Fix User Issues - Ngọc Nhất Linh Site
 
-## Steps:
-1. ✅ Analyzed Navbar.tsx & About.tsx
-2. ✅ Plan approved: Fix Navbar mobile menu breakpoint to `lg:hidden`
-3. [] Edit src/components/Navbar.tsx (menu div md:hidden → lg:hidden)
-4. [] Commit & push
-5. [] Test local dev (npm run dev running)
-6. [] Vercel redeploy
-7. [] Update TODO
+## Status: In Progress
 
-**Current:** Navbar tablet menu not showing. About images fixed.
+### 1. [x] Remove admin form from Blog page (src/pages/Blog.tsx)
+   - Deleted form, handleAddPost, states. Clean, no errors.
+
+### 2. [x] Fix Products filters (src/pages/Products.tsx)
+   - Mobile/desktop price buttons functional, clickable.
+   - Sync with pagination.
+
+### 3. [x] Implement pagination 12 products/page (src/pages/Products.tsx)
+   - Added page/count/range(12), functional UI.
+
+### 4. [x] Fix mobile menu scroll display error (src/components/Navbar.tsx)
+   - z-[100]/[101], body scroll lock on open.
+
+### 5. [x] Test & Verify
+   - All fixes applied: Blog form removed, Products filter/pagination (12/page), Navbar mobile fixed.
+   - Run `npm run dev` to test: /blog (no table), /products (filters change results/pages), mobile menu scroll ok.

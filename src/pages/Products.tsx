@@ -12,6 +12,8 @@ export default function Products() {
   const [activeCategory, setActiveCategory] = useState('Tất cả');
   const [activeMenh, setActiveMenh] = useState('Tất cả');
   const [priceRange, setPriceRange] = useState('Tất cả');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -34,8 +36,14 @@ export default function Products() {
       setLoading(true);
       setErrorMsg('');
 
+      const pageSize = 12;
+      const from = (currentPage - 1) * pageSize;
+      const to = from + pageSize - 1;
+
       try {
-        let query = supabase.from('products').select('*');
+        let query = supabase
+          .from('products')
+          .select('*', { count: 'exact' });
 
         if (activeCategory !== 'Tất cả') {
           query = query.eq('category', activeCategory);
@@ -54,17 +62,21 @@ export default function Products() {
           if (priceRange === 'Trên 10 triệu') query = query.gte('price', 10000000);
         }
 
-        const { data, error } = await query;
-        console.log('Supabase products query:', { data, error });
+        query = query.range(from, to);
+
+        const { data, error, count } = await query;
+        console.log('Supabase products query:', { data, count, error });
 
         if (error) {
           throw error;
         }
 
         setProducts(data || []);
+        setTotalCount(count || 0);
       } catch (err: any) {
         console.error('Error fetching products:', err);
         setProducts([]);
+        setTotalCount(0);
         setErrorMsg('Không thể tải sản phẩm. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
@@ -72,7 +84,7 @@ export default function Products() {
     }
 
     fetchProducts();
-  }, [activeCategory, activeMenh, priceRange, searchQuery]);
+  }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage]);
 
 
 
@@ -153,11 +165,19 @@ export default function Products() {
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Khoảng giá</h3>
                       <div className="space-y-3">
-                        {['Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'].map((range) => (
-                          <label key={range} className="flex items-center space-x-3 cursor-pointer group">
-                            <div className="w-5 h-5 rounded border border-accent group-hover:border-primary transition-colors"></div>
-                            <span className="text-secondary/60 group-hover:text-primary transition-colors">{range}</span>
-                          </label>
+                        {priceRanges.slice(1).map((range) => (
+                          <button
+                            key={range}
+                            onClick={() => {
+                              setPriceRange(range);
+                              setIsFilterOpen(false);
+                            }}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${
+                              priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                            }`}
+                          >
+                            {range}
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -223,16 +243,17 @@ export default function Products() {
             </div>
 
             <div>
-              <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Khoảng giá (VNĐ)</h3>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-2">
-                  <input type="number" placeholder="Từ" className="w-full px-3 py-2 border border-accent rounded-md text-sm focus:outline-none focus:border-primary bg-white/50" />
-                  <span className="text-gray-400">-</span>
-                  <input type="number" placeholder="Đến" className="w-full px-3 py-2 border border-accent rounded-md text-sm focus:outline-none focus:border-primary bg-white/50" />
-                </div>
-                <button className="w-full bg-gradient-gold text-secondary py-2 rounded-md text-sm font-bold hover:shadow-lg transition-all">
-                  Áp dụng
-                </button>
+              <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Khoảng giá</h3>
+              <div className="space-y-3">
+                {priceRanges.map((range) => (
+                  <button 
+                    key={range}
+                    onClick={() => setPriceRange(range)}
+                    className={`block text-sm transition-colors ${priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
+                  >
+                    {range}
+                  </button>
+                ))}
               </div>
             </div>
           </aside>
@@ -240,7 +261,9 @@ export default function Products() {
           {/* Product Grid */}
           <main className="flex-grow">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-              <p className="text-sm text-secondary/60">Hiển thị {products.length} sản phẩm</p>
+              <p className="text-sm text-secondary/60">
+                Hiển thị {(currentPage - 1) * 12 + 1} - {Math.min(currentPage * 12, totalCount)} trong {totalCount} sản phẩm
+              </p>
               <div className="flex items-center space-x-4 w-full sm:w-auto">
                 <div className="relative flex-grow sm:flex-grow-0">
                   <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40" />
@@ -335,12 +358,37 @@ export default function Products() {
             </div>
 
             {/* Pagination */}
-            <div className="mt-16 flex justify-center items-center space-x-2">
-              <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">1</button>
-              <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">2</button>
-              <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">3</button>
-              <span className="px-2">...</span>
-              <button className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">12</button>
+            <div className="mt-16 flex justify-center items-center space-x-1">
+              <button 
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ‹
+              </button>
+              {Array.from({length: Math.min(5, Math.ceil(totalCount / 12))}, (_, i) => {
+                const pageNum = Math.max(1, Math.min(currentPage - 2 + i, Math.ceil(totalCount / 12)));
+                return (
+                  <button 
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                      currentPage === pageNum 
+                        ? 'bg-primary text-white border-primary shadow-md' 
+                        : 'border border-gray-200 hover:border-primary hover:text-primary'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+              <button 
+                onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
+                disabled={currentPage === Math.ceil(totalCount / 12)}
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ›
+              </button>
             </div>
           </main>
         </div>

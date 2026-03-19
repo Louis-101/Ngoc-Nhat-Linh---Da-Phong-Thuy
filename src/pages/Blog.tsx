@@ -9,17 +9,7 @@ export default function Blog() {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const [newPost, setNewPost] = useState<any>({
-    title: '',
-    slug: '',
-    content: '',
-    author: '',
-    category: '',
-    image_url: '',
-    imageFile: null
-  });
-  const [isAdding, setIsAdding] = useState(false);
-  const [addMessage, setAddMessage] = useState('');
+
 
   useEffect(() => {
     async function fetchPosts() {
@@ -49,55 +39,7 @@ export default function Blog() {
     fetchPosts();
   }, []);
 
-  const handleAddPost = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsAdding(true);
-    setAddMessage('');
 
-    if (!newPost.title || !newPost.slug || !newPost.content || !newPost.author) {
-      setAddMessage('Vui lòng điền đầy đủ thông tin bài viết.');
-      setIsAdding(false);
-      return;
-    }
-
-    try {
-      // Upload image to Supabase Storage nếu có (bucket phải tạo sẵn tên blog-images)
-      let imageUrl = newPost.image_url;
-      if (newPost.imageFile) {
-        const file = newPost.imageFile;
-        const fileName = `${Date.now()}-${file.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from('blog-images')
-          .upload(fileName, file, { upsert: true });
-        if (uploadError) throw uploadError;
-        const { data: urlData } = supabase.storage.from('blog-images').getPublicUrl(fileName);
-        imageUrl = urlData.publicUrl;
-      }
-
-      const insertResult = await supabase.from('posts').insert([{
-        title: newPost.title,
-        slug: newPost.slug,
-        content: newPost.content,
-        author: newPost.author,
-        category: newPost.category,
-        image_url: typeof imageUrl === 'string' ? imageUrl : ''
-      }]);
-
-      if (insertResult.error) throw insertResult.error;
-
-      setAddMessage('Thêm bài viết mới thành công!');
-      setNewPost({ title: '', slug: '', content: '', author: '', category: '', image_url: '', imageFile: null });
-      const inserted = (insertResult.data as any[] | null)?.[0];
-      if (inserted) {
-        setPosts((prev) => [inserted, ...prev]);
-      }
-    } catch (err: any) {
-      console.error('Add post error', err);
-      setAddMessage('Lỗi khi thêm bài viết: ' + (err.message || err));
-    } finally {
-      setIsAdding(false);
-    }
-  };
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
@@ -129,23 +71,7 @@ export default function Blog() {
           </div>
         </div>
 
-        {/* Add Blog Post (Admin/Owner) */}
-        <div className="mb-12 p-6 bg-white rounded-3xl shadow-sm border border-accent/20">
-          <h2 className="text-xl font-bold text-secondary mb-4">Thêm bài viết mới</h2>
-          <form onSubmit={handleAddPost} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input value={newPost.title} onChange={(e) => setNewPost({...newPost, title: e.target.value})} placeholder="Tiêu đề" className="p-3 border rounded" required />
-            <input value={newPost.slug} onChange={(e) => setNewPost({...newPost, slug: e.target.value})} placeholder="Slug (url)" className="p-3 border rounded" required />
-            <input value={newPost.author} onChange={(e) => setNewPost({...newPost, author: e.target.value})} placeholder="Tác giả" className="p-3 border rounded" required />
-            <input value={newPost.category} onChange={(e) => setNewPost({...newPost, category: e.target.value})} placeholder="Chuyên mục" className="p-3 border rounded" required />
-            <input value={newPost.image_url as string} onChange={(e) => setNewPost({...newPost, image_url: e.target.value})} placeholder="URL ảnh (hoặc chọn file)" className="p-3 border rounded md:col-span-2" />
-            <input type="file" accept="image/*" onChange={(e) => setNewPost({...newPost, imageFile: e.target.files?.[0] || null})} className="p-3 border rounded md:col-span-2" />
-            <textarea value={newPost.content} onChange={(e) => setNewPost({...newPost, content: e.target.value})} placeholder="Nội dung Markdown" className="p-3 border rounded md:col-span-2" rows={4} required />
-            <button type="submit" disabled={isAdding} className="md:col-span-2 bg-primary text-white px-4 py-3 rounded font-bold hover:opacity-90 transition">
-              {isAdding ? 'Đang thêm...' : 'Thêm bài viết'}
-            </button>
-          </form>
-          {addMessage && <p className="mt-3 text-sm text-secondary">{addMessage}</p>}
-        </div>
+
 
         {/* Blog Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">

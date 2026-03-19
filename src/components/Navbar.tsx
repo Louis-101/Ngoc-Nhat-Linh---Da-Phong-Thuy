@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [preventScroll, setPreventScroll] = useState(false);
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
@@ -31,6 +32,13 @@ export default function Navbar() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = preventScroll ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [preventScroll]);
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -61,7 +69,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${getBgColor()}`}>
+  <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${getBgColor()}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             {/* Logo */}
@@ -143,7 +151,9 @@ export default function Navbar() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-50 lg:hidden shadow-2xl flex flex-col bg-pattern-subtle"
+                className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-[101] lg:hidden shadow-2xl flex flex-col bg-pattern-subtle"
+                onAnimationStart={() => setPreventScroll(true)}
+                onAnimationComplete={() => setPreventScroll(isMobileMenuOpen)}
               >
                 <div className="p-6 flex justify-between items-center border-b border-accent">
                   <span className="text-xl font-serif font-bold text-gradient-gold tracking-tighter">MENU</span>
