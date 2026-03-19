@@ -143,7 +143,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/50 backdrop-blur-md z-40 lg:hidden"
+className="fixed inset-0 bg-black z-40 lg:hidden"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
@@ -153,7 +153,7 @@ export default function Navbar() {
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                 className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-[101] lg:hidden shadow-2xl flex flex-col bg-pattern-subtle"
                 onAnimationStart={() => setPreventScroll(true)}
-                onAnimationComplete={() => setPreventScroll(isMobileMenuOpen)}
+onAnimationComplete={() => setPreventScroll(false)}
               >
                 <div className="p-6 flex justify-between items-center border-b border-accent">
                   <span className="text-xl font-serif font-bold text-gradient-gold tracking-tighter">MENU</span>

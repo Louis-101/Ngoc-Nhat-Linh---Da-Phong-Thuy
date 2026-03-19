@@ -41,7 +41,7 @@ export default function Home() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-            src={heroError ? "https://picsum.photos/seed/home-hero/1920/1080" : "https://lh3.googleusercontent.com/gg-dl/AOI_d_-RUK__VoIF6NlIvzy5RVy3tR7jlHPvs_rhhvduHaf73r2O7oPe2VClsuT7JsOWbnDeh_XGQwvHzM2k4nIn-LI5rI9YoOZONyPXzat90C29mr9ynzgaOqPD6bao3Lc2Byzw880oCJei9ZHGVp018j6aPT9HbDC-5ysGKFxzkSbCOgECBQ=s1024-rj?authuser=1"}
+src="https://images.unsplash.com/photo-1588880354343-8c120dbf5d20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80&ar=16:9"
             alt="Hero Background" 
             className="w-full h-full object-cover brightness-[0.4]"
             referrerPolicy="no-referrer"
