@@ -7,6 +7,7 @@ import { supabase } from '../service/supabaseClient';
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [heroError, setHeroError] = useState(false);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -20,7 +21,7 @@ export default function Home() {
         setFeaturedProducts(data || []);
       } catch (err) {
         console.error('Error fetching products:', err);
-        // Fallback mock data if supabase fails
+        // Fallback mock data
         setFeaturedProducts([
           { id: '1', name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly', price: 4500000, image_url: 'https://picsum.photos/seed/gem1/600/600', category: 'Vòng tay' },
           { id: '2', name: 'Mặt Dây Chuyền Cẩm Thạch Sơn Thủy', price: 12800000, image_url: 'https://picsum.photos/seed/gem2/600/600', category: 'Mặt dây' },
@@ -40,10 +41,11 @@ export default function Home() {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
-src="https://lh3.googleusercontent.com/gg-dl/AOI_d_-RUK__VoIF6NlIvzy5RVy3tR7jlHPvs_rhhvduHaf73r2O7oPe2VClsuT7JsOWbnDeh_XGQwvHzM2k4nIn-LI5rI9YoOZONyPXzat90C29mr9ynzgaOqPD6bao3Lc2Byzw880oCJei9ZHGVp018j6aPT9HbDC-5ysGKFxzkSbCOgECBQ=s1024-rj?authuser=1"
+            src={heroError ? "https://picsum.photos/seed/home-hero/1920/1080" : "https://lh3.googleusercontent.com/gg-dl/AOI_d_-RUK__VoIF6NlIvzy5RVy3tR7jlHPvs_rhhvduHaf73r2O7oPe2VClsuT7JsOWbnDeh_XGQwvHzM2k4nIn-LI5rI9YoOZONyPXzat90C29mr9ynzgaOqPD6bao3Lc2Byzw880oCJei9ZHGVp018j6aPT9HbDC-5ysGKFxzkSbCOgECBQ=s1024-rj?authuser=1"}
             alt="Hero Background" 
             className="w-full h-full object-cover brightness-[0.4]"
             referrerPolicy="no-referrer"
+            onError={() => setHeroError(true)}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70"></div>
         </div>
@@ -176,3 +178,4 @@ src="https://lh3.googleusercontent.com/gg-dl/AOI_d_-RUK__VoIF6NlIvzy5RVy3tR7jlHP
     </div>
   );
 }
+
