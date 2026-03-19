@@ -8,6 +8,7 @@ export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [heroError, setHeroError] = useState(false);
+  const [productImageErrors, setProductImageErrors] = useState<{[key: string]: boolean}>({});
 
   useEffect(() => {
     async function fetchProducts() {
@@ -169,9 +170,20 @@ src="https://images.unsplash.com/photo-1588880354343-8c120dbf5d20?ixlib=rb-4.0.3
                         src={product.image_url} 
                         alt={product.name}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        className={`w-full h-full transition-transform duration-700 group-hover:scale-110 ${productImageErrors[product.id || ''] ? 'hidden' : 'object-cover'}`}
                         referrerPolicy="no-referrer"
+                        onError={() => setProductImageErrors(prev => ({ ...prev, [product.id || 'unknown']: true }))}
                       />
+                      {productImageErrors[product.id || ''] && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-gradient-gold via-primary/30 to-secondary flex items-center justify-center">
+                          <div className="text-center text-white p-4">
+                            <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center">
+                              <span className="text-2xl font-serif">✦</span>
+                            </div>
+                            <p className="text-xs font-light">Hình ảnh tạm thời</p>
+                          </div>
+                        </div>
+                      )}
                       <div className="absolute top-4 left-4">
                         <span className="bg-gradient-gold text-secondary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm">Hot</span>
                       </div>
