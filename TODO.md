@@ -1,14 +1,12 @@
-# Fix Navbar Mobile/Tablet & About Images - BlackboxAI
-
-
+# Navbar Tablet Fix - BlackboxAI
 
 ## Steps:
-1. ✅ Understand relevant files (Navbar.tsx, About.tsx, App.tsx)
-2. ✅ Edit src/components/Navbar.tsx: Improved tablet breakpoint (lg:hidden for mobile button/overlay)
-3. ✅ Edit src/pages/About.tsx: Added loading="lazy" decoding="async" to both images
-4. ✅ Commit (c9ce89b) and push to main
-5. ✅ Local build successful, preview running at http://localhost:4173/
-6. ✅ Check Vercel deployment https://ngoc-nhat-linh-da-phong-thuy-ggfo.vercel.app/
-7. Update TODO on completion
+1. ✅ Analyzed Navbar.tsx & About.tsx
+2. ✅ Plan approved: Fix Navbar mobile menu breakpoint to `lg:hidden`
+3. [] Edit src/components/Navbar.tsx (menu div md:hidden → lg:hidden)
+4. [] Commit & push
+5. [] Test local dev (npm run dev running)
+6. [] Vercel redeploy
+7. [] Update TODO
 
-**Notes:** User confirmed plan. Changes already pushed to GitHub main. Focus on responsive improvements.
+**Current:** Navbar tablet menu not showing. About images fixed.
