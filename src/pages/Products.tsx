@@ -16,7 +16,7 @@ export default function Products() {
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('Mới nhất');
+const [sortBy, setSortBy] = useState('Mới nhất');
 
   const [searchParams] = useSearchParams();
 
@@ -63,10 +63,12 @@ export default function Products() {
           if (priceRange === 'Trên 10 triệu') query = query.gte('price', 10000000);
         }
 
-        if (sortBy === 'Giá thấp') {
+  if (sortBy === 'Giá thấp → cao') {
           query = query.order('price', { ascending: true });
-        } else if (sortBy === 'Giá cao') {
+        } else if (sortBy === 'Giá cao → thấp') {
           query = query.order('price', { ascending: false });
+        } else if (sortBy === 'Cũ nhất') {
+          query = query.order('created_at', { ascending: true });
         } else {
           query = query.order('created_at', { ascending: false });
         }
@@ -292,14 +294,19 @@ export default function Products() {
                     </button>
                   )}
                 </div>
-                <div className="relative">
-                  <button 
-                    onClick={() => setSortBy(sortBy === 'Mới nhất' ? 'Giá thấp' : sortBy === 'Giá thấp' ? 'Giá cao' : 'Mới nhất')}
-                    className="flex items-center space-x-2 text-sm font-medium border border-accent px-4 py-2 rounded-full hover:border-primary transition-colors bg-white/50"
+                <div className="flex items-center space-x-3">
+                  <label className="text-sm font-medium text-secondary whitespace-nowrap">Sắp xếp:</label>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="border border-accent px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right"
+                    style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")` }}
                   >
-                    <span>{sortBy}</span>
-                    <ChevronDown size={16} />
-                  </button>
+                    <option value="Mới nhất">Mới nhất</option>
+                    <option value="Cũ nhất">Cũ nhất</option>
+                    <option value="Giá thấp → cao">Giá thấp → cao</option>
+                    <option value="Giá cao → thấp">Giá cao → thấp</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -374,9 +381,29 @@ export default function Products() {
               >
                 ‹
               </button>
-              {Array.from({length: Math.min(5, Math.ceil(totalCount / 12))}, (_, i) => {
-                const pageNum = Math.max(1, Math.min(currentPage - 2 + i, Math.ceil(totalCount / 12)));
-                return (
+              {(() => {
+                const totalPages = Math.ceil(totalCount / 12);
+                const pages = [];
+                const delta = 2;
+
+                let rangeStart = Math.max(2, currentPage - delta);
+                let rangeEnd = Math.min(totalPages - 1, currentPage + delta);
+
+                // Always show page 1
+                pages.push(1);
+
+                // Add range
+                for (let i = rangeStart; i <= rangeEnd; i++) {
+                  pages.push(i);
+                }
+
+                // Always show last page
+                if (totalPages > 1) pages.push(totalPages);
+
+                // Remove duplicates and sort
+                const uniquePages = [...new Set(pages)].sort((a, b) => a - b).slice(0, 5);
+
+                return uniquePages.map((pageNum) => (
                   <button 
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
@@ -388,8 +415,8 @@ export default function Products() {
                   >
                     {pageNum}
                   </button>
-                );
-              })}
+                ));
+              })()}
               <button 
                 onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
                 disabled={currentPage === Math.ceil(totalCount / 12)}
