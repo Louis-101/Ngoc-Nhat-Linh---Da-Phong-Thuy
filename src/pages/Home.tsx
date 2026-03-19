@@ -40,13 +40,26 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
+            {heroError ? (
+              <div className="w-full h-full bg-gradient-to-br from-gradient-gold via-primary/30 to-secondary brightness-50 flex items-center justify-center p-12">
+                <div className="text-center text-white drop-shadow-2xl">
+                  <div className="w-32 h-32 bg-white/20 rounded-full mx-auto mb-8 backdrop-blur-sm flex items-center justify-center">
+                    <span className="text-4xl font-serif">✦</span>
+                  </div>
+                  <h2 className="text-3xl font-serif font-bold mb-4">NGỌC NHẤT LINH</h2>
+                  <p className="text-lg opacity-90 font-light">Tinh hoa phong thủy thiên nhiên</p>
+                </div>
+              </div>
+            ) : (
+              <img 
 src="https://images.unsplash.com/photo-1588880354343-8c120dbf5d20?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80&ar=16:9"
-            alt="Hero Background" 
-            className="w-full h-full object-cover brightness-[0.4]"
-            referrerPolicy="no-referrer"
-            onError={() => setHeroError(true)}
-          />
+                alt="Hero Background" 
+                className="w-full h-full object-cover brightness-50" // Reduced from 0.4
+                referrerPolicy="no-referrer"
+                onError={() => setHeroError(true)}
+              />
+            )}
+
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/70"></div>
         </div>
         
