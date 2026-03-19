@@ -16,6 +16,7 @@ export default function Products() {
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('Mới nhất');
 
   const [searchParams] = useSearchParams();
 
@@ -28,7 +29,7 @@ export default function Products() {
 
   // No add product form needed
 
-  const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật'];
+  const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật', 'Bi ngọc'];
   const priceRanges = ['Tất cả', 'Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'];
 
   useEffect(() => {
@@ -62,6 +63,14 @@ export default function Products() {
           if (priceRange === 'Trên 10 triệu') query = query.gte('price', 10000000);
         }
 
+        if (sortBy === 'Giá thấp') {
+          query = query.order('price', { ascending: true });
+        } else if (sortBy === 'Giá cao') {
+          query = query.order('price', { ascending: false });
+        } else {
+          query = query.order('created_at', { ascending: false });
+        }
+
         query = query.range(from, to);
 
         const { data, error, count } = await query;
@@ -84,7 +93,7 @@ export default function Products() {
     }
 
     fetchProducts();
-  }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage]);
+  }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage, sortBy]);
 
 
 
@@ -283,10 +292,15 @@ export default function Products() {
                     </button>
                   )}
                 </div>
-                <button className="flex items-center space-x-2 text-sm font-medium border border-accent px-4 py-2 rounded-full hover:border-primary transition-colors bg-white/50">
-                  <span>Mới nhất</span>
-                  <ChevronDown size={16} />
-                </button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setSortBy(sortBy === 'Mới nhất' ? 'Giá thấp' : sortBy === 'Giá thấp' ? 'Giá cao' : 'Mới nhất')}
+                    className="flex items-center space-x-2 text-sm font-medium border border-accent px-4 py-2 rounded-full hover:border-primary transition-colors bg-white/50"
+                  >
+                    <span>{sortBy}</span>
+                    <ChevronDown size={16} />
+                  </button>
+                </div>
               </div>
             </div>
 
