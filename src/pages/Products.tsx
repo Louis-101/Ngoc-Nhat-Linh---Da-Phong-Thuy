@@ -4,9 +4,10 @@ import { Filter, ChevronDown, Search, X } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
+import { uploadProductImage } from '../service/imageService';
 
 export default function Products() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tất cả');
@@ -16,7 +17,18 @@ export default function Products() {
   const [totalCount, setTotalCount] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-const [sortBy, setSortBy] = useState('Mới nhất');
+  const [sortBy, setSortBy] = useState('Mới nhất');
+  const [showAdminForm, setShowAdminForm] = useState(false);
+  const [adminProduct, setAdminProduct] = useState({
+    name: '',
+    description: '',
+    price: '',
+    category: '',
+    menh: '',
+    specs: '{}',
+    meaning: '',
+  });
+  const [imageFile, setImageFile] = useState(null);
 
   const [searchParams] = useSearchParams();
 
@@ -27,10 +39,40 @@ const [sortBy, setSortBy] = useState('Mới nhất');
 
   const menhOptions = ['Tất cả', 'Kim', 'Mộc', 'Thủy', 'Hỏa', 'Thổ'];
 
-  // No add product form needed
-
   const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật', 'Bi ngọc'];
   const priceRanges = ['Tất cả', 'Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'];
+
+  const handleAdminSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const newProduct = { ...adminProduct, price: parseInt(adminProduct.price) };
+      const { data, error } = await supabase.from('products').insert([newProduct]).select();
+      if (error) throw error;
+
+      const productId = data[0].id;
+      if (imageFile) {
+        const imageUrl = await uploadProductImage(imageFile, productId);
+        if (imageUrl) {
+          await supabase.from('products').update({ image_url: imageUrl }).eq('id', productId);
+        }
+      }
+      setShowAdminForm(false);
+      setAdminProduct({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        menh: '',
+        specs: '{}',
+        meaning: '',
+      });
+      // Refetch
+      window.location.reload();
+    } catch (error) {
+      console.error('Admin submit error:', error);
+      alert('Lỗi thêm sản phẩm: ' + error.message);
+    }
+  };
 
   useEffect(() => {
     async function fetchProducts() {
@@ -63,7 +105,7 @@ const [sortBy, setSortBy] = useState('Mới nhất');
           if (priceRange === 'Trên 10 triệu') query = query.gte('price', 10000000);
         }
 
-  if (sortBy === 'Giá thấp → cao') {
+        if (sortBy === 'Giá thấp → cao') {
           query = query.order('price', { ascending: true });
         } else if (sortBy === 'Giá cao → thấp') {
           query = query.order('price', { ascending: false });
@@ -84,7 +126,7 @@ const [sortBy, setSortBy] = useState('Mới nhất');
 
         setProducts(data || []);
         setTotalCount(count || 0);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching products:', err);
         setProducts([]);
         setTotalCount(0);
@@ -97,14 +139,9 @@ const [sortBy, setSortBy] = useState('Mới nhất');
     fetchProducts();
   }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage, sortBy]);
 
-
-
-
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4 text-secondary">Danh Mục Sản Phẩm</h1>
@@ -141,7 +178,7 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
                   transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                  className="fixed left-0 top-0 bottom-0 w-[85%] max-w-xs bg-white z-50 lg:hidden shadow-2xl flex flex-col bg-pattern-subtle"
+                  className="fixed left-0 top-0 bottom-0 w-[85vw] max-w-xs bg-white z-50 shadow-2xl flex flex-col bg-pattern-subtle"
                 >
                   {/* Header */}
                   <div className="flex justify-between items-center p-8 border-b border-accent/20 bg-white/80 backdrop-blur-md sticky top-0 z-10">
@@ -152,7 +189,7 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                   </div>
                   
                   {/* Scrollable Content */}
-                  <div className="flex-grow overflow-y-auto p-8 space-y-10 relative">
+                  <div className="flex-1 overflow-y-auto p-8 space-y-10">
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Danh mục</h3>
                       <div className="space-y-3">
@@ -213,16 +250,13 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                       </div>
                     </div>
                   </div>
-
-                  {/* Bottom Shadow Indicator */}
-                  <div className="h-8 bg-gradient-to-t from-black/5 to-transparent pointer-events-none absolute bottom-0 left-0 right-0 z-10"></div>
                 </motion.div>
               </>
             )}
           </AnimatePresence>
 
-          {/* Sidebar Filters (Desktop) */}
-          <aside className="hidden lg:block lg:w-64 space-y-10">
+          {/* Desktop Filters */}
+          <aside className="hidden lg:block lg:w-64 space-y-10 sticky top-24 h-fit">
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Theo mệnh</h3>
               <div className="space-y-3">
@@ -237,7 +271,6 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                 ))}
               </div>
             </div>
-
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Loại sản phẩm</h3>
               <div className="space-y-3">
@@ -252,7 +285,6 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                 ))}
               </div>
             </div>
-
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Khoảng giá</h3>
               <div className="space-y-3">
@@ -269,51 +301,61 @@ const [sortBy, setSortBy] = useState('Mới nhất');
             </div>
           </aside>
 
-          {/* Product Grid */}
-          <main className="flex-grow">
+          {/* Main Content */}
+          <main className="flex-1 lg:ml-0">
+            {/* Controls */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-              <p className="text-sm text-secondary/60">
+              <p className="text-sm text-secondary/60 order-2 sm:order-1">
                 Hiển thị {(currentPage - 1) * 12 + 1} - {Math.min(currentPage * 12, totalCount)} trong {totalCount} sản phẩm
               </p>
-              <div className="flex items-center space-x-4 w-full sm:w-auto">
-                <div className="relative flex-grow sm:flex-grow-0">
-                  <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40" />
-                  <input 
-                    type="text" 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Tìm sản phẩm..." 
-                    className="pl-10 pr-4 py-2 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-64 bg-white/50 transition-all focus:bg-white"
-                  />
-                  {searchQuery && (
-                    <button 
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary/40 hover:text-secondary transition-colors"
+              <div className="order-1 sm:order-2 flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+                <button 
+                  onClick={() => setShowAdminForm(!showAdminForm)}
+                  className="bg-gradient-gold text-secondary px-6 py-2 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap"
+                >
+                  {showAdminForm ? 'Đóng form' : '➕ Thêm sản phẩm'}
+                </button>
+                <div className="flex items-center space-x-4 w-full sm:w-auto">
+                  <div className="relative flex-1 sm:flex-none">
+                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40" />
+                    <input 
+                      type="text" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Tìm sản phẩm..." 
+                      className="pl-10 pr-4 py-2 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-64 bg-white/50 transition-all focus:bg-white"
+                    />
+                    {searchQuery && (
+                      <button 
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary/40 hover:text-secondary transition-colors"
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <label className="text-sm font-medium text-secondary whitespace-nowrap">Sắp xếp:</label>
+                    <select 
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="border border-accent px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right"
+                      style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")` }}
                     >
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-                <div className="flex items-center space-x-3">
-                  <label className="text-sm font-medium text-secondary whitespace-nowrap">Sắp xếp:</label>
-                  <select 
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-accent px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right"
-                    style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")` }}
-                  >
-                    <option value="Mới nhất">Mới nhất</option>
-                    <option value="Cũ nhất">Cũ nhất</option>
-                    <option value="Giá thấp → cao">Giá thấp → cao</option>
-                    <option value="Giá cao → thấp">Giá cao → thấp</option>
-                  </select>
+                      <option value="Mới nhất">Mới nhất</option>
+                      <option value="Cũ nhất">Cũ nhất</option>
+                      <option value="Giá thấp → cao">Giá thấp → cao</option>
+                      <option value="Giá cao → thấp">Giá cao → thấp</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8">
               {loading ? (
-                Array(6).fill(0).map((_, i) => (
+                Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
                     <div className="bg-accent/20 aspect-square rounded-2xl"></div>
                     <div className="h-4 bg-accent/20 rounded w-3/4"></div>
@@ -327,20 +369,112 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                 </div>
               ) : products.length === 0 ? (
                 <div className="col-span-full py-20 text-center">
-                  <div className="bg-accent/20 inline-block p-6 rounded-full mb-6">
+                  <div className="bg-accent/20 inline-block p-6 rounded-full mb-6 mx-auto">
                     <Search size={48} className="text-primary/40" />
                   </div>
                   <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Không tìm thấy sản phẩm</h3>
-                  <p className="text-gray-500 mb-8">Rất tiếc, chúng tôi không tìm thấy sản phẩm nào phù hợp với lựa chọn của bạn.</p>
+                  <p className="text-gray-500 mb-8">Rất tiếc, không tìm thấy sản phẩm phù hợp.</p>
                   <button 
                     onClick={() => {
                       setActiveCategory('Tất cả');
                       setSearchQuery('');
+                      setPriceRange('Tất cả');
+                      setActiveMenh('Tất cả');
                     }}
                     className="bg-gradient-gold text-secondary px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all"
                   >
                     Xem tất cả sản phẩm
                   </button>
+                </div>
+              ) : showAdminForm ? (
+                <div className="col-span-full max-w-2xl mx-auto">
+                  <div className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-accent/20">
+                    <h3 className="text-2xl font-serif font-bold mb-8 text-secondary text-center">Thêm sản phẩm mới</h3>
+                    <form onSubmit={handleAdminSubmit} className="space-y-6">
+                      <div>
+                        <label className="block text-sm font-bold text-secondary mb-3">Tên sản phẩm *</label>
+                        <input 
+                          type="text" 
+                          value={adminProduct.name}
+                          onChange={(e) => setAdminProduct({...adminProduct, name: e.target.value})}
+                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                          required 
+                        />
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-bold text-secondary mb-3">Giá (VND) *</label>
+                          <input 
+                            type="number" 
+                            value={adminProduct.price}
+                            onChange={(e) => setAdminProduct({...adminProduct, price: e.target.value})}
+                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                            required 
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-secondary mb-3">Danh mục *</label>
+                          <input 
+                            type="text" 
+                            value={adminProduct.category}
+                            onChange={(e) => setAdminProduct({...adminProduct, category: e.target.value})}
+                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                            required 
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <label className="block text-sm font-bold text-secondary mb-3">Mệnh</label>
+                          <select 
+                            value={adminProduct.menh}
+                            onChange={(e) => setAdminProduct({...adminProduct, menh: e.target.value})}
+                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                          >
+                            <option value="">Chọn mệnh</option>
+                            <option value="Kim">Kim</option>
+                            <option value="Mộc">Mộc</option>
+                            <option value="Thủy">Thủy</option>
+                            <option value="Hỏa">Hỏa</option>
+                            <option value="Thổ">Thổ</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-bold text-secondary mb-3">Hình ảnh chính</label>
+                          <input 
+                            type="file" 
+                            accept="image/*"
+                            onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+                            className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark cursor-pointer block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all rounded-2xl px-4 py-3"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-secondary mb-3">Mô tả ngắn</label>
+                        <textarea 
+                          rows={3}
+                          value={adminProduct.description}
+                          onChange={(e) => setAdminProduct({...adminProduct, description: e.target.value})}
+                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-vertical"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-secondary mb-3">Ý nghĩa phong thủy</label>
+                        <textarea 
+                          rows={4}
+                          value={adminProduct.meaning}
+                          onChange={(e) => setAdminProduct({...adminProduct, meaning: e.target.value})}
+                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-vertical"
+                        />
+                      </div>
+                      <button 
+                        type="submit"
+                        className="w-full bg-gradient-gold text-secondary py-4 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all block mx-auto"
+                      >
+                        ➕ Thêm sản phẩm & Upload hình
+                      </button>
+                    </form>
+                  </div>
                 </div>
               ) : (
                 products.map((product) => (
@@ -348,23 +482,22 @@ const [sortBy, setSortBy] = useState('Mới nhất');
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="group"
+                    className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 cursor-pointer border border-accent/20 hover:border-primary/30"
                   >
-                    <Link to={`/product/${product.id}`}>
-                      <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 shadow-sm group-hover:shadow-md transition-all">
+                    <Link to={`/product/${product.id}`} className="block">
+                      <div className="aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 group-hover:bg-primary/5 transition-all">
                         <img 
-                          src={product.image_url} 
+                          src={product.image_url || 'https://picsum.photos/400/400?random=1'} 
                           alt={product.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
-
-                      <div className="space-y-1">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest">{product.category}{product.menh ? ` • ${product.menh}` : ''}</span>
-                        <h3 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1 text-secondary">{product.name}</h3>
-                        <p className="text-primary font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
+                      <div className="space-y-2">
+                        <span className="text-xs text-gray-400 uppercase tracking-wider px-2 py-1 bg-accent/50 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
+                        <h3 className="font-serif font-bold text-xl line-clamp-1 group-hover:text-primary transition-colors">{product.name}</h3>
+                        <p className="text-primary font-bold text-2xl">
+                          {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                        </p>
                       </div>
                     </Link>
                   </motion.div>
@@ -373,61 +506,44 @@ const [sortBy, setSortBy] = useState('Mới nhất');
             </div>
 
             {/* Pagination */}
-            <div className="mt-16 flex justify-center items-center space-x-1">
-              <button 
-                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ‹
-              </button>
-              {(() => {
-                const totalPages = Math.ceil(totalCount / 12);
-                const pages = [];
-                const delta = 2;
-
-                let rangeStart = Math.max(2, currentPage - delta);
-                let rangeEnd = Math.min(totalPages - 1, currentPage + delta);
-
-                // Always show page 1
-                pages.push(1);
-
-                // Add range
-                for (let i = rangeStart; i <= rangeEnd; i++) {
-                  pages.push(i);
-                }
-
-                // Always show last page
-                if (totalPages > 1) pages.push(totalPages);
-
-                // Remove duplicates and sort
-                const uniquePages = [...new Set(pages)].sort((a, b) => a - b).slice(0, 5);
-
-                return uniquePages.map((pageNum) => (
-                  <button 
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                      currentPage === pageNum 
-                        ? 'bg-primary text-white border-primary shadow-md' 
-                        : 'border border-gray-200 hover:border-primary hover:text-primary'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                ));
-              })()}
-              <button 
-                onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
-                disabled={currentPage === Math.ceil(totalCount / 12)}
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ›
-              </button>
-            </div>
+            {products.length > 0 && !loading && !showAdminForm && (
+              <div className="mt-16 flex justify-center items-center space-x-2">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                >
+                  ‹
+                </button>
+                {Array.from({ length: Math.min(5, Math.ceil(totalCount / 12)) }, (_, i) => {
+                  const page = i + 1;
+                  return (
+                    <button 
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all shadow-md ${
+                        currentPage === page 
+                          ? 'bg-primary text-white border-primary shadow-lg scale-110' 
+                          : 'border-2 border-gray-200 hover:border-primary hover:text-primary hover:shadow-lg hover:scale-105'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
+                  disabled={currentPage === Math.ceil(totalCount / 12)}
+                  className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                >
+                  ›
+                </button>
+              </div>
+            )}
           </main>
         </div>
       </div>
     </div>
   );
 }
+
