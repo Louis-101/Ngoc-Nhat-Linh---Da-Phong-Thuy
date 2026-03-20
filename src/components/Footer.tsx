@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="bg-secondary text-white pt-16 pb-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern-subtle opacity-10"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
           {/* Brand Info */}
           <div className="space-y-6">
             <h3 className="text-2xl font-serif font-bold tracking-tighter text-gradient-gold">
@@ -54,14 +54,14 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
+          {/* Contact & Maps */}
+          <div className="lg:col-span-1">
             <h4 className="text-lg font-serif font-bold mb-6 text-accent">Liên hệ</h4>
             <ul className="space-y-4 text-sm text-white/60">
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-primary mt-0.5 flex-shrink-0" />
                 <a 
-                  href="https://www.bing.com/maps/default.aspx?v=2&pc=FACEBK&mid=8100&where1=65%20đường%203/2%2C%20phường%20Hưng%20Lợi%2C%20Quận%20Ninh%20Kiều%2C%20Thành%20phố%20Cần%20Thơ%2C%20Vietnam%2C%2090000&FORM=FBKPL1&mkt=en-GB" 
+                  href="https://www.google.com/maps/search/?api=1&query=65+đường+3/2,+phường+Hưng+Lợi,+Quận+Ninh+Kiều,+Cần+Thơ"
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="hover:text-primary transition-colors"
@@ -81,7 +81,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mt-8">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.682565757227!2d105.74684337504303!3d10.03182210823167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDAxJzUyLjciTiAxMDXCsDQ0JzUyLjMiRQ!5e0!3m2!1svi!2svn!4v1731906510518!5m2!1svi!2svn" 
+            width="100%" 
+            height="300" 
+            style={{border:0}} 
+            allowFullScreen={true} 
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Ngọc Nhất Linh - Cần Thơ"
+            className="rounded-2xl w-full drop-shadow-lg"
+            loading="lazy"
+          />
+        </div>
+
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mt-12">
           <p className="text-xs text-white/40">
             © 2024 Ngọc Nhất Linh. All rights reserved.
           </p>
@@ -94,3 +108,4 @@ export default function Footer() {
     </footer>
   );
 }
+

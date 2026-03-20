@@ -48,4 +48,26 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Enhanced mobile responsive for ProductDetail */
+  @media (max-width: 640px) {
+    .pd-btn {
+      padding: 1rem 1.5rem;
+      font-size: 1.1rem;
+      min-height: 56px;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .pd-gallery-main {
+      height: 60vh;
+    }
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
 }
