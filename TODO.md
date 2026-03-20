@@ -1,15 +1,25 @@
-# Progress Tracker for Task Completion
+# TODO: Website UI/Supabase Image Fixes for Ngọc Nhất Linh
 
-## Completed Steps:
-- [x] Downloaded leopard-contact.jpg to public/images/
-- [x] Edited Contact.tsx: leopard image + Google Maps iframe (65 3/2 Ninh Kiều, Cần Thơ)
-- [x] Edited ProductDetail.tsx: Detail image → leopard-contact.jpg
-- [x] Started dev server (http://localhost:3003)
+## Plan Implementation Steps (Approved by User)
 
-## Next Steps:
-1. User upload real product images → Supabase Storage → update DB `supabase-setup.sql`
-2. Run `node check-supabase-data.js` verify
-3. Test changes: http://localhost:3003/contact & /product/[id]
-4. Commit/push branch
+### 1. Add Sample Stone Images ✅ (Use free stone placeholders)
+### 2. Update src/service/supabaseClient.ts - Add image upload utils
+### 3. Create Admin Upload Form in src/pages/Products.tsx
+### 4. Redesign src/pages/ProductDetail.tsx (UI, FB consult, images, mobile)
+### 5. Update src/pages/Contact.tsx - Replace store image
+### 6. Update src/components/Footer.tsx - Add Google Maps iframe/link
+### 7. Enhance src/index.css - Mobile/tablet improvements
+### 8. Test & Supabase seed if needed
+### 9. Complete! 🚀
 
-✅ Edits complete. Check browser!
+**Current Step: 4/9 - Redesign ProductDetail.tsx**
+**Progress: 50%**
+
+Completed:
+- ✅ Images replaced with stone-themed Picsum (ProductDetail, Contact)
+- ✅ imageService.ts for Supabase storage uploads ready (use Products page admin form)
+- ✅ Footer Google Maps iframe + link fixed/added
+- Next: ProductDetail full redesign (UI, FB consult, mobile)
+
+*Run `npm run dev` after each major step to preview changes.*
+
