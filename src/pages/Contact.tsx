@@ -100,7 +100,19 @@ export default function Contact() {
             </div>
             
             <div className="aspect-square rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 shadow-md border border-accent/20">
-              <img src="https://picsum.photos/seed/map/600/600" alt="Map Placeholder" className="w-full h-full object-cover" />
+              <img src="/images/leopard-contact.jpg" alt="Cửa hàng Ngọc Nhất Linh" className="w-full h-full object-cover hover:grayscale-0" />
+              <div className="mt-6 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.682565757227!2d105.74684337504303!3d10.03182210823167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDAxJzUyLjciTiAxMDXCsDQ0JzUyLjMiRQ!5e0!3m2!1svi!2svn!4v1731906510518!5m2!1svi!2svn" 
+                  width="100%" 
+                  height="300" 
+                  style={{border:0}} 
+                  allowFullScreen={true} 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Cửa hàng Ngọc Nhất Linh - 65 đường 3/2, Hưng Lợi, Ninh Kiều, Cần Thơ"
+                  className="rounded-xl w-full h-64 md:h-80"
+                />
+              </div>
             </div>
           </div>
 

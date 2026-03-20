@@ -159,7 +159,7 @@ export default function ProductDetail() {
                 {product.meaning}
               </p>
               <div className="aspect-video rounded-3xl overflow-hidden bg-gray-100 mt-8">
-                <img src={product.image_url} alt="Detail" className="w-full h-full object-cover" />
+              <img src="/images/leopard-contact.jpg" alt={product.name} className="w-full h-full object-cover" />
               </div>
             </section>
           </div>
