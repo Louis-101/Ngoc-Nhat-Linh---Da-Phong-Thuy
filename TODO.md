@@ -1,12 +1,15 @@
-# New Task: Fix Footer & Improve Products Filter/Sort
+# Progress Tracker for Task Completion
 
-**Issues:**
-- Footer: lỗi hiển thị nhiều số 1 (kiểm tra runtime/products pagination?)
-- Products page: thêm filter/sort rõ ràng "Giá cao → thấp", "Giá thấp → cao", "Mới nhất", "Cũ nhất"
+## Completed Steps:
+- [x] Downloaded leopard-contact.jpg to public/images/
+- [x] Edited Contact.tsx: leopard image + Google Maps iframe (65 3/2 Ninh Kiều, Cần Thơ)
+- [x] Edited ProductDetail.tsx: Detail image → leopard-contact.jpg
+- [x] Started dev server (http://localhost:3003)
 
-**Plan steps:**
-- [x] Step 1: Read Products.tsx pagination code & inspect footer runtime ✅
-- [x] Step 2: Fix pagination bug (multiple 1's if few pages) ✅
-- [x] Step 3: Add explicit sort options dropdown (Giá cao/thấp, Mới/Cũ) ✅
-- [x] Step 4: Test filters work with Supabase query ✅
-- [ ] Step 5: Git branch/PR new changes
+## Next Steps:
+1. User upload real product images → Supabase Storage → update DB `supabase-setup.sql`
+2. Run `node check-supabase-data.js` verify
+3. Test changes: http://localhost:3003/contact & /product/[id]
+4. Commit/push branch
+
+✅ Edits complete. Check browser!
