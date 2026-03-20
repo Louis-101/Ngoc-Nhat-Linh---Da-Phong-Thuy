@@ -18,7 +18,6 @@ export async function uploadProductImage(file: File, productId: string): Promise
 
     return publicUrl;
   } catch (error) {
-    console.error('Upload error:', error);
     return null;
   }
 }
@@ -41,7 +40,6 @@ export async function uploadProductGallery(file: File, productId: string, index:
 
     return publicUrl;
   } catch (error) {
-    console.error('Upload error:', error);
     return null;
   }
 }
