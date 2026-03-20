@@ -1,8 +1,1 @@
-# Git Upload and Run Progress
-
-## Plan Steps (Approved):
-- [ ] 1. Stage all changes: `git add .`
-- [ ] 2. Commit changes
-- [ ] 3. Push to GitHub
-- [ ] 4. Run dev server: `npm run dev`
-- [ ] 5. Complete task
+# Plan Steps (Approved):\n\n- [ ] 1. Stage all changes: `git add .`\n- [ ] 2. Commit changes\n- [ ] 3. Push to GitHub\n- [ ] 4. Run dev server: `npm run dev`\n- [ ] 5. Complete task
