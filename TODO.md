@@ -1,1 +1,1 @@
-- [x] 1. Stage all changes: `git add .`
+- [x] Supabase storage buckets/policies (added to supabase-setup.sql)

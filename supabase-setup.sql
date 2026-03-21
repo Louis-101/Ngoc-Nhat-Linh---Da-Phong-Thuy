@@ -71,25 +71,4 @@ values
 ('Chọn Đá Phong Thủy Theo Mệnh','chon-da-phong-thuy-theo-menh','Hướng dẫn chọn đá phong thủy ứng với ngũ hành...', 'Admin','https://picsum.photos/seed/blog2/1200/600','Phong thủy'),
 ('Cách Bảo Quản Trang Sức Đá Quý','cach-bao-quan-trang-suc-da-quy','Mẹo giữ gìn trang sức đá quý luôn sáng bóng...', 'Admin','https://picsum.photos/seed/blog3/1200/600','Bảo quản');
 
--- Update timestamp trigger
-create or replace function set_updated_at()
-returns trigger as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$ language plpgsql;
-
--- Remove existing triggers if they exist (to allow re-running script)
-drop trigger if exists products_updated_at on products;
-drop trigger if exists posts_updated_at on posts;
-
-create trigger products_updated_at
-before update on products
-for each row
-execute procedure set_updated_at();
-
-create trigger posts_updated_at
-before update on posts
-for each row
-execute procedure set_updated_at();
+-- Storage buckets for product images\n-- Create buckets\ncreate bucket if not exists \"product-images\";\ncreate bucket if not exists \"product-gallery\";\n\n-- Public access policies\ncreate policy \"Public read product-images\" on storage.objects for select using ( bucket_id = 'product-images' );\ncreate policy \"Public read product-gallery\" on storage.objects for select using ( bucket_id = 'product-gallery' );\n\n-- Insert/update policies (admin only, adjust RLS)\ncreate policy \"Users upload product-images\" on storage.objects for insert with check ( bucket_id = 'product-images' );\ncreate policy \"Users upload product-gallery\" on storage.objects for insert with check ( bucket_id = 'product-gallery' );\ncreate policy \"Users update product images\" on storage.objects for update using ( bucket_id = 'product-images' ) with check ( bucket_id = 'product-images' );\ncreate policy \"Users update product gallery\" on storage.objects for update using ( bucket_id = 'product-gallery' ) with check ( bucket_id = 'product-gallery' );\n\n-- Update timestamp trigger\ncreate or replace function set_updated_at()\nreturns trigger as $$\nbegin\n  new.updated_at = now();\n  return new;\nend;\n$$ language plpgsql;\n\n-- Remove existing triggers if they exist (to allow re-running script)\ndrop trigger if exists products_updated_at on products;\ndrop trigger if exists posts_updated_at on posts;\n\ncreate trigger products_updated_at\nbefore update on products\nfor each row\nexecute procedure set_updated_at();\n\ncreate trigger posts_updated_at\nbefore update on posts\nfor each row\nexecute procedure set_updated_at();
