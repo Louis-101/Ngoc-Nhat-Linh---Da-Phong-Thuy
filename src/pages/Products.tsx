@@ -352,7 +352,7 @@ className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl 
               </div>
             </div>
 
-            {/* Products Grid */}
+
 "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6 xl:gap-8 auto-rows-fr"
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
