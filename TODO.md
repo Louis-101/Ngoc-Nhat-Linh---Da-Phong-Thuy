@@ -1,10 +1,13 @@
-# Task Progress: Google Search Console Verification
+# Website Updates: Footer, Contact, Products Mobile Optimization
 
-## Steps from Approved Plan:
-- [x] 1. Create TODO.md to track progress
-- [x] 2. Edit index.html to add Google verification meta tag
-- [x] 3. Verify the change and test locally
-- [x] 4. Deploy/update production site (Vercel)
-- [x] 5. Test verification in Google Search Console
-- [x] 6. Mark task complete
+✅ Previous: Google Search Console verification complete
+
+## New Task Steps:
+- [x] 1. Create/update TODO.md
+- [x] 2. Edit src/components/Footer.tsx (TikTok, address, new map iframe)
+- [x] 3. Edit src/pages/Contact.tsx (address, TikTok, replace image with map iframe)
+- [x] 4. Edit src/pages/Products.tsx (grid density, mobile UI optimizations)
+- [ ] 5. Test locally and verify changes
+- [ ] 6. Commit and push for Vercel deploy
+- [ ] 7. Mark complete
 

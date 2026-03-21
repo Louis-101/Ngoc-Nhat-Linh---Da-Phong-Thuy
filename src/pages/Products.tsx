@@ -311,7 +311,7 @@ export default function Products() {
               <div className="order-1 sm:order-2 flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
                 <button 
                   onClick={() => setShowAdminForm(!showAdminForm)}
-                  className="bg-gradient-gold text-secondary px-6 py-2 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap"
+className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap min-w-[140px] flex-shrink-0 touch-manipulation shadow-md"
                 >
                   {showAdminForm ? 'Đóng form' : '➕ Thêm sản phẩm'}
                 </button>
@@ -353,7 +353,7 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-6 md:gap-8">
+"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6 xl:gap-8 auto-rows-fr"
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
