@@ -311,7 +311,7 @@ export default function Products() {
               <div className="order-1 sm:order-2 flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
                 <button 
                   onClick={() => setShowAdminForm(!showAdminForm)}
-className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap min-w-[140px] flex-shrink-0 touch-manipulation shadow-md"
+                  className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap min-w-[140px] flex-shrink-0 touch-manipulation shadow-md"
                 >
                   {showAdminForm ? 'Đóng form' : '➕ Thêm sản phẩm'}
                 </button>
@@ -323,7 +323,7 @@ className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl 
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Tìm sản phẩm..." 
-                      className="pl-10 pr-4 py-2 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-64 bg-white/50 transition-all focus:bg-white"
+                      className="pl-10 pr-4 py-3 sm:py-3 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-72 bg-white/50 transition-all focus:bg-white min-h-[48px]"
                     />
                     {searchQuery && (
                       <button 
@@ -339,7 +339,7 @@ className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl 
                     <select 
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="border border-accent px-4 py-2 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right"
+                      className="border border-accent px-4 py-3 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right min-h-[48px]"
                       style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")` }}
                     >
                       <option value="Mới nhất">Mới nhất</option>
@@ -352,8 +352,8 @@ className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl 
               </div>
             </div>
 
-
-"grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6 xl:gap-8 auto-rows-fr"
+            {/* Products Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6 xl:gap-8 auto-rows-fr">
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
