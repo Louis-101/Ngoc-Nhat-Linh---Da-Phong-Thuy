@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ZaloButton from './components/ZaloButton';
@@ -38,6 +39,7 @@ function App() {
         </main>
         <Footer />
         <ZaloButton />
+        <Analytics />
       </div>
     </Router>
     <Analytics />
