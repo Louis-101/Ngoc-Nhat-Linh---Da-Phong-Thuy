@@ -1,25 +1,15 @@
-# TODO: Website UI/Supabase Image Fixes for Ngọc Nhất Linh
+ok# Website Updates: Footer, Contact, Products Mobile Optimization
 
-## Plan Implementation Steps (Approved by User)
+✅ Previous: Google Search Console verification complete
 
-### 1. Add Sample Stone Images ✅ (Use free stone placeholders)
-### 2. Update src/service/supabaseClient.ts - Add image upload utils
-### 3. Create Admin Upload Form in src/pages/Products.tsx
-### 4. Redesign src/pages/ProductDetail.tsx (UI, FB consult, images, mobile)
-### 5. Update src/pages/Contact.tsx - Replace store image
-### 6. Update src/components/Footer.tsx - Add Google Maps iframe/link
-### 7. Enhance src/index.css - Mobile/tablet improvements
-### 8. Test & Supabase seed if needed
-### 9. Complete! 🚀
+## New Task Steps:
+- [x] 1. Create/update TODO.md
+- [x] 2. Edit src/components/Footer.tsx (TikTok, address, new map iframe)
+- [x] 3. Edit src/pages/Contact.tsx (address, TikTok, replace image with map iframe)
+- [x] 4. Edit src/pages/Products.tsx (grid density, mobile UI optimizations)
+- [✅] 5. Test locally and verify changes (including fixed hero image path)
+- [✅] 6. Commit and push for Vercel deploy 
+- [✅] 7. Mark complete
 
-**Current Step: 4/9 - Redesign ProductDetail.tsx**
-**Progress: 50%**
-
-Completed:
-- ✅ Images replaced with stone-themed Picsum (ProductDetail, Contact)
-- ✅ imageService.ts for Supabase storage uploads ready (use Products page admin form)
-- ✅ Footer Google Maps iframe + link fixed/added
-- Next: ProductDetail full redesign (UI, FB consult, mobile)
-
-*Run `npm run dev` after each major step to preview changes.*
+**✅ Complete:** All updates done. Hero image fixed (buddha-hero.jpg to root). Ready for Vercel live.
 

@@ -83,7 +83,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Địa chỉ</p>
-                      <p className="font-bold text-sm">Số 65 đường 3/2, phường Hưng Lợi, Quận Ninh Kiều, TP. Cần Thơ</p>
+                      <p className="font-bold text-sm">65 Đường 3/2 Phường Tân An Thành Phố Cần Thơ</p>
                     </div>
                   </div>
                 </div>
@@ -92,28 +92,28 @@ export default function Contact() {
                   <p className="text-xs text-white/40 uppercase tracking-widest mb-4">Kết nối mạng xã hội</p>
                   <div className="flex space-x-4">
                     <a href="https://www.facebook.com/profile.php?id=61575224635423" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><Facebook size={20} /></a>
-                    <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><Instagram size={20} /></button>
+                    <a href="https://www.tiktok.com/@ngocnhatlinh2108" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all">
+                      <svg fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5"><path d="M19.951 6.3a1.715 1.715 0 00-.518-.044c-.4 0-.754.145-1.043.435-.3.3-.45.696-.45 1.174v2.587h3.096v3.478h-3.096v8.678h-3.522v-8.678H9.38v-3.478h3.522V7.91c0-.87.233-1.557.696-2.056.462-.5 1.104-.765 1.913-.765.696 0 1.261.217 1.691.652.43.435.646 1.104.646 1.996v2.478h3.478V7.91c0-.522-.074-.978-.217-1.37-.145-.391-.39-.696-.739-.913z"/></svg>
+                    </a>
                     <a href="https://zalo.me/0902111626" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><MessageCircle size={20} /></a>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="aspect-square rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 shadow-md border border-accent/20">
-<img src="https://picsum.photos/seed/da-phong-thuy-shop/900/600" alt="Cửa hàng đá quý Ngọc Nhất Linh" className="w-full h-full object-cover hover:grayscale-0" />
-              <div className="mt-6 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg">
+            <div className="aspect-[4/3] rounded-3xl shadow-xl border border-accent/20 overflow-hidden">
                 <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.682565757227!2d105.74684337504303!3d10.03182210823167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDAxJzUyLjciTiAxMDXCsDQ0JzUyLjMiRQ!5e0!3m2!1svi!2svn!4v1731906510518!5m2!1svi!2svn" 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3555.552830988385!2d105.75481205280464!3d10.01572032227409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a089f9b67e85ff%3A0xb7931ccbde2bcddc!2zxJDDoSBQaG9uZyBUaOG7p3kgQ-G6p24gVGjGoSAtIE5n4buNYyBOaOG6pXQgTGluaA!5e1!3m2!1svi!2s!4v1774104483785!5m2!1svi!2s" 
                   width="100%" 
-                  height="300" 
+                  height="450" 
                   style={{border:0}} 
                   allowFullScreen={true} 
+                  loading="lazy" 
                   referrerPolicy="no-referrer-when-downgrade"
-                  title="Cửa hàng Ngọc Nhất Linh - 65 đường 3/2, Hưng Lợi, Ninh Kiều, Cần Thơ"
-                  className="rounded-xl w-full h-64 md:h-80"
+                  title="Cửa hàng Ngọc Nhất Linh - 65 Đường 3/2 Phường Tân An, Cần Thơ"
+                  className="w-full h-full"
                 />
               </div>
-            </div>
           </div>
 
           {/* Contact Form */}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Post } from '../types/product';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Calendar, User, Share2, Facebook, Twitter, Link as LinkIcon, ArrowLeft } from 'lucide-react';
@@ -7,7 +8,7 @@ import Markdown from 'react-markdown';
 
 export default function BlogPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState<any>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function BlogPost() {
         console.error('Error fetching post:', err);
         // Fallback mock data
         setPost({
-          title: 'Cách chọn vòng tay phong thủy theo mệnh Kim, Mộc, Thủy, Hỏa, Thổ',
+          id: 'fallback', slug: slug || 'fallback', title: 'Cách chọn vòng tay phong thủy theo mệnh Kim, Mộc, Thủy, Hỏa, Thổ',
           content: `
 # Tại sao cần chọn vòng tay theo mệnh?
 

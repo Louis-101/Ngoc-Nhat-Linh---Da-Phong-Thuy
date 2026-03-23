@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DestinyResult } from '../types/product';
 import { motion } from 'motion/react';
 import { Search, Sparkles, Info, ArrowRight, User, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ export default function Destiny() {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [gender, setGender] = useState('Nam');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DestinyResult | null>(null);
 
   // Load saved destiny on mount
   React.useEffect(() => {

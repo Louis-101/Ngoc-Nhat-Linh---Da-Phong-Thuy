@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { Product, DestinyResult } from '../types/product';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Facebook, Sparkles, Phone } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { useWishlist } from '../Context/WishlistContext';
-import { calculateDestinyFromYear, DestinyResult } from '../service/destinyService';
+import { calculateDestinyFromYear } from '../service/destinyService';
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [userDestiny, setUserDestiny] = useState(null);
   const [birthYearInput, setBirthYearInput] = useState('');
@@ -42,7 +43,7 @@ export default function ProductDetail() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      setSuggestedProducts(data || []);
+      setSuggestedProducts((data || []) as Product[]);
     } catch (err) {
       console.error('Error fetching suggestions:', err);
     } finally {

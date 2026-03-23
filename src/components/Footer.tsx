@@ -21,8 +21,8 @@ export default function Footer() {
               <a href="https://www.facebook.com/profile.php?id=61575224635423" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
-                <Instagram size={18} />
+              <a href="https://www.tiktok.com/@ngocnhatlinh2108" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
+                <svg fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5"><path d="M19.951 6.3a1.715 1.715 0 00-.518-.044c-.4 0-.754.145-1.043.435-.3.3-.45.696-.45 1.174v2.587h3.096v3.478h-3.096v8.678h-3.522v-8.678H9.38v-3.478h3.522V7.91c0-.87.233-1.557.696-2.056.462-.5 1.104-.765 1.913-.765.696 0 1.261.217 1.691.652.43.435.646 1.104.646 1.996v2.478h3.478V7.91c0-.522-.074-.978-.217-1.37-.145-.391-.39-.696-.739-.913z"/></svg>
               </a>
               <a href="mailto:daphongthuyngocnhatlinh@gmail.com" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
                 <Mail size={18} />
@@ -61,12 +61,12 @@ export default function Footer() {
               <li className="flex items-start space-x-3">
                 <MapPin size={18} className="text-primary mt-0.5 flex-shrink-0" />
                 <a 
-                  href="https://www.google.com/maps/search/?api=1&query=65+đường+3/2,+phường+Hưng+Lợi,+Quận+Ninh+Kiều,+Cần+Thơ"
+                  href="https://www.google.com/maps/search/?api=1&query=65+%C4%90%C6%B0%E1%BB%9Dng+3%2F2+Ph%C6%B0%E1%BB%9Dng+T%C3%A2n+An+Th%C3%A0nh+Ph%E1%BB%91+C%E1%BA%A7n+Th%C6%A1"
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="hover:text-primary transition-colors"
                 >
-                  Số 65 đường 3/2, phường Hưng Lợi, Quận Ninh Kiều, TP. Cần Thơ
+                  65 Đường 3/2 Phường Tân An Thành Phố Cần Thơ
                 </a>
               </li>
               <li className="flex items-center space-x-3">
@@ -83,9 +83,9 @@ export default function Footer() {
 
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mt-8">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.682565757227!2d105.74684337504303!3d10.03182210823167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTDCsDAxJzUyLjciTiAxMDXCsDQ0JzUyLjMiRQ!5e0!3m2!1svi!2svn!4v1731906510518!5m2!1svi!2svn" 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3555.552830988385!2d105.75481205280464!3d10.01572032227409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a089f9b67e85ff%3A0xb7931ccbde2bcddc!2zxJDDoSBQaG9uZyBUaOG7p3kgQ-G6p24gVGjGoSAtIE5n4buNYyBOaOG6pXQgTGluaA!5e1!3m2!1svi!2s!4v1774104483785!5m2!1svi!2s" 
             width="100%" 
-            height="300" 
+            height="450" 
             style={{border:0}} 
             allowFullScreen={true} 
             referrerPolicy="no-referrer-when-downgrade"
