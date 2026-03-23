@@ -53,7 +53,7 @@ export default function Home() {
               </div>
             ) : (
               <img 
-src="/images/buddha-hero.jpg" 
+src="/buddha-hero.jpg"
 alt="Buddha Hero - Ngọc Nhất Linh" 
                 className="w-full h-full object-cover brightness-50" // Reduced from 0.4
                 referrerPolicy="no-referrer"
