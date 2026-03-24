@@ -1,41 +1,28 @@
-# Code Fix & Vercel Deploy Plan
+# Mobile UI Redesign - Premium E-commerce (Approved ✅)
 
-**Current Status (Critical):**
-- ❌ App.tsx, Navbar.tsx: Import syntax broken (incomplete `import` statements)
-- ❌ TypeScript: 5+ errors
-- ❌ Vite dev: Parse errors, site not rendering
-- ✅ GitHub pushed, Vercel.json ready
-- ✅ main.tsx OK, Home.tsx OK (other pages likely OK)
+**Status**: Plan approved by user. Breakdown implementation.
 
-**Step 1: Fix Syntax (Highest Priority)**
-```
-git checkout -- src/App.tsx src/components/Navbar.tsx src/pages/ProductDetail.tsx src/index.css
-```
-- Restore from git to remove broken edits
+**1. [x] Understanding**
+- Products.tsx & Home.tsx identified (main grids)
+- Mobile-first: 2-col grid, white cards, object-contain images
+- Desktop unchanged
 
-**Step 2: Test**
-```
-npm run lint
-npm run dev
-```
-Expected: No errors, site loads http://localhost:3000
+**2. [ ] Edit Products.tsx product grid**
+- Mobile: grid-cols-2 gap-3 px-3
+- Card: bg-white rounded-xl shadow-sm p-6 hover:scale-[1.02]
+- Image: aspect-square p-2 object-contain
+- Typography: name text-base font-semibold line-clamp-2, price text-lg font-bold
 
-**Step 3: Vercel Deploy**
-```
-git add .
-git commit -m "Fix syntax errors, ready for Vercel"
-git push origin main
-vercel --prod
-```
-→ Deploy to https://www.daphongthuyngocnhatlinh.com/
+**3. [ ] Edit Home.tsx featured products**
+- Same mobile grid/card styling
 
-**Supabase Warning:** Add .env:
-```
-VITE_SUPABASE_URL=your_url
-VITE_SUPABASE_ANON_KEY=your_key
-```
+**4. [ ] Test**
+- npm run lint
+- Check mobile view localhost:3000
 
-**Run these commands to fix NOW:**
-1. `git checkout -- src/App.tsx src/components/Navbar.tsx`
-2. `npm run dev`
+**5. [ ] Deploy**
+- git commit/push
+- vercel --prod
+
+**Next**: Edit Products.tsx grid section.
 

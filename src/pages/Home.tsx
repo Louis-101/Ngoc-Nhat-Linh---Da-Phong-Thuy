@@ -148,7 +148,7 @@ alt="Buddha Hero - Ngọc Nhất Linh"
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8 px-3 md:px-0"
             {loading ? (
               Array(4).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse space-y-4">
@@ -165,12 +165,12 @@ alt="Buddha Hero - Ngọc Nhất Linh"
                   className="group"
                 >
                   <Link to={`/product/${product.id}`}>
-                    <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/20 shadow-sm group-hover:shadow-md transition-all">
+className="relative aspect-square rounded-xl shadow-sm overflow-hidden mb-4 bg-white p-2 group-hover:shadow-md transition-all hover:scale-[1.02]"
                       <img 
                         src={product.image_url} 
                         alt={product.name}
                         loading="lazy"
-                        className={`w-full h-full transition-transform duration-700 group-hover:scale-110 ${productImageErrors[product.id || ''] ? 'hidden' : 'object-cover'}`}
+`w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105 flex items-center justify-center ${productImageErrors[product.id || ''] ? 'hidden' : ''}`
                         referrerPolicy="no-referrer"
                         onError={() => setProductImageErrors(prev => ({ ...prev, [product.id || 'unknown']: true }))}
                       />
@@ -190,7 +190,7 @@ alt="Buddha Hero - Ngọc Nhất Linh"
                     </div>
                     <div className="space-y-1">
                       <span className="text-[10px] text-gray-400 uppercase tracking-widest">{product.category}</span>
-                      <h3 className="font-serif font-bold text-lg group-hover:text-primary transition-colors line-clamp-1 text-secondary">{product.name}</h3>
+"font-serif font-semibold text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors text-secondary"
                       <p className="text-primary font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
                     </div>
                   </Link>

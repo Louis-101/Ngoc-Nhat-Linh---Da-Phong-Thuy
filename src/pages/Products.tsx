@@ -308,7 +308,7 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 lg:gap-6 xl:gap-8 auto-rows-fr">
+className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 xl:gap-8 px-3 md:px-0 auto-rows-fr"
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
@@ -347,19 +347,19 @@ export default function Products() {
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 cursor-pointer border border-accent/20 hover:border-primary/30"
+className="group bg-white rounded-xl shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer border border-gray-100 hover:border-primary/20 p-4"
                   >
                     <Link to={`/product/${product.id}`} className="block">
                       <div className="aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 group-hover:bg-primary/5 transition-all">
                         <img 
                           src={product.image_url || 'https://picsum.photos/400/400?random=1'} 
                           alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+"w-full h-auto object-contain p-2 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center"
                         />
                       </div>
                       <div className="space-y-2">
                         <span className="text-xs text-gray-400 uppercase tracking-wider px-2 py-1 bg-accent/50 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
-                        <h3 className="font-serif font-bold text-xl line-clamp-1 group-hover:text-primary transition-colors">{product.name}</h3>
+className="font-serif font-semibold text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors"
                         <p className="text-primary font-bold text-2xl">
                           {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
                         </p>
