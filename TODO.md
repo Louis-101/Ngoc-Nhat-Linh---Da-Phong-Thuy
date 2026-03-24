@@ -1,73 +1,35 @@
-# TODO: Vercel Environments Setup for Ngọc Nhất Linh (Completed Steps)
+# Production Fix Progress - React + Supabase + Vercel
 
-## Progress (Updated for Vercel Setup)
-- [x] **Analyzed project** (Vite/React SPA, Supabase, Vercel-ready)
-- [x] **1. Create .env.example** (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
-- [x] **2. Update supabaseClient.ts** (graceful mock fallback)
-- [x] **5. Optimize vite.config.ts** (chunking, aliases done)
-- [x] **6. Update vercel.json** (enhanced headers, caching)
-- [x] **8. Test local build/preview** (run `npm run build &amp;&amp; npm run preview`)
+## Status: Implementation ✅ Plan Approved by User
 
-**Remaining App Tasks:**
-- [ ] **7. Add page-level error handling** (Home/Products)
-- [ ] **10. Verify live site** (after deploy)
+### 1. Environment Setup 
+- [x] Create .env.example with templates
+- [ ] Copy to .env.local, fill VITE_SUPABASE_URL/KEY from dashboard
 
-## Vercel Environments Setup (User Steps - No Code Changes Needed)
-Follow these **exact steps** for Local/Preview/Production:
+### 2. Dependencies 
+- [x] package.json: react-router-dom ^6.26.2, cleaned deps
+- [x] npm install complete
 
-### 1. Vercel CLI (Local/Global)
-```
-npm i -g vercel  # Optional: global install
-```
+### 3. Supabase Mock Polish 
+- [x] supabaseClient.ts: mock chaining fix (.limit/range)
+- [x] Export logic fixed: real client when .env configured
 
-### 2. Login & Link Project
-```
-vercel login  # Or npx vercel login
-vercel link   # Links to Vercel project (creates if new)
-```
+### 4. Routing 
+- [x] src/App.tsx: complete/proper v6 Router+Routes
 
-### 3. Add Env Vars on Vercel Dashboard/CLI
-**Required vars** (add to **all environments**: Production, Preview, Development):
-- `VITE_SUPABASE_URL` = your_supabase_project_url
-- `VITE_SUPABASE_ANON_KEY` = your_supabase_anon_public_key
+### 5. Guards 
+- [x] imageService.ts: supabase.isReady() + fallback images
 
-**CLI alternative:**
-```
-vercel env add VITE_SUPABASE_URL
-vercel env add VITE_SUPABASE_ANON_KEY
-```
-(Select environments when prompted)
+### 6. Vercel 
+- [x] vercel.json already good SPA config
 
-### 4. Local Development (Pull Envs)
-```
-vercel env pull .env.local  # Creates .env.local with vars
-npm run dev  # Test locally: http://localhost:3000
-```
+### 7. Testing 
+- [x] npm run dev running on :3001
+- [ ] npm run build/preview
 
-### 5. Test Preview Locally
-```
-npm run build
-npm run preview  # http://localhost:4173
-```
+### 8. Deploy 
+- [ ] Vercel env vars instr
+- [ ] Production ready
 
-### 6. Deploy Preview (Non-Prod)
-```
-vercel  # Deploys to preview URL (unique per deploy)
-```
-Or push to non-main branch / open PR (auto-preview).
+**Next step marked in bold**
 
-### 7. Deploy Production
-```
-vercel --prod  # Updates production domain
-```
-Or push/merge to main branch (auto-prod).
-
-### 8. Verify
-- Check console logs for 'Supabase client initialized'.
-- Test product fetches, auth, etc. on preview/prod URLs.
-- Monitor Vercel dashboard: Deployments > Environments.
-
-**Custom Environments** (Pro/Enterprise): Create via dashboard if needed (e.g., staging).
-
-## Next: Deploy & Test!
-Run the commands above. Preview URL appears after `vercel`. Ping me with deploy URL/logs if issues.

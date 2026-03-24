@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
+@import "tailwindcss";
 
 :root {
   --color-primary: #C5A028;
@@ -63,27 +64,7 @@ h1, h2, h3, h4, h5, h6 {
     height: 60vh !important;
   }
 
-  /* Enhanced mobile responsive for ProductDetail */
-  @media (max-width: 640px) {
-    .pd-btn {
-      padding: 1rem 1.5rem;
-      font-size: 1.1rem;
-      min-height: 56px;
-    }
-  }
 
-  @media (min-width: 641px) and (max-width: 1024px) {
-    .pd-gallery-main {
-      height: 60vh;
-    }
-  }
-
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-  }
 }
 
 /* Line clamp with standard fallback */
