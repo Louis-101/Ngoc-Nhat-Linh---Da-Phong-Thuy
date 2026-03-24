@@ -7,7 +7,8 @@ export default function Footer() {
 <footer className="bg-secondary text-white pt-16 pb-8 relative overflow-hidden flex-shrink-0">
       <div className="absolute inset-0 bg-pattern-subtle opacity-10"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-12">
+
           {/* Brand Info */}
           <div className="space-y-6">
             <h3 className="text-2xl font-serif font-bold tracking-tighter text-gradient-gold">
@@ -55,7 +56,8 @@ export default function Footer() {
           </div>
 
           {/* Contact & Maps */}
-          <div className="lg:col-span-1">
+          <div>
+
             <h4 className="text-lg font-serif font-bold mb-6 text-accent">Liên hệ</h4>
             <ul className="space-y-4 text-sm text-white/60">
               <li className="flex items-start space-x-3">
@@ -81,11 +83,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8 mt-8">
+        <div className="lg:col-span-2 lg:row-span-2">
           <iframe 
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3555.552830988385!2d105.75481205280464!3d10.01572032227409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a089f9b67e85ff%3A0xb7931ccbde2bcddc!2zxJDDoSBQaG9uZyBUaOG7p3kgQ-G6p24gVGjGoSAtIE5n4buNYyBOaOG6pXQgTGluaA!5e1!3m2!1svi!2s!4v1774104483785!5m2!1svi!2s" 
             width="100%" 
-            height="450" 
+            height="300" 
             style={{border:0}} 
             allowFullScreen={true} 
             referrerPolicy="no-referrer-when-downgrade"
@@ -94,6 +96,7 @@ export default function Footer() {
             loading="lazy"
           />
         </div>
+
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mt-12">
           <p className="text-xs text-white/40">
