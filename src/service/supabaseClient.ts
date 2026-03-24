@@ -5,8 +5,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 let supabaseClient: ReturnType<typeof createClient> | null = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn('Supabase credentials missing. Using mock client. Check .env / Vercel dashboard.');
+if (!supabaseUrl || !supabaseAnonKey || !supabaseUrl.startsWith('http')) {
+  console.warn('Supabase credentials missing/invalid. Using mock client. Check .env.local / Vercel dashboard.');
 } else {
   try {
     supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
