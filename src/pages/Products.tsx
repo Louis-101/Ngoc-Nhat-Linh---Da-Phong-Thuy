@@ -18,17 +18,7 @@ export default function Products() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('Mới nhất');
-  const [showAdminForm, setShowAdminForm] = useState(false);
-  const [adminProduct, setAdminProduct] = useState({
-    name: '',
-    description: '',
-    price: '',
-    category: '',
-    menh: '',
-    specs: '{}',
-    meaning: '',
-  });
-  const [imageFile, setImageFile] = useState(null);
+
 
   const [searchParams] = useSearchParams();
 
@@ -42,37 +32,7 @@ export default function Products() {
   const categories = ['Tất cả', 'Vòng tay', 'Mặt dây', 'Tượng phật', 'Vật phẩm', 'Linh vật', 'Bi ngọc'];
   const priceRanges = ['Tất cả', 'Dưới 1 triệu', '1 - 5 triệu', '5 - 10 triệu', 'Trên 10 triệu'];
 
-  const handleAdminSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const newProduct = { ...adminProduct, price: parseInt(adminProduct.price) };
-      const { data, error } = await supabase.from('products').insert([newProduct]).select();
-      if (error) throw error;
 
-      const productId = data[0].id;
-      if (imageFile) {
-        const imageUrl = await uploadProductImage(imageFile, productId);
-        if (imageUrl) {
-          await supabase.from('products').update({ image_url: imageUrl }).eq('id', productId);
-        }
-      }
-      setShowAdminForm(false);
-      setAdminProduct({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        menh: '',
-        specs: '{}',
-        meaning: '',
-      });
-      // Refetch
-      window.location.reload();
-    } catch (error) {
-      console.error('Admin submit error:', error);
-      alert('Lỗi thêm sản phẩm: ' + error.message);
-    }
-  };
 
   useEffect(() => {
     async function fetchProducts() {
@@ -309,12 +269,7 @@ export default function Products() {
                 Hiển thị {(currentPage - 1) * 12 + 1} - {Math.min(currentPage * 12, totalCount)} trong {totalCount} sản phẩm
               </p>
               <div className="order-1 sm:order-2 flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
-                <button 
-                  onClick={() => setShowAdminForm(!showAdminForm)}
-                  className="bg-gradient-gold text-secondary px-6 py-3 sm:px-8 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all text-sm whitespace-nowrap min-w-[140px] flex-shrink-0 touch-manipulation shadow-md"
-                >
-                  {showAdminForm ? 'Đóng form' : '➕ Thêm sản phẩm'}
-                </button>
+
                 <div className="flex items-center space-x-4 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-none">
                     <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40" />
@@ -386,96 +341,6 @@ export default function Products() {
                     Xem tất cả sản phẩm
                   </button>
                 </div>
-              ) : showAdminForm ? (
-                <div className="col-span-full max-w-2xl mx-auto">
-                  <div className="bg-white p-8 md:p-12 rounded-3xl shadow-2xl border border-accent/20">
-                    <h3 className="text-2xl font-serif font-bold mb-8 text-secondary text-center">Thêm sản phẩm mới</h3>
-                    <form onSubmit={handleAdminSubmit} className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-bold text-secondary mb-3">Tên sản phẩm *</label>
-                        <input 
-                          type="text" 
-                          value={adminProduct.name}
-                          onChange={(e) => setAdminProduct({...adminProduct, name: e.target.value})}
-                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                          required 
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-bold text-secondary mb-3">Giá (VND) *</label>
-                          <input 
-                            type="number" 
-                            value={adminProduct.price}
-                            onChange={(e) => setAdminProduct({...adminProduct, price: e.target.value})}
-                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                            required 
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-secondary mb-3">Danh mục *</label>
-                          <input 
-                            type="text" 
-                            value={adminProduct.category}
-                            onChange={(e) => setAdminProduct({...adminProduct, category: e.target.value})}
-                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                            required 
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <label className="block text-sm font-bold text-secondary mb-3">Mệnh</label>
-                          <select 
-                            value={adminProduct.menh}
-                            onChange={(e) => setAdminProduct({...adminProduct, menh: e.target.value})}
-                            className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all"
-                          >
-                            <option value="">Chọn mệnh</option>
-                            <option value="Kim">Kim</option>
-                            <option value="Mộc">Mộc</option>
-                            <option value="Thủy">Thủy</option>
-                            <option value="Hỏa">Hỏa</option>
-                            <option value="Thổ">Thổ</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-bold text-secondary mb-3">Hình ảnh chính</label>
-                          <input 
-                            type="file" 
-                            accept="image/*"
-                            onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
-                            className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark cursor-pointer block w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-dark border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all rounded-2xl px-4 py-3"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-bold text-secondary mb-3">Mô tả ngắn</label>
-                        <textarea 
-                          rows={3}
-                          value={adminProduct.description}
-                          onChange={(e) => setAdminProduct({...adminProduct, description: e.target.value})}
-                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-vertical"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-bold text-secondary mb-3">Ý nghĩa phong thủy</label>
-                        <textarea 
-                          rows={4}
-                          value={adminProduct.meaning}
-                          onChange={(e) => setAdminProduct({...adminProduct, meaning: e.target.value})}
-                          className="w-full px-4 py-3 rounded-2xl border border-accent focus:ring-2 focus:ring-primary focus:border-primary transition-all resize-vertical"
-                        />
-                      </div>
-                      <button 
-                        type="submit"
-                        className="w-full bg-gradient-gold text-secondary py-4 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all block mx-auto"
-                      >
-                        ➕ Thêm sản phẩm & Upload hình
-                      </button>
-                    </form>
-                  </div>
-                </div>
               ) : (
                 products.map((product) => (
                   <motion.div 
@@ -506,7 +371,7 @@ export default function Products() {
             </div>
 
             {/* Pagination */}
-            {products.length > 0 && !loading && !showAdminForm && (
+{products.length > 0 && !loading && (
               <div className="mt-16 flex justify-center items-center space-x-2">
                 <button 
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}

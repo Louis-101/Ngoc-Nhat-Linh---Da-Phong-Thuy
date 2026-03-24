@@ -1,35 +1,15 @@
-# Production Fix Progress - React + Supabase + Vercel
+# Website Fix Progress - Ngọc Nhất Linh
 
-## Status: Implementation ✅ Plan Approved by User
+**Approved Plan**: Footer layout, Tailwind v4 @theme, Supabase mock (ilike/single/storage), remove Products admin form.
 
-### 1. Environment Setup 
-- [x] Create .env.example with templates
-- [ ] Copy to .env.local, fill VITE_SUPABASE_URL/KEY from dashboard
+**Status**: Starting implementation
 
-### 2. Dependencies 
-- [x] package.json: react-router-dom ^6.26.2, cleaned deps
-- [x] npm install complete
-
-### 3. Supabase Mock Polish 
-- [x] supabaseClient.ts: mock chaining fix (.limit/range)
-- [x] Export logic fixed: real client when .env configured
-
-### 4. Routing 
-- [x] src/App.tsx: complete/proper v6 Router+Routes
-
-### 5. Guards 
-- [x] imageService.ts: supabase.isReady() + fallback images
-
-### 6. Vercel 
-- [x] vercel.json already good SPA config
-
-### 7. Testing 
-- [x] npm run dev running on :3001
-- [ ] npm run build/preview
-
-### 8. Deploy 
-- [ ] Vercel env vars instr
-- [ ] Production ready
-
-**Next step marked in bold**
-
+## TODO Steps:
+- [ ] 1. Update index.html (#root flex layout)
+- [ ] 2. Enhance src/service/supabaseClient.ts (ilike, single, storage.upload)
+- [ ] 3. Update src/index.css (Tailwind @theme directive)
+- [ ] 4. Remove admin form from src/pages/Products.tsx
+- [ ] 5. Verify src/components/Footer.tsx (flex-shrink:0)
+- [ ] 6. npm run build && npm run dev
+- [ ] 7. Test: footer/search/products
+- [ ] 8. git commit/push + vercel deploy

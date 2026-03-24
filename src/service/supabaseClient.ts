@@ -47,6 +47,11 @@ class MockQuery {
     return this;
   }
 
+  ilike(field: string, pattern: string) {
+    this.filters.push({ type: 'ilike', field, pattern: pattern.replace(/%/g, '') });
+    return this;
+  }
+
   or(conditions: string) {
     this.filters.push({ type: 'or', conditions });
     return this;
@@ -78,6 +83,11 @@ class MockQuery {
     return this;
   }
 
+  single() {
+    this.limitVal = 1;
+    return this;
+  }
+
   select(fields?: string, opts?: { count: 'exact' }) {
     this.countMode = opts?.count === 'exact';
     return this;
@@ -87,13 +97,18 @@ class MockQuery {
     // Mock exec
     let data = this.table === 'products' ? [...mockProducts] : this.table === 'posts' ? [...mockPosts] : [];
 
-    // Apply filters (simple)
+// Apply all filters
     data = data.filter(item => {
       for (const f of this.filters) {
         if (f.type === 'eq' && item[f.field] !== f.value) return false;
-        if (f.type === 'or') return true; // simplistic
-        if (f.type === 'lte' && item[f.field as keyof typeof item] > f.value) return false;
-        if (f.type === 'gte' && item[f.field as keyof typeof item] < f.value) return false;
+        if (f.type === 'ilike') {
+          const val = (item[f.field] || '').toString().toLowerCase();
+          const search = f.pattern.toLowerCase();
+          if (!val.includes(search)) return false;
+        }
+        if (f.type === 'or') return true;
+        if (f.type === 'lte' && (item[f.field] as number) > f.value) return false;
+        if (f.type === 'gte' && (item[f.field] as number) < f.value) return false;
       }
       return true;
     });
@@ -129,8 +144,12 @@ const mockSupabase = {
     update: async (data: any) => ({ data, error: null }),
     storage: {
       from: (bucket: string) => ({
+        upload: async (path: string, file: File, options?: any) => {
+          console.log('Mock upload', path);
+          return { data: { path }, error: null };
+        },
         getPublicUrl: (path: string) => ({ 
-          data: { publicUrl: `https://dummy.img/${path}?w=600` } 
+          data: { publicUrl: `https://dummy.storage/${path}?w=600` } 
         }),
       }),
     },

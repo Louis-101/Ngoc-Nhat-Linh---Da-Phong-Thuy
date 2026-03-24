@@ -281,7 +281,7 @@ export default function ProductDetail() {
                   {product.meaning}
                 </p>
                 <div className="aspect-[16/9] md:aspect-video rounded-3xl overflow-hidden bg-gray-50 shadow-2xl">
-                  <img src="https://picsum.photos/seed/ngoc-hoang-long/1200/675" alt="Đá quý tự nhiên" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/505372034_4132967026923831_8812997507424975280_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeEbdgSFzCYBDrjvUh448OxJOT-i8DhFDQ85P6LwOEUND5jq-IL-SyAd-Azx9oBUJYetbLIMXWA32VV9UbsUGeEm&_nc_ohc=nyrtWg0YY_YQ7kNvwGo6sBP&_nc_oc=Adq6AbqzbNRhB1oVq_aAyCrEwoXcaAERe3lNtq8xkCrkOzm_ZzSr9HIcRhqzQvWhAZs&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=6SXPR21H2_EFiRCVvtRZsw&_nc_ss=7a32e&oh=00_AfwA4JEokU930CDvpQCQrlpVbM1jsKEbgHUG60abk86W8Q&oe=69C84D66" alt="Đá quý tự nhiên" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                 </div>
               </motion.section>
             )}
