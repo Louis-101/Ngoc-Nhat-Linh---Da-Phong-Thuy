@@ -1,15 +1,40 @@
-ok# Website Updates: Footer, Contact, Products Mobile Optimization
+# TODO: Fix White Screen & Vercel Deployment for Ngọc Nhất Linh
 
-✅ Previous: Google Search Console verification complete
+## Progress
+- [x] **Analyzed project** (files, build, Supabase, configs)
+- [x] **1. Create .env.example** (env vars for Vercel)
+- [x] **2. Update supabaseClient.ts** (graceful handling, lazy init)
+- [x] **3. Update main.tsx** (Suspense, StrictMode toggle)
+- [x] **4. Update App.tsx** (loading fallback)
+- [x] **5. Optimize vite.config.ts** (remove unused, chunking)
+- [ ] **6. Update vercel.json** (headers, caching)
+- [ ] **7. Add page-level error handling** (Home/Products)
+- [ ] **8. Test local build/preview**
+- [ ] **9. Vercel env vars & deploy**
+- [ ] **10. Verify live site**
+- [ ] **7. Fix Home.tsx & Products.tsx** (per-page error handling)
+- [ ] **8. Test build & preview locally**
+- [ ] **9. User sets Vercel env vars**
+- [ ] **10. Deploy & verify**
 
-## New Task Steps:
-- [x] 1. Create/update TODO.md
-- [x] 2. Edit src/components/Footer.tsx (TikTok, address, new map iframe)
-- [x] 3. Edit src/pages/Contact.tsx (address, TikTok, replace image with map iframe)
-- [x] 4. Edit src/pages/Products.tsx (grid density, mobile UI optimizations)
-- [✅] 5. Test locally and verify changes (including fixed hero image path)
-- [✅] 6. Commit and push for Vercel deploy 
-- [✅] 7. Mark complete
+## Commands to Run
+```bash
+npm run build
+npm run preview  # http://localhost:4173
+```
 
-**✅ Complete:** All updates done. Hero image fixed (buddha-hero.jpg to root). Ready for Vercel live.
+**Next Step**: Optimize vite.config.ts.
+- [ ] **5. Optimize vite.config.ts** (remove unused, chunking)
+- [ ] **6. Update vercel.json** (headers, caching)
+- [ ] **7. Fix Home.tsx & Products.tsx** (per-page error handling)
+- [ ] **8. Test build & preview locally**
+- [ ] **9. User sets Vercel env vars**
+- [ ] **10. Deploy & verify**
 
+## Commands to Run
+```bash
+npm run build
+npm run preview  # http://localhost:4173
+```
+
+**Next Step**: Update supabaseClient.ts for graceful Supabase handling.
