@@ -94,11 +94,16 @@ class MockQuery {
   }
 
   async then(onFulfilled?: any, onRejected?: any): Promise<any> {
-    // Mock exec
-    let data = this.table === 'products' ? [...mockProducts] : this.table === 'posts' ? [...mockPosts] : [];
+    // Mock exec - type-safe by table
+    let data: any[] = [];
+    if (this.table === 'products') {
+      data = [...mockProducts];
+    } else if (this.table === 'posts') {
+      data = [...mockPosts];
+    }
 
-// Apply all filters
-    data = data.filter(item => {
+    // Apply all filters
+    data = data.filter((item: any) => {
       for (const f of this.filters) {
         if (f.type === 'eq' && item[f.field] !== f.value) return false;
         if (f.type === 'ilike') {
