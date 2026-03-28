@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Star, ShieldCheck, Truck } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -37,6 +38,26 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden bg-pattern-subtle">
+      <SEO 
+        title="Trang Chủ"
+        description="Khám phá bộ sưu tập đá phong thủy cao cấp tại Ngọc Nhất Linh Cần Thơ. Vòng tay thạch anh, tượng phật, linh vật đá tự nhiên giúp chiêu tài lộc và bình an."
+      />
+      {/* SEO Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Ngọc Nhất Linh",
+          "url": window.location.origin,
+          "logo": `${window.location.origin}/logo-brand.png`,
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "0902111626",
+            "contactType": "customer service"
+          }
+        })}
+      </script>
+
       {/* Hero Section */}
       <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
@@ -154,7 +175,7 @@ export default function Home() {
               Array(4).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse space-y-4">
                   <div className="bg-gray-100 aspect-square rounded-xl"></div>
-                  <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-100 rounded w-3/4"></div> 
                   <div className="h-4 bg-gray-100 rounded w-1/2"></div>
                 </div>
               ))
@@ -171,7 +192,7 @@ export default function Home() {
                         src={product.image_url || '/images/fallback.jpg'} 
                         alt={product.name}
                         loading="lazy"
-                        className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105 flex items-center justify-center"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         referrerPolicy="no-referrer"
                         onError={() => setProductImageErrors(prev => ({ ...prev, [product.id || 'unknown']: true }))}
                       />

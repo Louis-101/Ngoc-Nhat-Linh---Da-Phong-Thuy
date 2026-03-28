@@ -43,8 +43,8 @@ export default function FixedProducts() {
           .from('products')
           .select('*', { count: 'exact' });
 
-        if (activeCategory !== 'Tất cả') query = query.eq('category', activeCategory);
-        if (activeMenh !== 'Tất cả') query = query.eq('menh', activeMenh);
+        if (activeCategory !== 'Tất cả') query = query.ilike('category', activeCategory);
+        if (activeMenh !== 'Tất cả') query = query.ilike('menh', activeMenh);
         if (searchQuery.trim()) query = query.or(`name.ilike.%${searchQuery.trim()}%,description.ilike.%${searchQuery.trim()}%`);
 
         if (priceRange !== 'Tất cả') {
@@ -58,21 +58,6 @@ export default function FixedProducts() {
         else if (sortBy === 'Giá cao → thấp') query = query.order('price', { ascending: false });
         else if (sortBy === 'Cũ nhất') query = query.order('created_at', { ascending: true });
         else query = query.order('created_at', { ascending: false });
-
-        query = query.range(from, to);
-
-
-        if (sortBy === 'Giá thấp → cao') {
-          query = query.order('price', { ascending: true });
-        } else if (sortBy === 'Giá cao → thấp') {
-          query = query.order('price', { ascending: false });
-        } else if (sortBy === 'Cũ nhất') {
-          query = query.order('created_at', { ascending: true });
-        } else {
-          query = query.order('created_at', { ascending: false });
-        }
-
-        query = query.range(from, to);
 
         const { data, error, count } = await query;
         console.log('FixedProducts products:', data);
@@ -191,6 +176,20 @@ export default function FixedProducts() {
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Theo mệnh</h3>
                       <div className="space-y-3">
+                        {menhOptions.map((m) => (
+                          <button
+                            key={m}
+                            onClick={() => {
+                              setActiveMenh(m);
+                              setIsFilterOpen(false);
+                            }}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${
+                              activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                            }`}
+                          >
+                            {m}
+                          </button>
+                        ))}
                         </div>
                     </div>
                   </div>
@@ -246,7 +245,7 @@ export default function FixedProducts() {
           </aside>
 
           <main className="flex-1 lg:ml-0">
-            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 xl:gap-8 px-3 md:px-0 auto-rows-fr">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 px-3 md:px-0 auto-rows-fr">
               {loading ? Array(8).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse space-y-4">
                   <div className="bg-accent/20 aspect-square rounded-2xl" />
@@ -264,22 +263,22 @@ export default function FixedProducts() {
                   className="group bg-white rounded-xl shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer border border-gray-100 hover:border-primary/20 p-4"
                 >
                   <Link to={`/product/${product.id}`} className="block">
-                    <div className="aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 group-hover:bg-primary/5 transition-all flex items-center justify-center p-2">
+                    <div className="aspect-square rounded-2xl overflow-hidden mb-5 bg-accent/5 group-hover:bg-primary/5 transition-all flex items-center justify-center">
                       <img 
                         src={product.image_url || '/images/fallback.jpg'} 
                         alt={product.name}
-                        className="w-full h-full max-h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         onError={(e) => {
                           e.currentTarget.src = '/images/fallback.jpg';
                         }}
                       />
                     </div>
-                    <div className="space-y-2">
-                      <span className="text-xs text-gray-400 uppercase tracking-wider px-2 py-1 bg-accent/50 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
-                      <h3 className="font-serif font-semibold text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                    <div className="space-y-3 px-1">
+                      <span className="text-[10px] text-gray-400 uppercase tracking-widest px-2 py-0.5 bg-accent/30 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
+                      <h3 className="font-serif font-semibold text-sm md:text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors h-10">
                         {product.name}
                       </h3>
-                      <p className="text-primary font-bold text-2xl">
+                      <p className="text-primary font-bold text-lg md:text-xl">
                         {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
                       </p>
                     </div>

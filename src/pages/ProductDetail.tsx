@@ -6,6 +6,8 @@ import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Facebook,
 import { supabase } from '../service/supabaseClient';
 import { useWishlist } from '../Context/WishlistContext';
 import { calculateDestinyFromYear } from '../service/destinyService';
+import Markdown from 'react-markdown';
+import SEO from '../components/SEO';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -132,6 +134,12 @@ export default function ProductDetail() {
 
   return (
     <div className="pt-24 pb-20 min-h-screen bg-linear-to-b from-beige-subtle to-white">
+      <SEO 
+        title={product.name}
+        description={product.description || `Mua ${product.name} tự nhiên tại Ngọc Nhất Linh. Đá quý phong thủy chất lượng cao, có kiểm định, giao hàng toàn quốc.`}
+        image={product.image_url}
+        type="product"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="flex text-sm md:text-base text-gray-500 mb-8 space-x-2">
@@ -285,10 +293,26 @@ export default function ProductDetail() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <h2 className="text-3xl font-serif font-bold mb-8 text-secondary">Ý nghĩa & Năng lượng</h2>
-                <p className="text-gray-600 leading-relaxed text-lg max-w-4xl mb-12">
-                  {product.meaning}
-                </p>
+                <div className="prose prose-lg md:prose-xl max-w-none
+                  prose-headings:font-bold 
+                  prose-headings:mt-12 prose-headings:mb-6
+                  prose-h1:font-sans prose-h1:text-primary prose-h1:text-4xl md:prose-h1:text-5xl
+                  prose-h2:font-serif prose-h2:text-secondary prose-h2:text-2xl md:prose-h2:text-3xl
+                  prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-8
+                  prose-strong:text-primary prose-strong:font-bold
+                  prose-li:text-gray-600
+                  mb-12"
+                >
+                  <Markdown
+                    components={{
+                      h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
+                      h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
+                      p: ({...props}) => <p className="mb-6 leading-relaxed text-gray-600" {...props} />,
+                    }}
+                  >
+                    {product.meaning}
+                  </Markdown>
+                </div>
                 <div className="aspect-21/9 rounded-3xl overflow-hidden bg-accent/10 shadow-2xl border border-accent/20">
                   <img 
                     src="/images/bang-hieu.jpg"
@@ -296,7 +320,6 @@ export default function ProductDetail() {
                     className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
                     loading="lazy" 
                     decoding="async" 
-                    onError={(e) => { e.currentTarget.src = 'https://picsum.photos/seed/banner/1200/600'; }}
                   />
                 </div>
               </motion.section>

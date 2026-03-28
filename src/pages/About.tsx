@@ -76,7 +76,6 @@ export default function About() {
                 className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
                 loading="lazy" 
                 decoding="async" 
-                onError={(e) => { e.currentTarget.src = 'https://picsum.photos/seed/banner/1200/600'; }}
               />
             </div>
           </div>
