@@ -80,7 +80,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-gradient-gold font-bold mb-8 leading-[1.1] drop-shadow-2xl"
           >
-            Ngọc Nhất Linh – Tinh Hoa Phong Thủy
+            Ngọc Nhất Linh – Tinh Hoa Đá Phong Thủy Cần Thơ
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

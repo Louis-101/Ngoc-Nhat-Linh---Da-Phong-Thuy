@@ -291,7 +291,8 @@ export default function ProductDetail() {
                 </p>
                 <div className="aspect-21/9 rounded-3xl overflow-hidden bg-accent/10 shadow-2xl border border-accent/20">
                   <img 
-                    src="/ảng hiệu Ngọc Nhất Linh" 
+                    src="/images/bang-hieu.jpg"
+                    alt="Bảng hiệu Ngọc Nhất Linh"
                     className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
                     loading="lazy" 
                     decoding="async" 
