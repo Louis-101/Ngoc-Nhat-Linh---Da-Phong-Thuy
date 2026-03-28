@@ -4,14 +4,14 @@ import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
-<footer className="bg-secondary text-white pt-16 pb-8 relative overflow-hidden flex-shrink-0">
+<footer className="bg-[#4d241e] text-white pt-16 pb-8 relative overflow-hidden shrink-0">
       <div className="absolute inset-0 bg-pattern-subtle opacity-10"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-12">
 
           {/* Brand Info */}
           <div className="space-y-6">
-            <h3 className="text-2xl font-serif font-bold tracking-tighter text-gradient-gold">
+            <h3 className="text-2xl font-serif font-bold italic tracking-widest text-gradient-gold">
               NGỌC NHẤT LINH
             </h3>
             <p className="text-white/60 text-sm leading-relaxed">
@@ -23,7 +23,9 @@ export default function Footer() {
                 <Facebook size={18} />
               </a>
               <a href="https://www.tiktok.com/@ngocnhatlinh2108" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
-                <svg fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5"><path d="M19.951 6.3a1.715 1.715 0 00-.518-.044c-.4 0-.754.145-1.043.435-.3.3-.45.696-.45 1.174v2.587h3.096v3.478h-3.096v8.678h-3.522v-8.678H9.38v-3.478h3.522V7.91c0-.87.233-1.557.696-2.056.462-.5 1.104-.765 1.913-.765.696 0 1.261.217 1.691.652.43.435.646 1.104.646 1.996v2.478h3.478V7.91c0-.522-.074-.978-.217-1.37-.145-.391-.39-.696-.739-.913z"/></svg>
+                <svg fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.6-4.12-1.31a6.44 6.44 0 0 1-1.57-1.17v6.28c-.03 3.15-2.1 6.35-5.22 7.13-2.15.52-4.58.04-6.39-1.23A7.43 7.43 0 0 1 2 12.33c.02-3.76 3.46-7.25 7.21-7.25.88 0 1.74.19 2.54.55V9.65c-.84-.35-1.77-.5-2.66-.35-1.22.21-2.3.93-2.91 2.01-.57 1.08-.63 2.45-.08 3.5.55 1.05 1.61 1.83 2.79 2.05 1.35.25 2.87-.19 3.65-1.33.45-.65.66-1.44.64-2.22V0h.01z"/>
+                </svg>
               </a>
               <a href="mailto:daphongthuyngocnhatlinh@gmail.com" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300">
                 <Mail size={18} />
@@ -61,7 +63,7 @@ export default function Footer() {
             <h4 className="text-lg font-serif font-bold mb-6 text-accent">Liên hệ</h4>
             <ul className="space-y-4 text-sm text-white/60">
               <li className="flex items-start space-x-3">
-                <MapPin size={18} className="text-primary mt-0.5 flex-shrink-0" />
+                <MapPin size={18} className="text-primary mt-0.5 shrink-0" />
                 <a 
                   href="https://www.google.com/maps/search/?api=1&query=65+%C4%90%C6%B0%E1%BB%9Dng+3%2F2+Ph%C6%B0%E1%BB%9Dng+T%C3%A2n+An+Th%C3%A0nh+Ph%E1%BB%91+C%E1%BA%A7n+Th%C6%A1"
                   target="_blank" 
@@ -72,11 +74,11 @@ export default function Footer() {
                 </a>
               </li>
               <li className="flex items-center space-x-3">
-                <Phone size={18} className="text-primary flex-shrink-0" />
+                <Phone size={18} className="text-primary shrink-0" />
                 <a href="tel:0902111626" className="hover:text-primary transition-colors">0902 111 626</a>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail size={18} className="text-primary flex-shrink-0" />
+                <Mail size={18} className="text-primary shrink-0" />
                 <span>daphongthuyngocnhatlinh@gmail.com</span>
               </li>
             </ul>
@@ -100,7 +102,7 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 mt-12">
           <p className="text-xs text-white/40">
-            © 2024 Ngọc Nhất Linh. All rights reserved.
+            © 2024 NGỌC NHẤT LINH. All rights reserved.
           </p>
           <div className="flex items-center space-x-6">
             <Link to="/contact" className="text-xs text-white/40 hover:text-white transition-colors">Điều khoản sử dụng</Link>
@@ -111,4 +113,3 @@ export default function Footer() {
     </footer>
   );
 }
-

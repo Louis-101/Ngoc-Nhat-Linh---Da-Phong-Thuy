@@ -58,7 +58,7 @@ export default function Contact() {
                 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                       <Phone size={20} className="text-primary" />
                     </div>
                     <div>
@@ -68,7 +68,7 @@ export default function Contact() {
                   </div>
                   
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                       <Mail size={20} className="text-primary" />
                     </div>
                     <div>
@@ -78,7 +78,7 @@ export default function Contact() {
                   </div>
                   
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
                       <MapPin size={20} className="text-primary" />
                     </div>
                     <div>
@@ -101,7 +101,7 @@ export default function Contact() {
               </div>
             </div>
             
-            <div className="aspect-[4/3] rounded-3xl shadow-xl border border-accent/20 overflow-hidden">
+            <div className="aspect-4/3 rounded-3xl shadow-xl border border-accent/20 overflow-hidden">
                 <iframe 
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3555.552830988385!2d105.75481205280464!3d10.01572032227409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a089f9b67e85ff%3A0xb7931ccbde2bcddc!2zxJDDoSBQaG9uZyBUaOG7p3kgQ-G6p24gVGjGoSAtIE5n4buNYyBOaOG6pXQgTGluaA!5e1!3m2!1svi!2s!4v1774104483785!5m2!1svi!2s" 
                   width="100%" 

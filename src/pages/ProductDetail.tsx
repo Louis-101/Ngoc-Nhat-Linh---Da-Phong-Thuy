@@ -81,7 +81,7 @@ export default function ProductDetail() {
           name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly',
           price: 4500000,
           description: 'Pháp bảo chiêu tài, dẫn lộc và gia tăng vượng khí cho chủ nhân.',
-          image_url: 'https://picsum.photos/seed/gem1/800/800',
+          image_url: '/images/fallback.jpg',
           category: 'Vòng tay',
           meaning: 'Thạch anh tóc vàng quyền năng giúp tăng tài lộc, bình an và thịnh vượng.',
           specs: {
@@ -111,7 +111,7 @@ export default function ProductDetail() {
   };
 
   if (loading) return (
-    <div className="min-h-screen pt-24 pb-20 text-center bg-gradient-to-b from-beige-subtle to-white">
+    <div className="min-h-screen pt-24 pb-20 text-center bg-linear-to-b from-beige-subtle to-white">
       <div className="max-w-7xl mx-auto px-4">
         <div className="animate-pulse space-y-8">
           <div className="aspect-square w-full max-w-md mx-auto bg-accent/20 rounded-3xl"></div>
@@ -131,7 +131,7 @@ export default function ProductDetail() {
   );
 
   return (
-    <div className="pt-24 pb-20 min-h-screen bg-gradient-to-b from-beige-subtle to-white">
+    <div className="pt-24 pb-20 min-h-screen bg-linear-to-b from-beige-subtle to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="flex text-sm md:text-base text-gray-500 mb-8 space-x-2">
@@ -153,9 +153,13 @@ export default function ProductDetail() {
             {/* Main Image */}
             <div className="aspect-square rounded-3xl overflow-hidden bg-gray-50 shadow-xl group cursor-pointer">
               <img 
-                src={mainImage} 
+                src={mainImage || '/images/fallback.jpg'} 
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => {
+                  console.log('Main image error');
+                  e.currentTarget.src = '/images/fallback.jpg';
+                }}
               />
             </div>
             {/* Thumbnails */}
@@ -163,13 +167,18 @@ export default function ProductDetail() {
               {(product.images || [product.image_url]).slice(0,5).map((imgUrl, i) => (
                 <motion.button
                   key={i}
-                  className={`flex-shrink-0 w-20 aspect-square rounded-xl overflow-hidden border-4 transition-all ${
+                  className={`shrink-0 w-20 aspect-square rounded-xl overflow-hidden border-4 transition-all ${
                     mainImage === imgUrl ? 'border-primary shadow-lg scale-105' : 'border-transparent hover:border-primary/50'
                   }`}
                   onClick={() => handleThumbClick(imgUrl)}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <img src={imgUrl} alt={`Thumbnail ${i+1}`} className="w-full h-full object-cover" />
+                  <img 
+                    src={imgUrl} 
+                    alt={`Thumbnail ${i+1}`} 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}
+                  />
                 </motion.button>
               ))}
             </div>
@@ -201,7 +210,7 @@ export default function ProductDetail() {
               <Link 
                 to="https://zalo.me/0902111626"
                 target="_blank"
-                className="block w-full bg-gradient-gold text-secondary py-5 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-3"
+                className="w-full bg-gradient-gold text-secondary py-5 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-3"
               >
                 <Phone size={24} />
                 <span>TƯ VẤN ZALO NGAY</span>
@@ -280,8 +289,14 @@ export default function ProductDetail() {
                 <p className="text-gray-600 leading-relaxed text-lg max-w-4xl mb-12">
                   {product.meaning}
                 </p>
-                <div className="aspect-[16/9] md:aspect-video rounded-3xl overflow-hidden bg-gray-50 shadow-2xl">
-                  <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/505372034_4132967026923831_8812997507424975280_n.jpg?stp=dst-jpg_s960x960_tt6&_nc_cat=108&ccb=1-7&_nc_sid=2a1932&_nc_eui2=AeEbdgSFzCYBDrjvUh448OxJOT-i8DhFDQ85P6LwOEUND5jq-IL-SyAd-Azx9oBUJYetbLIMXWA32VV9UbsUGeEm&_nc_ohc=nyrtWg0YY_YQ7kNvwGo6sBP&_nc_oc=Adq6AbqzbNRhB1oVq_aAyCrEwoXcaAERe3lNtq8xkCrkOzm_ZzSr9HIcRhqzQvWhAZs&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=6SXPR21H2_EFiRCVvtRZsw&_nc_ss=7a32e&oh=00_AfwA4JEokU930CDvpQCQrlpVbM1jsKEbgHUG60abk86W8Q&oe=69C84D66" alt="Đá quý tự nhiên" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                <div className="aspect-21/9 rounded-3xl overflow-hidden bg-accent/10 shadow-2xl border border-accent/20">
+                  <img 
+                    src="/ảng hiệu Ngọc Nhất Linh" 
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
+                    loading="lazy" 
+                    decoding="async" 
+                    onError={(e) => { e.currentTarget.src = 'https://picsum.photos/seed/banner/1200/600'; }}
+                  />
                 </div>
               </motion.section>
             )}
@@ -320,9 +335,10 @@ export default function ProductDetail() {
                 <Link key={suggestion.id} to={`/product/${suggestion.id}`} className="group">
                   <div className="aspect-square rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
                     <img 
-                      src={suggestion.image_url} 
+                      src={suggestion.image_url || '/images/fallback.jpg'} 
                       alt={suggestion.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}
                     />
                   </div>
                   <div className="mt-4 text-center">
@@ -340,4 +356,3 @@ export default function ProductDetail() {
     </div>
   );
 }
-

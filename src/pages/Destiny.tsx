@@ -143,7 +143,7 @@ export default function Destiny() {
               </form>
 
               <div className="mt-8 flex items-start space-x-3 p-4 bg-white/30 rounded-xl border border-accent/20">
-                <Info size={20} className="text-primary flex-shrink-0 mt-1" />
+                <Info size={20} className="text-primary shrink-0 mt-1" />
                 <p className="text-xs text-secondary/60 leading-relaxed">
                   Kết quả tra cứu dựa trên thuyết Ngũ Hành tương sinh tương khắc (Can Chi). Dữ liệu được tối ưu cho các năm từ 1950 đến 2026.
                 </p>

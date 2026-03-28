@@ -13,4 +13,4 @@
 
 Dev server http://localhost:3003 - inspect /, /products, footer. Premium smooth look achieved.
 
-Optional: Custom fonts/google fonts load check.
+Optional: Custom fonts/google fonts load check. 

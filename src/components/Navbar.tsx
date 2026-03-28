@@ -77,12 +77,12 @@ export default function Navbar() {
 
   return (
     <>
-  <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${getBgColor()}`}>
+  <nav className={`fixed top-0 left-0 right-0 z-100 transition-all duration-300 ${getBgColor()}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
-              <span className={`text-2xl font-serif font-bold tracking-tighter transition-all duration-300 ${
+              <span className={`text-2xl font-serif font-bold italic tracking-widest transition-all duration-300 ${
                 isScrolled ? 'text-gradient-gold' : isHomePage ? 'text-white group-hover:text-primary' : 'text-gradient-gold'
               }`}>
                 NGỌC NHẤT LINH
@@ -151,7 +151,7 @@ export default function Navbar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-black/80 z-[49]"
+                className="fixed inset-0 bg-black/80 z-49"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
 
@@ -160,7 +160,7 @@ export default function Navbar() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-0 h-screen w-80 bg-white shadow-2xl z-[50] flex flex-col"
+                className="fixed right-0 top-0 h-screen w-80 bg-white shadow-2xl z-50 flex flex-col"
                 onAnimationStart={() => setPreventScroll(true)}
                 onAnimationComplete={() => setPreventScroll(false)}
               >
@@ -171,7 +171,7 @@ export default function Navbar() {
                     <X size={24} className="text-secondary" />
                   </button>
                 </div>
-                <div className="flex-grow overflow-y-auto py-8 px-6 space-y-2">
+                <div className="grow overflow-y-auto py-8 px-6 space-y-2">
                   {navLinks.map((link, i) => (
                     <motion.div
                       key={link.path}
@@ -223,7 +223,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-white z-[60] flex flex-col"
+            className="fixed inset-0 bg-white z-60 flex flex-col"
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-10">
               <div className="flex justify-between items-center mb-20">

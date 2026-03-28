@@ -278,7 +278,7 @@ export default function Products() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Tìm sản phẩm..." 
-                      className="pl-10 pr-4 py-3 sm:py-3 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-72 bg-white/50 transition-all focus:bg-white min-h-[48px]"
+                      className="pl-10 pr-4 py-3 sm:py-3 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-72 bg-white/50 transition-all focus:bg-white min-h-12"
                     />
                     {searchQuery && (
                       <button 
@@ -294,7 +294,7 @@ export default function Products() {
                     <select 
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="border border-accent px-4 py-3 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right min-h-[48px]"
+                      className="border border-accent px-4 py-3 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right min-h-12"
                       style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")` }}
                     >
                       <option value="Mới nhất">Mới nhất</option>
@@ -308,7 +308,7 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 xl:gap-8 px-3 md:px-0 auto-rows-fr"
+            <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-6 xl:gap-8 px-3 md:px-0 auto-rows-fr">
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
@@ -347,19 +347,25 @@ className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-className="group bg-white rounded-xl shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer border border-gray-100 hover:border-primary/20 p-4"
+                    className="group bg-white rounded-xl shadow-sm hover:shadow-md hover:scale-[1.02] transition-all duration-200 cursor-pointer border border-gray-100 hover:border-primary/20 p-4"
                   >
                     <Link to={`/product/${product.id}`} className="block">
                       <div className="aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 group-hover:bg-primary/5 transition-all">
                         <img 
-                          src={product.image_url || 'https://picsum.photos/400/400?random=1'} 
+                          src={product.image_url || '/images/fallback.jpg'} 
                           alt={product.name}
-"w-full h-auto object-contain p-2 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 flex items-center justify-center"
+                          onError={(e) => {
+                            console.log('Image load error:', product.name);
+                            e.currentTarget.src = '/images/fallback.jpg';
+                          }}
                         />
                       </div>
                       <div className="space-y-2">
                         <span className="text-xs text-gray-400 uppercase tracking-wider px-2 py-1 bg-accent/50 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
-className="font-serif font-semibold text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors"
+                        <h3 className="font-serif font-semibold text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                          {product.name}
+                        </h3>
                         <p className="text-primary font-bold text-2xl">
                           {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
                         </p>
@@ -411,4 +417,3 @@ className="font-serif font-semibold text-base leading-tight line-clamp-2 group-h
     </div>
   );
 }
-

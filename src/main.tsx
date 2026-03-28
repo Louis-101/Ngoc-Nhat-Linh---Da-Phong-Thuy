@@ -33,12 +33,8 @@ if (!rootElement) {
 const root = createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <WishlistProvider>
-      <CartProvider>
-        <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-white">Đang tải...</div>}>
-          <App />
-        </Suspense>
-      </CartProvider>
-    </WishlistProvider>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-white">Đang tải...</div>}>
+      <App />
+    </Suspense>
   </React.StrictMode>
 );

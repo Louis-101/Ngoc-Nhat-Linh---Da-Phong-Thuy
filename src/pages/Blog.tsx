@@ -78,7 +78,7 @@ export default function Blog() {
           {loading ? (
             Array(6).fill(0).map((_, i) => (
               <div key={i} className="animate-pulse space-y-4">
-                <div className="bg-accent/20 aspect-[16/10] rounded-2xl"></div>
+                <div className="bg-accent/20 aspect-16/10 rounded-2xl"></div>
                 <div className="h-4 bg-accent/20 rounded w-3/4"></div>
                 <div className="h-4 bg-accent/20 rounded w-1/2"></div>
               </div>
@@ -102,7 +102,7 @@ export default function Blog() {
                 className="group"
               >
                 <Link to={`/blog/${post.slug}`}>
-                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-md border border-accent/10">
+                  <div className="relative aspect-16/10 rounded-2xl overflow-hidden mb-6 shadow-md border border-accent/10">
                     <img 
                       src={post.image_url} 
                       alt={post.title}
