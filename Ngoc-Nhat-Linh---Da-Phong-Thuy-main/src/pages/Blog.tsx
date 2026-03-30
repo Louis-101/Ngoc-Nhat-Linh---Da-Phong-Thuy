@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Calendar, User, ArrowRight, Search } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 
@@ -63,9 +63,9 @@ export default function Blog() {
           </div>
           <div className="relative w-full md:w-64">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/40" />
-            <input 
-              type="text" 
-              placeholder="Tìm bài viết..." 
+            <input
+              type="text"
+              placeholder="Tìm bài viết..."
               className="w-full pl-12 pr-4 py-3 bg-white/50 border border-accent/20 rounded-full text-sm focus:ring-1 focus:ring-primary outline-none text-secondary"
             />
           </div>
@@ -86,7 +86,13 @@ export default function Blog() {
           ) : errorMsg ? (
             <div className="col-span-full py-20 text-center">
               <p className="text-red-600 font-bold text-lg mb-2">{errorMsg}</p>
-              <p className="text-secondary/70">Kiểm tra kết nối hoặc cấu hình Supabase.</p>
+              <p className="text-secondary/70 mb-6">Kiểm tra kết nối hoặc cấu hình Supabase.</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-primary text-white rounded-full text-sm font-bold hover:bg-primary-dark transition-all"
+              >
+                TẢI LẠI TRANG
+              </button>
             </div>
           ) : posts.length === 0 ? (
             <div className="col-span-full py-20 text-center">
@@ -95,7 +101,7 @@ export default function Blog() {
             </div>
           ) : (
             posts.map((post) => (
-              <motion.article 
+              <motion.article
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -103,8 +109,8 @@ export default function Blog() {
               >
                 <Link to={`/blog/${post.slug}`}>
                   <div className="relative aspect-16/10 rounded-2xl overflow-hidden mb-6 shadow-md border border-accent/10">
-                    <img 
-                      src={post.image_url} 
+                    <img
+                      src={post.image_url}
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       referrerPolicy="no-referrer"

@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Product, DestinyResult } from '../types/product';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Facebook, Sparkles, Phone } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Sparkles, Phone } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { useWishlist } from '../Context/WishlistContext';
 import { calculateDestinyFromYear } from '../service/destinyService';
 import Markdown from 'react-markdown';
 import SEO from '../components/SEO';
 
+const FacebookIcon = ({ size = 20, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
 export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userDestiny, setUserDestiny] = useState(null);
+  const [userDestiny, setUserDestiny] = useState<DestinyResult | null>(null);
   const [birthYearInput, setBirthYearInput] = useState('');
-  const [suggestedProducts, setSuggestedProducts] = useState([]);
+  const [suggestedProducts, setSuggestedProducts] = useState<Product[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('meaning');
   const [mainImage, setMainImage] = useState('');
@@ -29,21 +35,22 @@ export default function ProductDetail() {
   }, []);
 
   useEffect(() => {
-    if (userDestiny) {
+    if (userDestiny && userDestiny.name) {
       fetchSuggestedProducts(userDestiny.name);
     }
-  }, [userDestiny]);
+  }, [userDestiny, id]); // Thêm id vào dependency để cập nhật gợi ý khi đổi sản phẩm
 
-  async function fetchSuggestedProducts(elementName) {
+  async function fetchSuggestedProducts(elementName: string) {
     setSuggestionsLoading(true);
     try {
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .ilike('description', `%${elementName}%`)
+        .neq('id', id) // Không gợi ý chính sản phẩm đang xem
         .limit(4)
         .order('created_at', { ascending: false });
-      
+
       if (error) throw error;
       setSuggestedProducts((data || []) as Product[]);
     } catch (err) {
@@ -71,7 +78,7 @@ export default function ProductDetail() {
           .select('*')
           .eq('id', id)
           .single();
-        
+
         if (error) throw error;
         setProduct(data);
         setMainImage(data?.image_url || '');
@@ -93,9 +100,9 @@ export default function ProductDetail() {
             certification: 'SJC / PNJ Lab'
           },
           images: [
-            'https://picsum.photos/seed/gem11/800/800', 
-            'https://picsum.photos/seed/gem12/800/800', 
-            'https://picsum.photos/seed/gem13/800/800', 
+            'https://picsum.photos/seed/gem11/800/800',
+            'https://picsum.photos/seed/gem12/800/800',
+            'https://picsum.photos/seed/gem13/800/800',
             'https://picsum.photos/seed/gem14/800/800'
           ]
         };
@@ -110,6 +117,11 @@ export default function ProductDetail() {
 
   const handleThumbClick = (img) => {
     setMainImage(img);
+  };
+
+  // Hàm xử lý lỗi ảnh chung
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = 'https://placehold.co/600x600?text=Anh+dang+cap+nhat';
   };
 
   if (loading) return (
@@ -134,7 +146,7 @@ export default function ProductDetail() {
 
   return (
     <div className="pt-24 pb-20 min-h-screen bg-linear-to-b from-beige-subtle to-white">
-      <SEO 
+      <SEO
         title={product.name}
         description={product.description || `Mua ${product.name} tự nhiên tại Ngọc Nhất Linh. Đá quý phong thủy chất lượng cao, có kiểm định, giao hàng toàn quốc.`}
         image={product.image_url}
@@ -153,38 +165,34 @@ export default function ProductDetail() {
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16 items-start">
           {/* Image Gallery */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6 order-1 lg:order-1"
           >
             {/* Main Image */}
             <div className="aspect-square rounded-3xl overflow-hidden bg-gray-50 shadow-xl group cursor-pointer">
-              <img 
-                src={mainImage || '/images/fallback.jpg'} 
+              <img
+                src={mainImage || '/images/fallback.jpg'}
                 alt={product.name}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                onError={(e) => {
-                  console.log('Main image error');
-                  e.currentTarget.src = '/images/fallback.jpg';
-                }}
+                onError={handleImageError}
               />
             </div>
             {/* Thumbnails */}
             <div className="flex gap-3 no-scrollbar overflow-x-auto pb-2">
-              {(product.images || [product.image_url]).slice(0,5).map((imgUrl, i) => (
+              {(product.images || [product.image_url]).slice(0, 5).map((imgUrl, i) => (
                 <motion.button
                   key={i}
-                  className={`shrink-0 w-20 aspect-square rounded-xl overflow-hidden border-4 transition-all ${
-                    mainImage === imgUrl ? 'border-primary shadow-lg scale-105' : 'border-transparent hover:border-primary/50'
-                  }`}
+                  className={`shrink-0 w-20 aspect-square rounded-xl overflow-hidden border-4 transition-all ${mainImage === imgUrl ? 'border-primary shadow-lg scale-105' : 'border-transparent hover:border-primary/50'
+                    }`}
                   onClick={() => handleThumbClick(imgUrl)}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <img 
-                    src={imgUrl} 
-                    alt={`Thumbnail ${i+1}`} 
-                    className="w-full h-full object-cover" 
+                  <img
+                    src={imgUrl}
+                    alt={`Thumbnail ${i + 1}`}
+                    className="w-full h-full object-cover"
                     onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}
                   />
                 </motion.button>
@@ -193,7 +201,7 @@ export default function ProductDetail() {
           </motion.div>
 
           {/* Product Info */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="space-y-8 lg:max-w-lg order-2 lg:order-2"
@@ -215,7 +223,7 @@ export default function ProductDetail() {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <Link 
+              <Link
                 to="https://zalo.me/0902111626"
                 target="_blank"
                 className="w-full bg-gradient-gold text-secondary py-5 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-3"
@@ -223,7 +231,7 @@ export default function ProductDetail() {
                 <Phone size={24} />
                 <span>TƯ VẤN ZALO NGAY</span>
               </Link>
-              <button 
+              <button
                 onClick={() => toggleWishlist(product)}
                 className="w-full p-5 border-2 border-primary/30 rounded-2xl flex items-center justify-center space-x-3 hover:bg-primary/5 hover:border-primary hover:shadow-lg transition-all font-semibold text-lg"
               >
@@ -236,19 +244,19 @@ export default function ProductDetail() {
             <div className="pt-8 border-t border-gray-200">
               <h3 className="text-2xl font-serif font-bold mb-6 text-secondary">Tư vấn miễn phí</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <a 
+                <a
                   href="https://m.me/61575224635423"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group bg-blue-600 text-white p-5 rounded-xl flex items-center space-x-4 hover:bg-blue-700 hover:shadow-xl transition-all font-semibold shadow-lg"
                 >
-                  <Facebook size={28} className="group-hover:scale-110 transition-transform" />
+                  <FacebookIcon size={28} className="group-hover:scale-110 transition-transform" />
                   <div>
                     <div className="font-bold text-lg">Facebook Messenger</div>
                     <div className="text-sm opacity-90">Tư vấn nhanh qua Messenger</div>
                   </div>
                 </a>
-                <a 
+                <a
                   href="https://zalo.me/0902111626"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -268,18 +276,16 @@ export default function ProductDetail() {
         {/* Tabs Section */}
         <div className="max-w-6xl mx-auto">
           <div className="flex bg-white/50 backdrop-blur-md rounded-3xl p-1 shadow-xl mb-12">
-            <button 
-              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${
-                activeTab === 'meaning' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
-              }`}
+            <button
+              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${activeTab === 'meaning' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
+                }`}
               onClick={() => setActiveTab('meaning')}
             >
               Ý nghĩa phong thủy
             </button>
-            <button 
-              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${
-                activeTab === 'specs' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
-              }`}
+            <button
+              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${activeTab === 'specs' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
+                }`}
               onClick={() => setActiveTab('specs')}
             >
               Thông số kỹ thuật
@@ -289,7 +295,7 @@ export default function ProductDetail() {
           {/* Tab Content */}
           <div className="space-y-12">
             {activeTab === 'meaning' && (
-              <motion.section 
+              <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -305,28 +311,28 @@ export default function ProductDetail() {
                 >
                   <Markdown
                     components={{
-                      h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
-                      h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
-                      p: ({...props}) => <p className="mb-6 leading-relaxed text-gray-600" {...props} />,
+                      h1: ({ ...props }) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
+                      h2: ({ ...props }) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
+                      p: ({ ...props }) => <p className="mb-6 leading-relaxed text-gray-600" {...props} />,
                     }}
                   >
                     {product.meaning}
                   </Markdown>
                 </div>
                 <div className="aspect-21/9 rounded-3xl overflow-hidden bg-accent/10 shadow-2xl border border-accent/20">
-                  <img 
+                  <img
                     src="/images/bang-hieu.jpg"
                     alt="Bảng hiệu Ngọc Nhất Linh"
-                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
-                    loading="lazy" 
-                    decoding="async" 
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </motion.section>
             )}
 
             {activeTab === 'specs' && (
-              <motion.section 
+              <motion.section
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
@@ -346,7 +352,7 @@ export default function ProductDetail() {
 
         {/* Suggested Products */}
         {suggestedProducts.length > 0 && (
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="max-w-7xl mx-auto mt-32"
@@ -358,8 +364,8 @@ export default function ProductDetail() {
               {suggestedProducts.map((suggestion) => (
                 <Link key={suggestion.id} to={`/product/${suggestion.id}`} className="group">
                   <div className="aspect-square rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
-                    <img 
-                      src={suggestion.image_url || '/images/fallback.jpg'} 
+                    <img
+                      src={suggestion.image_url || '/images/fallback.jpg'}
                       alt={suggestion.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}

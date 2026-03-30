@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Trash2, ShoppingBag, ArrowRight, Minus, Plus } from 'lucide-react';
 import { useCart } from '../Context/CartContext';
 
@@ -33,7 +33,7 @@ export default function Cart() {
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cart.map((item) => (
-              <motion.div 
+              <motion.div
                 key={item.id}
                 layout
                 initial={{ opacity: 0 }}
@@ -55,7 +55,7 @@ export default function Cart() {
                     <span className="mx-4 font-medium w-4 text-center text-sm">{item.quantity}</span>
                     <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="text-gray-400 hover:text-charcoal"><Plus size={14} /></button>
                   </div>
-                  <button 
+                  <button
                     onClick={() => removeFromCart(item.id)}
                     className="p-2 text-gray-300 hover:text-red-500 transition-colors"
                   >

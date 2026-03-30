@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DestinyResult } from '../types/product';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Search, Sparkles, Info, ArrowRight, User, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { calculateDestinyFromYear } from '../service/destinyService';
@@ -52,7 +52,7 @@ export default function Destiny() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           {/* Form Section */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-accent/30 p-8 md:p-12 rounded-3xl border border-primary/20 shadow-sm relative overflow-hidden"
@@ -67,11 +67,11 @@ export default function Destiny() {
                   <label className="block text-xs font-bold text-secondary/60 mb-2 uppercase tracking-widest">Họ và tên</label>
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-primary/40" size={18} />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Nhập tên của bạn" 
+                      placeholder="Nhập tên của bạn"
                       className="w-full pl-12 pr-6 py-4 rounded-xl border border-accent/30 bg-white/50 focus:outline-none focus:border-primary text-secondary"
                     />
                   </div>
@@ -80,34 +80,34 @@ export default function Destiny() {
                 <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-secondary/60 mb-2 uppercase tracking-widest">Ngày sinh</label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min="1" max="31"
                       value={day}
                       onChange={(e) => setDay(e.target.value)}
-                      placeholder="Ngày" 
+                      placeholder="Ngày"
                       className="w-full px-4 py-4 rounded-xl border border-accent/30 bg-white/50 focus:outline-none focus:border-primary text-secondary"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-secondary/60 mb-2 uppercase tracking-widest">Tháng sinh</label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min="1" max="12"
                       value={month}
                       onChange={(e) => setMonth(e.target.value)}
-                      placeholder="Tháng" 
+                      placeholder="Tháng"
                       className="w-full px-4 py-4 rounded-xl border border-accent/30 bg-white/50 focus:outline-none focus:border-primary text-secondary"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-secondary/60 mb-2 uppercase tracking-widest">Năm sinh</label>
-                    <input 
-                      type="number" 
+                    <input
+                      type="number"
                       min="1950" max="2026"
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      placeholder="Năm" 
+                      placeholder="Năm"
                       className="w-full px-4 py-4 rounded-xl border border-accent/30 bg-white/50 focus:outline-none focus:border-primary text-secondary"
                       required
                     />
@@ -117,14 +117,14 @@ export default function Destiny() {
                 <div>
                   <label className="block text-xs font-bold text-secondary/60 mb-2 uppercase tracking-widest">Giới tính</label>
                   <div className="grid grid-cols-2 gap-4">
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setGender('Nam')}
                       className={`py-4 rounded-xl font-bold transition-all ${gender === 'Nam' ? 'bg-primary text-secondary shadow-md' : 'bg-white/50 text-secondary/40 border border-accent/20'}`}
                     >
                       Nam
                     </button>
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setGender('Nữ')}
                       className={`py-4 rounded-xl font-bold transition-all ${gender === 'Nữ' ? 'bg-primary text-secondary shadow-md' : 'bg-white/50 text-secondary/40 border border-accent/20'}`}
@@ -134,7 +134,7 @@ export default function Destiny() {
                   </div>
                 </div>
 
-                <button 
+                <button
                   type="submit"
                   className="w-full bg-gradient-gold text-secondary py-5 rounded-xl font-bold text-lg hover:shadow-lg transition-all shadow-lg active:scale-95"
                 >
@@ -162,14 +162,14 @@ export default function Destiny() {
                 <p className="text-secondary/40 max-w-xs mx-auto text-sm">Vui lòng điền thông tin của bạn để bắt đầu hành trình khám phá bản mệnh.</p>
               </div>
             ) : (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="space-y-8"
               >
                 <div className="bg-white p-6 md:p-10 rounded-3xl border-2 border-primary shadow-xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10"></div>
-                  
+
                   <div className="flex items-center space-x-2 mb-4">
                     <Sparkles size={16} className="text-primary" />
                     <span className="text-primary font-bold uppercase tracking-widest text-[10px] md:text-xs block">Kết quả tra cứu cho {result.userName}</span>

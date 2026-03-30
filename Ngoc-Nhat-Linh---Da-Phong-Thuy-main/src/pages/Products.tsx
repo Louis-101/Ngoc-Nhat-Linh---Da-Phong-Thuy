@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, ChevronDown, Search, X } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { Link, useSearchParams } from 'react-router-dom';
-import { AnimatePresence } from 'motion/react';
-import { uploadProductImage } from '../service/imageService';
 
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tất cả');
@@ -113,7 +111,7 @@ export default function Products() {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Mobile Filter Toggle */}
           <div className="lg:hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-40">
-            <button 
+            <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
               className="bg-secondary text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 font-bold text-sm border border-white/10 backdrop-blur-md"
             >
@@ -126,14 +124,14 @@ export default function Products() {
           <AnimatePresence>
             {isFilterOpen && (
               <>
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsFilterOpen(false)}
                   className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 lg:hidden"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ x: '-100%' }}
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
@@ -147,7 +145,7 @@ export default function Products() {
                       <X size={24} className="text-secondary" />
                     </button>
                   </div>
-                  
+
                   {/* Scrollable Content */}
                   <div className="flex-1 overflow-y-auto p-8 space-y-10">
                     <div>
@@ -160,16 +158,15 @@ export default function Products() {
                               setActiveCategory(cat);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {cat}
                           </button>
                         ))}
                       </div>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Khoảng giá</h3>
                       <div className="space-y-3">
@@ -180,9 +177,8 @@ export default function Products() {
                               setPriceRange(range);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {range}
                           </button>
@@ -200,9 +196,8 @@ export default function Products() {
                               setActiveMenh(m);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {m}
                           </button>
@@ -235,7 +230,7 @@ export default function Products() {
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Loại sản phẩm</h3>
               <div className="space-y-3">
                 {categories.map((cat) => (
-                  <button 
+                  <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
                     className={`block text-sm transition-colors ${activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
@@ -249,7 +244,7 @@ export default function Products() {
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Khoảng giá</h3>
               <div className="space-y-3">
                 {priceRanges.map((range) => (
-                  <button 
+                  <button
                     key={range}
                     onClick={() => setPriceRange(range)}
                     className={`block text-sm transition-colors ${priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
@@ -273,15 +268,15 @@ export default function Products() {
                 <div className="flex items-center space-x-4 w-full sm:w-auto">
                   <div className="relative flex-1 sm:flex-none">
                     <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary/40" />
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Tìm sản phẩm..." 
+                      placeholder="Tìm sản phẩm..."
                       className="pl-10 pr-4 py-3 sm:py-3 border border-accent rounded-full text-sm focus:outline-none focus:border-primary w-full sm:w-72 bg-white/50 transition-all focus:bg-white min-h-12"
                     />
                     {searchQuery && (
-                      <button 
+                      <button
                         onClick={() => setSearchQuery('')}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary/40 hover:text-secondary transition-colors"
                       >
@@ -291,7 +286,7 @@ export default function Products() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <label className="text-sm font-medium text-secondary whitespace-nowrap">Sắp xếp:</label>
-                    <select 
+                    <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
                       className="border border-accent px-4 py-3 rounded-full text-sm font-medium focus:outline-none focus:border-primary bg-white/50 hover:bg-white transition-all appearance-none bg-no-repeat bg-right min-h-12"
@@ -329,7 +324,7 @@ export default function Products() {
                   </div>
                   <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Không tìm thấy sản phẩm</h3>
                   <p className="text-gray-500 mb-8">Rất tiếc, không tìm thấy sản phẩm phù hợp.</p>
-                  <button 
+                  <button
                     onClick={() => {
                       setActiveCategory('Tất cả');
                       setSearchQuery('');
@@ -343,7 +338,7 @@ export default function Products() {
                 </div>
               ) : (
                 products.map((product) => (
-                  <motion.div 
+                  <motion.div
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -351,8 +346,8 @@ export default function Products() {
                   >
                     <Link to={`/product/${product.id}`} className="block">
                       <div className="aspect-square rounded-xl overflow-hidden mb-5 bg-accent/5 group-hover:bg-primary/5 transition-all flex items-center justify-center">
-                        <img 
-                          src={product.image_url || '/images/fallback.jpg'} 
+                        <img
+                          src={product.image_url || '/images/fallback.jpg'}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                           onError={(e) => {
@@ -377,9 +372,9 @@ export default function Products() {
             </div>
 
             {/* Pagination */}
-{products.length > 0 && !loading && (
+            {products.length > 0 && !loading && (
               <div className="mt-16 flex justify-center items-center space-x-2">
-                <button 
+                <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
@@ -389,20 +384,19 @@ export default function Products() {
                 {Array.from({ length: Math.min(5, Math.ceil(totalCount / 12)) }, (_, i) => {
                   const page = i + 1;
                   return (
-                    <button 
+                    <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all shadow-md ${
-                        currentPage === page 
-                          ? 'bg-primary text-white border-primary shadow-lg scale-110' 
-                          : 'border-2 border-gray-200 hover:border-primary hover:text-primary hover:shadow-lg hover:scale-105'
-                      }`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all shadow-md ${currentPage === page
+                        ? 'bg-primary text-white border-primary shadow-lg scale-110'
+                        : 'border-2 border-gray-200 hover:border-primary hover:text-primary hover:shadow-lg hover:scale-105'
+                        }`}
                     >
                       {page}
                     </button>
                   );
                 })}
-                <button 
+                <button
                   onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
                   disabled={currentPage === Math.ceil(totalCount / 12)}
                   className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"

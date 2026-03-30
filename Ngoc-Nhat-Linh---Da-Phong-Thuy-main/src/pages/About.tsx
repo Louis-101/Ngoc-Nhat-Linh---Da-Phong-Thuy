@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Award, Users, Heart, ShieldCheck } from 'lucide-react';
 
 export default function About() {
@@ -70,12 +70,12 @@ export default function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
             <div className="aspect-21/9 rounded-3xl overflow-hidden shadow-xl border border-accent/20 group bg-accent/10">
-              <img 
-                src="/images/bang-hieu.jpg" 
-                alt="Bảng hiệu Ngọc Nhất Linh" 
-                className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
-                loading="lazy" 
-                decoding="async" 
+              <img
+                src="/images/bang-hieu.jpg"
+                alt="Bảng hiệu Ngọc Nhất Linh"
+                className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Heart, ShoppingCart, Trash2, ArrowRight } from 'lucide-react';
 import { useWishlist } from '../Context/WishlistContext';
 import { useCart } from '../Context/CartContext';
@@ -33,7 +33,7 @@ export default function Wishlist() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {wishlist.map((product) => (
-            <motion.div 
+            <motion.div
               key={product.id}
               layout
               initial={{ opacity: 0 }}
@@ -42,14 +42,14 @@ export default function Wishlist() {
             >
               <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/10 border border-accent/20 shadow-sm">
                 <Link to={`/product/${product.id}`}>
-                  <img 
-                    src={product.image_url} 
+                  <img
+                    src={product.image_url}
                     alt={product.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
                   />
                 </Link>
-                <button 
+                <button
                   onClick={() => toggleWishlist(product)}
                   className="absolute top-4 right-4 p-2 bg-white/80 backdrop-blur-sm rounded-full text-red-500 shadow-sm hover:bg-white transition-all"
                 >
@@ -64,7 +64,7 @@ export default function Wishlist() {
                   </Link>
                   <p className="text-primary font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}</p>
                 </div>
-                <Link 
+                <Link
                   to={`/product/${product.id}`}
                   className="w-full bg-secondary text-white py-3 rounded-full text-sm font-bold flex items-center justify-center space-x-2 hover:bg-secondary-dark transition-all shadow-md"
                 >

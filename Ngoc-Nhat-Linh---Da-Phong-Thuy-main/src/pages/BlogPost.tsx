@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Post } from '../types/product';
 import { useParams, Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { Calendar, User, Share2, Facebook, Twitter, Link as LinkIcon, ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Calendar, User, Share2, Link as LinkIcon, ArrowLeft } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import Markdown from 'react-markdown';
 import SEO from '../components/SEO';
+
+const FacebookIcon = ({ size = 20, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const TwitterIcon = ({ size = 20, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" />
+  </svg>
+);
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -20,7 +32,7 @@ export default function BlogPost() {
           .select('*')
           .eq('slug', slug)
           .single();
-        
+
         if (error) throw error;
         setPost(data);
       } catch (err) {
@@ -65,9 +77,9 @@ Việc đeo vòng tay phong thủy không chỉ là làm đẹp mà còn là m�
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
-      <SEO 
+      <SEO
         title={post.title}
-        description={post.excerpt || `Kiến thức phong thủy: ${post.title}. Chia sẻ bởi chuyên gia Ngọc Nhất Linh.`}
+        description={(post as any).excerpt || `Kiến thức phong thủy: ${post.title}. Chia sẻ bởi chuyên gia Ngọc Nhất Linh.`}
         image={post.image_url}
         type="article"
       />
@@ -102,8 +114,8 @@ Việc đeo vòng tay phong thủy không chỉ là làm đẹp mà còn là m�
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <button className="p-2 rounded-full bg-white/50 text-secondary/40 hover:text-primary transition-colors border border-accent/20"><Facebook size={18} /></button>
-              <button className="p-2 rounded-full bg-white/50 text-secondary/40 hover:text-primary transition-colors border border-accent/20"><Twitter size={18} /></button>
+              <button className="p-2 rounded-full bg-white/50 text-secondary/40 hover:text-primary transition-colors border border-accent/20"><FacebookIcon size={18} /></button>
+              <button className="p-2 rounded-full bg-white/50 text-secondary/40 hover:text-primary transition-colors border border-accent/20"><TwitterIcon size={18} /></button>
               <button className="p-2 rounded-full bg-white/50 text-secondary/40 hover:text-primary transition-colors border border-accent/20"><LinkIcon size={18} /></button>
             </div>
           </div>
@@ -111,9 +123,9 @@ Việc đeo vòng tay phong thủy không chỉ là làm đẹp mà còn là m�
 
         {/* Featured Image */}
         <div className="aspect-video rounded-3xl overflow-hidden mb-12 shadow-lg border border-accent/20">
-          <img 
-            src={post.image_url} 
-            alt={post.title} 
+          <img
+            src={post.image_url}
+            alt={post.title}
             className="w-full h-full object-cover"
             referrerPolicy="no-referrer"
           />
@@ -133,9 +145,9 @@ Việc đeo vòng tay phong thủy không chỉ là làm đẹp mà còn là m�
         >
           <Markdown
             components={{
-              h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
-              h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
-              p: ({...props}) => <p className="mb-6 leading-relaxed text-gray-700" {...props} />,
+              h1: ({ ...props }) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
+              h2: ({ ...props }) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
+              p: ({ ...props }) => <p className="mb-6 leading-relaxed text-gray-700" {...props} />,
             }}
           >
             {post.content}

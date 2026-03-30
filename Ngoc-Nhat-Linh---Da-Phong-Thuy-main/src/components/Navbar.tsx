@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, Menu, X, Facebook, Instagram, MessageCircle, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { Search, Menu, X, MessageCircle, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const FacebookIcon = ({ size = 20, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const InstagramIcon = ({ size = 20, ...props }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,14 +91,13 @@ export default function Navbar() {
 
   return (
     <>
-  <nav className={`fixed top-0 left-0 right-0 z-100 transition-all duration-300 ${getBgColor()}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-100 transition-all duration-300 ${getBgColor()}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
-              <span className={`text-2xl font-serif font-bold italic tracking-widest transition-all duration-300 ${
-                isScrolled ? 'text-gradient-gold' : isHomePage ? 'text-white group-hover:text-primary' : 'text-gradient-gold'
-              }`}>
+              <span className={`text-2xl font-serif font-bold italic tracking-widest transition-all duration-300 ${isScrolled ? 'text-gradient-gold' : isHomePage ? 'text-white group-hover:text-primary' : 'text-gradient-gold'
+                }`}>
                 NGỌC NHẤT LINH
               </span>
             </Link>
@@ -95,45 +108,43 @@ export default function Navbar() {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-sm font-medium transition-colors hover:text-primary relative group ${
-                    location.pathname === link.path 
-                      ? 'text-primary' 
-                      : getTextColor()
-                  }`}
+                  className={`text-sm font-medium transition-colors hover:text-primary relative group ${location.pathname === link.path
+                    ? 'text-primary'
+                    : getTextColor()
+                    }`}
                 >
                   {link.name}
-                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full ${
-                    location.pathname === link.path ? 'w-full' : ''
-                  }`}></span>
+                  <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full ${location.pathname === link.path ? 'w-full' : ''
+                    }`}></span>
                 </Link>
               ))}
             </div>
 
             {/* Actions */}
             <div className="flex items-center space-x-5">
-              <button 
+              <button
                 onClick={() => setIsSearchOpen(true)}
                 className={`${getTextColor()} hover:text-primary transition-colors`}
               >
                 <Search size={20} />
               </button>
-              <a 
-                href="https://www.facebook.com/profile.php?id=61575224635423" 
-                target="_blank" 
+              <a
+                href="https://www.facebook.com/profile.php?id=61575224635423"
+                target="_blank"
                 rel="noopener noreferrer"
                 className={`${getTextColor()} hover:text-primary transition-colors`}
               >
-                <Facebook size={20} />
+                <FacebookIcon size={20} />
               </a>
-              <a 
-                href="https://zalo.me/0902111626" 
-                target="_blank" 
+              <a
+                href="https://zalo.me/0902111626"
+                target="_blank"
                 rel="noopener noreferrer"
                 className={`${getTextColor()} hover:text-primary transition-colors`}
               >
                 <MessageCircle size={20} />
               </a>
-              <button 
+              <button
                 className="lg:hidden"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
@@ -146,7 +157,7 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-          <>
+            <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -181,9 +192,8 @@ export default function Navbar() {
                     >
                       <Link
                         to={link.path}
-                        className={`block py-4 text-lg font-medium border-b border-accent/50 transition-colors ${
-                          location.pathname === link.path ? 'text-primary' : 'text-secondary hover:text-primary'
-                        }`}
+                        className={`block py-4 text-lg font-medium border-b border-accent/50 transition-colors ${location.pathname === link.path ? 'text-primary' : 'text-secondary hover:text-primary'
+                          }`}
                       >
                         {link.name}
                       </Link>
@@ -204,9 +214,9 @@ export default function Navbar() {
                     <span>© 2024 Ngọc Nhất Linh</span>
                     <div className="flex space-x-4">
                       <a href="https://www.facebook.com/profile.php?id=61575224635423" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                        <Facebook size={16} />
+                        <FacebookIcon size={16} />
                       </a>
-                      <Instagram size={16} className="hover:text-primary transition-colors" />
+                      <InstagramIcon size={16} className="hover:text-primary transition-colors" />
                     </div>
                   </div>
                 </div>
@@ -230,14 +240,14 @@ export default function Navbar() {
                 <span className="text-2xl font-serif font-bold tracking-tighter text-charcoal">
                   NGỌC NHẤT LINH
                 </span>
-                <button 
+                <button
                   onClick={() => setIsSearchOpen(false)}
                   className="p-3 hover:bg-gray-100 rounded-full transition-colors"
                 >
                   <X size={32} className="text-charcoal" />
                 </button>
               </div>
-              
+
               <div className="max-w-4xl mx-auto">
                 <div className="relative group">
                   <Search size={32} className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" />
@@ -258,7 +268,7 @@ export default function Navbar() {
                     placeholder="Tìm kiếm sản phẩm, mệnh, ý nghĩa..."
                   />
                 </div>
-                
+
                 <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">Gợi ý tìm kiếm</h4>

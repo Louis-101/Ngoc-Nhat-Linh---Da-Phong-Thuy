@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { ArrowRight, Star, ShieldCheck, Truck } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import SEO from '../components/SEO';
@@ -18,7 +18,7 @@ export default function Home() {
           .from('products')
           .select('*')
           .limit(4);
-        
+
         if (error) throw error;
         setFeaturedProducts(data || []);
       } catch (err) {
@@ -38,25 +38,24 @@ export default function Home() {
 
   return (
     <div className="overflow-hidden bg-pattern-subtle">
-      <SEO 
+      <SEO
         title="Trang Chủ"
         description="Khám phá bộ sưu tập đá phong thủy cao cấp tại Ngọc Nhất Linh Cần Thơ. Vòng tay thạch anh, tượng phật, linh vật đá tự nhiên giúp chiêu tài lộc và bình an."
       />
       {/* SEO Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "Ngọc Nhất Linh",
-          "url": window.location.origin,
-          "logo": `${window.location.origin}/logo-brand.png`,
-          "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "0902111626",
-            "contactType": "customer service"
-          }
-        })}
-      </script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "Ngọc Nhất Linh",
+            "url": typeof window !== 'undefined' ? window.location.origin : '',
+            "logo": typeof window !== 'undefined' ? `${window.location.origin}/logo-brand.png` : '',
+            "contactPoint": { "@type": "ContactPoint", "telephone": "0902111626", "contactType": "customer service" }
+          })
+        }}
+      />
 
       {/* Hero Section */}
       <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden">
@@ -75,9 +74,9 @@ export default function Home() {
             <picture>
               {/* Mobile optimized source can be added here */}
               <source media="(max-width: 768px)" srcSet="/buddha-hero.jpg" />
-              <img 
+              <img
                 src="/buddha-hero.jpg"
-                alt="Buddha Hero - Ngọc Nhất Linh" 
+                alt="Buddha Hero - Ngọc Nhất Linh"
                 className="w-full h-full object-cover object-[79%_center] md:object-center brightness-50"
                 referrerPolicy="no-referrer"
                 onError={() => setHeroError(true)}
@@ -86,16 +85,16 @@ export default function Home() {
           )}
           <div className="absolute inset-0 bg-linear-to-b from-black/60 via-black/20 to-black/70"></div>
         </div>
-        
+
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-primary font-bold tracking-[0.4em] uppercase text-xs sm:text-sm mb-6 block drop-shadow-sm"
           >
             Thương hiệu đẳng cấp
           </motion.span>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -103,7 +102,7 @@ export default function Home() {
           >
             Ngọc Nhất Linh – Tinh Hoa Đá Phong Thủy Cần Thơ
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -111,7 +110,7 @@ export default function Home() {
           >
             Hành trình mang lại sự bình an và thịnh vượng thông qua những giá trị tâm linh đích thực từ đá quý thiên nhiên.
           </motion.p>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -175,21 +174,21 @@ export default function Home() {
               Array(4).fill(0).map((_, i) => (
                 <div key={i} className="animate-pulse space-y-4">
                   <div className="bg-gray-100 aspect-square rounded-xl"></div>
-                  <div className="h-4 bg-gray-100 rounded w-3/4"></div> 
+                  <div className="h-4 bg-gray-100 rounded w-3/4"></div>
                   <div className="h-4 bg-gray-100 rounded w-1/2"></div>
                 </div>
               ))
             ) : (
               featuredProducts.map((product) => (
-                <motion.div 
+                <motion.div
                   key={product.id}
                   whileHover={{ y: -10 }}
                   className="group cursor-pointer"
                 >
                   <Link to={`/product/${product.id}`} className="block">
                     <div className="relative aspect-square rounded-xl shadow-sm overflow-hidden mb-4 bg-white p-2 group-hover:shadow-md transition-all hover:scale-[1.02]">
-                      <img 
-                        src={product.image_url || '/images/fallback.jpg'} 
+                      <img
+                        src={product.image_url || '/images/fallback.jpg'}
                         alt={product.name}
                         loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"

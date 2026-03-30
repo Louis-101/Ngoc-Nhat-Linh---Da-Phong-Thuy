@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Search, X } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { Link, useSearchParams } from 'react-router-dom';
-import { AnimatePresence } from 'motion/react';
-
 export default function FixedProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -59,6 +57,7 @@ export default function FixedProducts() {
         else if (sortBy === 'Cũ nhất') query = query.order('created_at', { ascending: true });
         else query = query.order('created_at', { ascending: false });
 
+        query = query.range(from, to); // Thêm dòng này để phân trang hoạt động
         const { data, error, count } = await query;
         console.log('FixedProducts products:', data);
         console.log('Supabase products query:', { data, count, error });
@@ -96,7 +95,7 @@ export default function FixedProducts() {
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Mobile Filter Toggle */}
           <div className="lg:hidden fixed bottom-8 left-1/2 -translate-x-1/2 z-40">
-            <button 
+            <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
               className="bg-secondary text-white px-8 py-4 rounded-full shadow-2xl flex items-center space-x-3 font-bold text-sm border border-white/10 backdrop-blur-md"
             >
@@ -109,14 +108,14 @@ export default function FixedProducts() {
           <AnimatePresence>
             {isFilterOpen && (
               <>
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsFilterOpen(false)}
                   className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 lg:hidden"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ x: '-100%' }}
                   animate={{ x: 0 }}
                   exit={{ x: '-100%' }}
@@ -130,7 +129,7 @@ export default function FixedProducts() {
                       <X size={24} className="text-secondary" />
                     </button>
                   </div>
-                  
+
                   {/* Scrollable Content */}
                   <div className="flex-1 overflow-y-auto p-8 space-y-10">
                     <div>
@@ -143,16 +142,15 @@ export default function FixedProducts() {
                               setActiveCategory(cat);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {cat}
                           </button>
                         ))}
                       </div>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-widest text-secondary/40 mb-6 border-b border-accent pb-2">Khoảng giá</h3>
                       <div className="space-y-3">
@@ -163,9 +161,8 @@ export default function FixedProducts() {
                               setPriceRange(range);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {range}
                           </button>
@@ -183,14 +180,13 @@ export default function FixedProducts() {
                               setActiveMenh(m);
                               setIsFilterOpen(false);
                             }}
-                            className={`block w-full text-left py-2 text-lg transition-colors ${
-                              activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
-                            }`}
+                            className={`block w-full text-left py-2 text-lg transition-colors ${activeMenh === m ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'
+                              }`}
                           >
                             {m}
                           </button>
                         ))}
-                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -203,7 +199,7 @@ export default function FixedProducts() {
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Theo mệnh</h3>
               <div className="space-y-3">
-{menhOptions.map((m) => (
+                {menhOptions.map((m) => (
                   <button
                     key={m}
                     onClick={() => setActiveMenh(m)}
@@ -217,8 +213,8 @@ export default function FixedProducts() {
             <div>
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Loại sản phẩm</h3>
               <div className="space-y-3">
-{categories.map((cat) => (
-                  <button 
+                {categories.map((cat) => (
+                  <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
                     className={`block text-sm transition-colors ${activeCategory === cat ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
@@ -232,7 +228,7 @@ export default function FixedProducts() {
               <h3 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-accent pb-2 text-secondary">Khoảng giá</h3>
               <div className="space-y-3">
                 {priceRanges.map((range) => (
-                  <button 
+                  <button
                     key={range}
                     className={`block text-sm transition-colors ${priceRange === range ? 'text-primary font-bold' : 'text-secondary/60 hover:text-primary'}`}
                     onClick={() => setPriceRange(range)}
@@ -256,7 +252,7 @@ export default function FixedProducts() {
                   <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Không tìm thấy sản phẩm</h3>
                 </div>
               ) : products.map((product) => (
-                <motion.div 
+                <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -264,8 +260,8 @@ export default function FixedProducts() {
                 >
                   <Link to={`/product/${product.id}`} className="block">
                     <div className="aspect-square rounded-2xl overflow-hidden mb-5 bg-accent/5 group-hover:bg-primary/5 transition-all flex items-center justify-center">
-                      <img 
-                        src={product.image_url || '/images/fallback.jpg'} 
+                      <img
+                        src={product.image_url || '/images/fallback.jpg'}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         onError={(e) => {
