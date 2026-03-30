@@ -8,18 +8,23 @@ export default function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
-
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('Tất cả');
 
   useEffect(() => {
     async function fetchPosts() {
       setLoading(true);
       setErrorMsg('');
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from('posts')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .select('*');
+
+        if (activeCategory !== 'Tất cả') {
+          query = query.ilike('category', activeCategory);
+        }
+
+        query = query.order('created_at', { ascending: false });
 
         console.log('Supabase posts query:', { data, error });
 
@@ -27,7 +32,15 @@ export default function Blog() {
           throw error;
         }
 
-        setPosts(data || []);
+        let filteredData = data || [];
+        if (searchQuery.trim()) {
+          filteredData = filteredData.filter(post =>
+            post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (post.excerpt && post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+          );
+        }
+
+        setPosts(filteredData);
       } catch (err: any) {
         console.error('Error fetching posts:', err);
         setPosts([]);
@@ -37,9 +50,7 @@ export default function Blog() {
       }
     }
     fetchPosts();
-  }, []);
-
-
+  }, [activeCategory, searchQuery]);
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
@@ -56,7 +67,12 @@ export default function Blog() {
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
           <div className="flex items-center space-x-4 overflow-x-auto pb-2 w-full md:w-auto no-scrollbar">
             {['Tất cả', 'Phong thủy', 'Đá quý', 'Cung mệnh', 'Đời sống'].map((cat) => (
-              <button key={cat} className="px-6 py-2 rounded-full border border-accent/20 text-sm text-secondary/60 hover:border-primary hover:text-primary transition-all whitespace-nowrap bg-white/50">
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-6 py-2 rounded-full border transition-all whitespace-nowrap ${activeCategory === cat ? 'border-primary text-primary bg-primary/5 font-bold' : 'border-accent/20 text-secondary/60 bg-white/50 hover:border-primary hover:text-primary'
+                  }`}
+              >
                 {cat}
               </button>
             ))}
@@ -66,6 +82,8 @@ export default function Blog() {
             <input
               type="text"
               placeholder="Tìm bài viết..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 bg-white/50 border border-accent/20 rounded-full text-sm focus:ring-1 focus:ring-primary outline-none text-secondary"
             />
           </div>
