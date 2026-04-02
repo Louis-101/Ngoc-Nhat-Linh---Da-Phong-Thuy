@@ -74,11 +74,11 @@ export default function Blog() {
 
 
         {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10">
           {loading ? (
             Array(6).fill(0).map((_, i) => (
               <div key={i} className="animate-pulse space-y-4">
-                <div className="bg-accent/20 aspect-16/10 rounded-2xl"></div>
+                <div className="bg-accent/20 aspect-square md:aspect-16/10 rounded-2xl"></div>
                 <div className="h-4 bg-accent/20 rounded w-3/4"></div>
                 <div className="h-4 bg-accent/20 rounded w-1/2"></div>
               </div>
@@ -102,14 +102,14 @@ export default function Blog() {
                 className="group"
               >
                 <Link to={`/blog/${post.slug}`}>
-                  <div className="relative aspect-16/10 rounded-2xl overflow-hidden mb-6 shadow-md border border-accent/10">
+                  <div className="relative aspect-square md:aspect-16/10 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 shadow-md border border-accent/10">
                     <img 
                       src={post.image_url} 
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-2 left-2 md:top-4 md:left-4">
                       <span className="bg-white/90 backdrop-blur-sm text-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm border border-accent/20">
                         Kiến thức
                       </span>

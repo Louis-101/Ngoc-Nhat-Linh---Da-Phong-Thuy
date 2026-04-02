@@ -97,6 +97,8 @@ export default function Products() {
     }
 
     fetchProducts();
+    // Tự động cuộn lên đầu trang khi thay đổi trang hoặc bộ lọc
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage, sortBy]);
 
   return (
@@ -308,7 +310,7 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10 px-3 md:px-0 auto-rows-fr">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-10 px-2 md:px-0 auto-rows-fr">
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">

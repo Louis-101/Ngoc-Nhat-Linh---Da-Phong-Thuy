@@ -59,7 +59,7 @@ export default function Home() {
       </script>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen md:h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-[85vh] md:h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           {heroError ? (
             <div className="w-full h-full bg-linear-to-br from-gradient-gold via-primary/30 to-[#4d241e] brightness-50 flex items-center justify-center p-12">
@@ -91,23 +91,23 @@ export default function Home() {
           <motion.span 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-primary font-bold tracking-[0.4em] uppercase text-xs sm:text-sm mb-6 block drop-shadow-sm"
+            className="text-gradient-gold font-serif italic font-bold tracking-[0.3em] uppercase text-[10px] sm:text-xs mb-6 block drop-shadow-sm"
           >
-            Thương hiệu đẳng cấp
+            NGỌC NHẤT LINH
           </motion.span>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif text-gradient-gold font-bold mb-8 leading-[1.1] drop-shadow-2xl"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-serif text-white font-bold mb-6 md:mb-8 leading-[1.1] drop-shadow-2xl"
           >
-            Ngọc Nhất Linh – Tinh Hoa Đá Phong Thủy Cần Thơ
+            <span className="text-gradient-gold">Ngọc Nhất Linh</span> – Tinh Hoa Đá Phong Thủy Cần Thơ
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-base sm:text-lg md:text-xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-lg"
+            className="text-sm sm:text-lg md:text-xl text-white/90 mb-8 md:mb-12 max-w-2xl mx-auto font-light leading-relaxed drop-shadow-lg"
           >
             Hành trình mang lại sự bình an và thịnh vượng thông qua những giá trị tâm linh đích thực từ đá quý thiên nhiên.
           </motion.p>
@@ -128,37 +128,36 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-accent/30 relative overflow-hidden">
+      <section className="py-12 md:py-20 bg-accent/30 relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-subtle opacity-50"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            <div className="text-center space-y-4 group">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
-                <ShieldCheck className="text-primary" size={32} />
+          <div className="grid grid-cols-3 gap-2 sm:gap-6 md:gap-12 px-1 sm:px-0">
+            <div className="text-center space-y-3 md:space-y-4 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
+                <ShieldCheck className="text-primary w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#4d241e]">Chất lượng Thật</h3>
-              <p className="text-gray-600 text-sm">Cam kết 100% đá quý tự nhiên, có kiểm định PNJ/SJC.</p>
+              <h3 className="text-[10px] sm:text-sm md:text-xl font-serif font-bold text-[#4d241e] leading-tight">Chất lượng Thật</h3>
+              <p className="text-gray-600 text-[9px] md:text-sm line-clamp-2 md:line-clamp-none">100% đá tự nhiên.</p>
             </div>
-            <div className="text-center space-y-4 group">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
-                <Star className="text-primary" size={32} />
+            <div className="text-center space-y-3 md:space-y-4 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
+                <Star className="text-primary w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#4d241e]">Tư vấn Tận Tâm</h3>
-              <p className="text-gray-600 text-sm">Đội ngũ chuyên gia phong thủy giàu kinh nghiệm hỗ trợ 24/7.</p>
+              <h3 className="text-[10px] sm:text-sm md:text-xl font-serif font-bold text-[#4d241e] leading-tight">Tư vấn Tận Tâm</h3>
+              <p className="text-gray-600 text-[9px] md:text-sm line-clamp-2 md:line-clamp-none">Hỗ trợ phong thủy 24/7.</p>
             </div>
-            <div className="text-center space-y-4 group">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
-                <Truck className="text-primary" size={32} />
+            <div className="text-center space-y-3 md:space-y-4 group">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 bg-white rounded-full flex items-center justify-center mx-auto shadow-md group-hover:scale-110 transition-transform">
+                <Truck className="text-primary w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#4d241e]">Giao hàng Toàn quốc</h3>
-              <p className="text-gray-600 text-sm">Vận chuyển nhanh chóng, an toàn và bảo mật tuyệt đối.</p>
+              <h3 className="text-[10px] sm:text-sm md:text-xl font-serif font-bold text-[#4d241e] leading-tight">Giao hàng Toàn quốc</h3>
+              <p className="text-gray-600 text-[9px] md:text-sm line-clamp-2 md:line-clamp-none">Vận chuyển an toàn.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-24 bg-white relative">
+      <section className="py-16 md:py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12">
             <div>

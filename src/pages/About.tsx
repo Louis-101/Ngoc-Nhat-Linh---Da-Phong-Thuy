@@ -6,12 +6,12 @@ export default function About() {
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <span className="text-primary font-medium uppercase tracking-widest text-xs mb-4 block">Câu chuyện thương hiệu</span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold mb-8 leading-tight text-secondary">
-              Ngọc Nhất Linh – Nơi Hội Tụ Tinh Hoa Đá Quý
+            <span className="text-gradient-gold font-serif italic font-bold uppercase tracking-widest text-[10px] mb-4 block">Câu chuyện thương hiệu</span>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-8 leading-tight text-secondary">
+              <span className="text-gradient-gold">Ngọc Nhất Linh</span> – Nơi Hội Tụ Tinh Hoa Đá Quý
             </h1>
             <p className="text-secondary/60 text-lg font-light leading-relaxed mb-8">
               Được thành lập từ niềm đam mê mãnh liệt với vẻ đẹp huyền bí của đá quý tự nhiên, Ngọc Nhất Linh không chỉ là một thương hiệu trang sức, mà còn là cầu nối mang năng lượng bình an từ đất trời đến với mỗi khách hàng.
@@ -40,25 +40,25 @@ export default function About() {
       </section>
 
       {/* Values Section */}
-      <section className="bg-accent/30 py-24 relative overflow-hidden">
+      <section className="bg-accent/30 py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-subtle opacity-20"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-secondary">Giá Trị Cốt Lõi</h2>
             <p className="text-secondary/60 font-light">Những nguyên tắc vàng giúp Ngọc Nhất Linh khẳng định vị thế trong lòng khách hàng.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="grid grid-cols-3 gap-2 sm:gap-4 md:gap-12 px-1 sm:px-0">
             {[
-              { icon: <ShieldCheck size={32} />, title: 'Chất Lượng Thật', desc: 'Mọi sản phẩm đều được kiểm định nghiêm ngặt, cam kết đá tự nhiên 100%.' },
-              { icon: <Users size={32} />, title: 'Tâm Huyết', desc: 'Đội ngũ nghệ nhân và chuyên gia phong thủy làm việc bằng cả trái tim.' },
-              { icon: <Heart size={32} />, title: 'Sứ Mệnh', desc: 'Mang lại sự thịnh vượng và bình an cho cộng đồng thông qua năng lượng đá quý.' }
+              { icon: <ShieldCheck className="w-5 h-5 md:w-8 md:h-8" />, title: 'Chất Lượng Thật', desc: 'Mọi sản phẩm đều được kiểm định nghiêm ngặt, cam kết đá tự nhiên 100%.' },
+              { icon: <Users className="w-5 h-5 md:w-8 md:h-8" />, title: 'Tâm Huyết', desc: 'Đội ngũ nghệ nhân và chuyên gia phong thủy làm việc bằng cả trái tim.' },
+              { icon: <Heart className="w-5 h-5 md:w-8 md:h-8" />, title: 'Sứ Mệnh', desc: 'Mang lại sự thịnh vượng và bình an cho cộng đồng thông qua năng lượng đá quý.' }
             ].map((item, i) => (
-              <div key={i} className="bg-white p-10 rounded-3xl text-center space-y-6 shadow-sm hover:shadow-md transition-all border border-accent/20">
-                <div className="w-16 h-16 bg-accent/50 rounded-full flex items-center justify-center mx-auto text-primary">
+              <div key={i} className={`bg-white p-2 sm:p-6 md:p-10 rounded-xl md:rounded-3xl text-center space-y-2 sm:space-y-4 md:space-y-6 shadow-sm hover:shadow-md transition-all border border-accent/20`}>
+                <div className="w-10 h-10 md:w-16 md:h-16 bg-accent/50 rounded-full flex items-center justify-center mx-auto text-primary">
                   {item.icon}
                 </div>
-                <h3 className="text-xl font-serif font-bold text-secondary">{item.title}</h3>
-                <p className="text-secondary/60 text-sm font-light leading-relaxed">{item.desc}</p>
+                <h3 className="text-[10px] sm:text-base md:text-xl font-serif font-bold text-secondary leading-tight">{item.title}</h3>
+                <p className="text-secondary/60 text-[10px] md:text-sm font-light leading-relaxed line-clamp-3 md:line-clamp-none">{item.desc}</p>
               </div>
             ))}
           </div>
