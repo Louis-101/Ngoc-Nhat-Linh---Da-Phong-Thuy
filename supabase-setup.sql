@@ -29,6 +29,7 @@ create table if not exists posts (
   author text,
   image_url text,
   category text,
+  published boolean default true,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -48,6 +49,20 @@ create table if not exists contacts (
   message text not null,
   created_at timestamptz default now()
 );
+
+-- Bật bảo mật RLS cho bảng contacts
+alter table contacts enable row level security;
+
+-- Cho phép khách gửi liên hệ (Insert)
+create policy "Allow public insert contacts" on contacts for insert with check (true);
+
+-- Chỉ Admin (người đã login) mới được xem liên hệ
+create policy "Allow admin select contacts" on contacts for select using (auth.role() = 'authenticated');
+
+-- Admin delete policies
+create policy "Allow admin delete contacts" on contacts for delete using (auth.role() = 'authenticated');
+create policy "Allow admin delete products" on products for delete using (auth.role() = 'authenticated');
+create policy "Allow admin delete posts" on posts for delete using (auth.role() = 'authenticated');
 
 -- Optional: ensure extension for uuid
 create extension if not exists "uuid-ossp";

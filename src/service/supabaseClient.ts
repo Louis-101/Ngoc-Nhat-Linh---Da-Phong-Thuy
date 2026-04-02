@@ -144,9 +144,14 @@ class MockQuery {
 const mockSupabase = {
   from: (table: string) => ({
     select: (...args: any[]) => new MockQuery(table),
-    eq: () => ({ /* deprecated direct */ }),
-    insert: async (data: any[]) => ({ data, error: null }),
-    update: async (data: any) => ({ data, error: null }),
+    insert: async (data: any[]) => Promise.resolve({ data, error: null }),
+    update: (data: any) => ({
+      eq: (field: string, val: any) => Promise.resolve({ data, error: null })
+    }),
+    delete: () => ({
+      eq: (field: string, val: any) => Promise.resolve({ error: null }),
+      in: (field: string, vals: any[]) => Promise.resolve({ error: null })
+    }),
     storage: {
       from: (bucket: string) => ({
         upload: async (path: string, file: File, options?: any) => {
@@ -159,7 +164,12 @@ const mockSupabase = {
       }),
     },
   }) as any,
-
+  auth: {
+    signInWithPassword: async () => Promise.resolve({ data: { session: {}, user: {} }, error: null }),
+    signOut: async () => Promise.resolve({ error: null }),
+    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }),
+    getSession: async () => Promise.resolve({ data: { session: null }, error: null }),
+  },
   isReady: () => false,
   getError: () => 'Supabase not configured - using mock with sample data',
 } as any;
