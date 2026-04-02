@@ -5,8 +5,5 @@
       "destination": "/index.html"
     }
   ],
-  "framework": "vite",
-  "regions": [
-    "sin1"
-  ]
+  "regions": ["sin1"]
 }

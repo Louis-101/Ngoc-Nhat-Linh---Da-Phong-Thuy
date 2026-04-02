@@ -17,6 +17,7 @@ export default defineConfig(({mode}) => {
       },
     },
     build: {
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -25,7 +26,6 @@ export default defineConfig(({mode}) => {
             'lucide': ['lucide-react'],
             'motion': ['motion'],
           },
-          chunkSizeWarningLimit: 1000,
         },
       },
     },
