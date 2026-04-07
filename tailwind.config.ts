@@ -8,14 +8,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#C5A028',
-        'primary-dark': '#A6851E',
-        secondary: '#4E342E',
-        accent: '#F5F5DC',
+        primary: '#D4AF37', // Vàng Kim chuẩn
+        'primary-dark': '#B8860B',
+        secondary: '#3E2723', // Nâu Trầm sang trọng
+        accent: '#FAF9F6', // Trắng Sứ nhẹ nhàng
         charcoal: '#2C1810',
-        'beige-subtle': '#FAF7F2',
-        cream: '#FFFDD0',
-        brown: '#5D4037',
+        'gold-light': '#F9E498',
+        'brown-soft': '#6D4C41',
+        'white-pure': '#FFFFFF',
       },
       fontFamily: {
         serif: ['Playfair Display', 'serif'],

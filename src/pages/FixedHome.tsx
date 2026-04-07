@@ -4,12 +4,13 @@ import { motion } from 'motion/react';
 import { ArrowRight, Star, ShieldCheck, Truck } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import SEO from '../components/SEO';
+import { Product } from '../types/product';
 
 export default function Home() {
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [heroError, setHeroError] = useState(false);
-  const [productImageErrors, setProductImageErrors] = useState({});
+  const [productImageErrors, setProductImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     async function fetchProducts() {
@@ -17,18 +18,19 @@ export default function Home() {
         const { data, error } = await supabase
           .from('products')
           .select('*')
+          .order('created_at', { ascending: false })
           .limit(4);
         
         if (error) throw error;
         setFeaturedProducts(data || []);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching products:', err);
         setFeaturedProducts([
-          { id: '1', name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly', price: 4500000, image_url: 'https://picsum.photos/seed/gem1/600/600', category: 'Vòng tay' },
-          { id: '2', name: 'Mặt Dây Chuyền Cẩm Thạch Sơn Thủy', price: 12800000, image_url: 'https://picsum.photos/seed/gem2/600/600', category: 'Mặt dây' },
-          { id: '3', name: 'Vòng Tay Aquamarine Hải Lam Ngọc', price: 6200000, image_url: 'https://picsum.photos/seed/gem3/600/600', category: 'Vòng tay' },
-          { id: '4', name: 'Thiềm Thừ Ngọc Hoàng Long Tự Nhiên', price: 25000000, image_url: 'https://picsum.photos/seed/gem4/600/600', category: 'Vật phẩm' },
-        ]);
+          { id: '00000000-0000-0000-0000-000000000001', name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly', price: 4500000, image_url: 'https://picsum.photos/seed/gem1/600/600', category: 'Vòng tay', menh: 'Kim', description: '', meaning: '', specs: {}, created_at: new Date().toISOString() },
+          { id: '00000000-0000-0000-0000-000000000002', name: 'Mặt Dây Chuyền Cẩm Thạch Sơn Thủy', price: 12800000, image_url: 'https://picsum.photos/seed/gem2/600/600', category: 'Mặt dây', menh: 'Mộc', description: '', meaning: '', specs: {}, created_at: new Date().toISOString() },
+          { id: '00000000-0000-0000-0000-000000000003', name: 'Vòng Tay Aquamarine Hải Lam Ngọc', price: 6200000, image_url: 'https://picsum.photos/seed/gem3/600/600', category: 'Vòng tay', menh: 'Thủy', description: '', meaning: '', specs: {}, created_at: new Date().toISOString() },
+          { id: '00000000-0000-0000-0000-000000000004', name: 'Thiềm Thừ Ngọc Hoàng Long Tự Nhiên', price: 25000000, image_url: 'https://picsum.photos/seed/gem4/600/600', category: 'Vật phẩm', menh: 'Thổ', description: '', meaning: '', specs: {}, created_at: new Date().toISOString() },
+        ] as unknown as Product[]);
       } finally {
         setLoading(false);
       }
@@ -182,7 +184,7 @@ export default function Home() {
               featuredProducts.map((product) => (
                 <motion.div 
                   key={product.id}
-                  whileHover={{ y: -10 }}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   className="group cursor-pointer"
                 >
                   <Link to={`/product/${product.id}`} className="block">

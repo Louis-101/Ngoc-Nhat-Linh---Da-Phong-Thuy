@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../service/supabaseClient';
 import { Search, Plus, Edit3, Trash2, Eye, Image, Filter, Grid, List, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { uploadProductImage } from '../../service/imageService';
 import { AdminProduct, ProductFormData } from '../types';
 import { motion } from 'motion/react';
 
@@ -65,22 +66,14 @@ const ProductsAdmin: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Reuse existing service or direct upload
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
-    const filePath = `product-images/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from('product-images')
-      .upload(filePath, file, { upsert: true });
-
-    if (uploadError) {
-      setNotification({ type: 'error', message: 'Upload ảnh thất bại' });
+    const publicUrl = await uploadProductImage(file, Date.now().toString(), 'product-images');
+    
+    if (!publicUrl || publicUrl.includes('picsum.photos')) {
+      setNotification({ type: 'error', message: 'Upload ảnh thất bại. Vui lòng kiểm tra quyền Storage.' });
       return;
     }
 
-    const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
-    setFormData({ ...formData, image_url: data.publicUrl });
+    setFormData(prev => ({ ...prev, image_url: publicUrl }));
     setNotification({ type: 'success', message: 'Upload ảnh thành công!' });
   };
 

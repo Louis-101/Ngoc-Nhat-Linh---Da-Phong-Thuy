@@ -13,12 +13,14 @@ export default function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userDestiny, setUserDestiny] = useState(null);
+  const [userDestiny, setUserDestiny] = useState<DestinyResult | null>(null);
   const [birthYearInput, setBirthYearInput] = useState('');
-  const [suggestedProducts, setSuggestedProducts] = useState([]);
+  const [suggestedProducts, setSuggestedProducts] = useState<Product[]>([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('meaning');
   const [mainImage, setMainImage] = useState('');
+
+  // Gọi trực tiếp. LƯU Ý: Phải bọc App trong WishlistProvider ở file App.tsx
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
@@ -30,11 +32,11 @@ export default function ProductDetail() {
 
   useEffect(() => {
     if (userDestiny) {
-      fetchSuggestedProducts(userDestiny.name);
+      fetchSuggestedProducts(userDestiny.name as string);
     }
   }, [userDestiny]);
 
-  async function fetchSuggestedProducts(elementName) {
+  async function fetchSuggestedProducts(elementName: string) {
     setSuggestionsLoading(true);
     try {
       const { data, error } = await supabase
@@ -53,7 +55,7 @@ export default function ProductDetail() {
     }
   }
 
-  const handleDestinySubmit = (e) => {
+  const handleDestinySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const year = parseInt(birthYearInput);
     if (year >= 1950 && year <= 2026) {
@@ -66,6 +68,11 @@ export default function ProductDetail() {
   useEffect(() => {
     async function fetchProduct() {
       try {
+        // Kiểm tra định dạng ID để tránh lỗi Supabase query khi ID không phải UUID
+        if (!id || id.length < 10) {
+          throw new Error('ID sản phẩm không hợp lệ');
+        }
+
         const { data, error } = await supabase
           .from('products')
           .select('*')
@@ -73,13 +80,13 @@ export default function ProductDetail() {
           .single();
         
         if (error) throw error;
-        setProduct(data);
+        setProduct(data as Product);
         setMainImage(data?.image_url || '');
       } catch (err) {
         console.error('Error fetching product:', err);
         // Fallback data
         const fallback = {
-          id: id,
+          id: id || 'fallback',
           name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly',
           price: 4500000,
           description: 'Pháp bảo chiêu tài, dẫn lộc và gia tăng vượng khí cho chủ nhân.',
@@ -87,9 +94,9 @@ export default function ProductDetail() {
           category: 'Vòng tay',
           meaning: 'Thạch anh tóc vàng quyền năng giúp tăng tài lộc, bình an và thịnh vượng.',
           specs: {
-            material: 'Thạch anh tóc vàng tự nhiên',
-            size: '12 ly',
-            count: '17-18 hạt',
+            material: 'Đá Thạch anh tóc vàng tự nhiên',
+            bead_size: '12 ly',
+            bead_count: '17-18 hạt',
             certification: 'SJC / PNJ Lab'
           },
           images: [
@@ -99,7 +106,7 @@ export default function ProductDetail() {
             'https://picsum.photos/seed/gem14/800/800'
           ]
         };
-        setProduct(fallback);
+        setProduct(fallback as Product);
         setMainImage(fallback.image_url);
       } finally {
         setLoading(false);
@@ -108,7 +115,7 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  const handleThumbClick = (img) => {
+  const handleThumbClick = (img: string) => {
     setMainImage(img);
   };
 
@@ -334,7 +341,17 @@ export default function ProductDetail() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
                   {Object.entries(product.specs || {}).map(([key, value]) => (
                     <div key={key} className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-accent/20 shadow-lg hover:shadow-xl transition-all group">
-                      <h4 className="font-serif font-bold text-lg text-secondary mb-2 capitalize">{key.replace('_', ' ')}:</h4>
+                      <h4 className="font-serif font-bold text-lg text-secondary mb-2">
+                        {key === 'material' ? 'Chất liệu' : 
+                         key === 'bead_size' ? 'Kích thước hạt' : 
+                         key === 'bead_count' ? 'Số lượng hạt' : 
+                         key === 'height' ? 'Chiều cao' : 
+                         key === 'width' ? 'Chiều ngang' : 
+                         key === 'depth' ? 'Chiều sâu' : 
+                         key === 'certification' ? 'Kiểm định' : 
+                         key === 'material_type' ? 'Loại đá' :
+                         key.replace('_', ' ').charAt(0).toUpperCase() + key.slice(1)}:
+                      </h4>
                       <p className="text-xl font-bold text-primary group-hover:text-primary-dark">{String(value)}</p>
                     </div>
                   ))}

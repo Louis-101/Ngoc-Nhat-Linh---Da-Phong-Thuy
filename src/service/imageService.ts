@@ -1,43 +1,33 @@
 import { supabase } from './supabaseClient';
 
-export async function uploadProductImage(file: File, productId: string): Promise<string | null> {
-  if (!supabase.isReady()) {
-    console.warn('Supabase not ready, skipping upload');
-    return `https://picsum.photos/seed/product-${productId}/600/600`;
-  }
-
+export async function uploadProductImage(file: File, id: string, bucketName: string = 'product-images'): Promise<string | null> {
   try {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${productId}.${fileExt}`;
-    const filePath = `product-images/${fileName}`;
+    const fileName = `${id}.${fileExt}`;
+    const filePath = fileName; // Không lặp lại tên bucket ở đây
 
     const { data, error } = await supabase.storage
-      .from('product-images')
+      .from(bucketName)
       .upload(filePath, file, { upsert: true });
 
     if (error) throw error;
 
     const { data: { publicUrl } } = supabase.storage
-      .from('product-images')
+      .from(bucketName)
       .getPublicUrl(filePath);
 
     return publicUrl;
   } catch (error) {
     console.error('Upload error:', error);
-    return `https://picsum.photos/seed/product-${productId}/600/600`;
+    return `https://picsum.photos/seed/${bucketName}-${id}/600/600`; // Fallback URL
   }
 }
 
 export async function uploadProductGallery(file: File, productId: string, index: number): Promise<string | null> {
-  if (!supabase.isReady()) {
-    console.warn('Supabase not ready, skipping upload');
-    return `https://picsum.photos/seed/gallery-${productId}-${index}/600/400`;
-  }
-
   try {
     const fileExt = file.name.split('.').pop();
     const fileName = `${productId}-gallery-${index}.${fileExt}`;
-    const filePath = `product-gallery/${fileName}`;
+    const filePath = fileName; // Corrected: no need to repeat bucket name in path
 
     const { data, error } = await supabase.storage
       .from('product-gallery')
@@ -55,4 +45,3 @@ export async function uploadProductGallery(file: File, productId: string, index:
     return `https://picsum.photos/seed/gallery-${productId}-${index}/600/400`;
   }
 }
-
