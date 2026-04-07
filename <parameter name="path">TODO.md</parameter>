@@ -1,0 +1,12 @@
+<parameter name="content"># TODO Progress
+
+## Current Task: Step 3 - Edit Home.tsx (Replace hero img with Buddha, add 'Menu phổ biến' section)
+
+1. [ ] Replace hero image src in src/pages/Home.tsx with `/images/buddha-hero.jpg` and remove heroError logic.
+2. [ ] Add 'Menu phổ biến' section after featured products: 4 static product cards linking to /products.
+3. [ ] Update TODO.md (mark complete).
+4. [ ] Test on dev server.
+5. [ ] Proceed to next TODO items (test navigation/search).
+
+Current: Starting Home.tsx edits.
+</parameter>

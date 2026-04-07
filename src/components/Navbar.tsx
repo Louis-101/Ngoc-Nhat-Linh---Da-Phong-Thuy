@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Menu, X, Facebook, Instagram, MessageCircle, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -7,9 +7,12 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [preventScroll, setPreventScroll] = useState(false);
   const location = useLocation();
 
   const isHomePage = location.pathname === '/';
+  const navigate = useNavigate();
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +32,21 @@ export default function Navbar() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (preventScroll) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [preventScroll]);
+
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
@@ -59,12 +77,12 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${getBgColor()}`}>
+  <nav className={`fixed top-0 left-0 right-0 z-100 transition-all duration-300 ${getBgColor()}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 group">
-              <span className={`text-2xl font-serif font-bold tracking-tighter transition-all duration-300 ${
+              <span className={`text-2xl font-serif font-bold italic tracking-widest transition-all duration-300 ${
                 isScrolled ? 'text-gradient-gold' : isHomePage ? 'text-white group-hover:text-primary' : 'text-gradient-gold'
               }`}>
                 NGỌC NHẤT LINH
@@ -72,7 +90,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
@@ -116,7 +134,7 @@ export default function Navbar() {
                 <MessageCircle size={20} />
               </a>
               <button 
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               >
                 {isMobileMenuOpen ? <X size={24} className={getTextColor()} /> : <Menu size={24} className={getTextColor()} />}
@@ -128,28 +146,32 @@ export default function Navbar() {
         {/* Mobile Menu */}
         <AnimatePresence>
           {isMobileMenuOpen && (
-            <>
+          <>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-40 md:hidden"
+                className="fixed inset-0 bg-black/80 z-49"
                 onClick={() => setIsMobileMenuOpen(false)}
               />
+
               <motion.div
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-50 md:hidden shadow-2xl flex flex-col bg-pattern-subtle"
+                className="fixed right-0 top-0 h-screen w-80 bg-white shadow-2xl z-50 flex flex-col"
+                onAnimationStart={() => setPreventScroll(true)}
+                onAnimationComplete={() => setPreventScroll(false)}
               >
+
                 <div className="p-6 flex justify-between items-center border-b border-accent">
                   <span className="text-xl font-serif font-bold text-gradient-gold tracking-tighter">MENU</span>
                   <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 hover:bg-accent rounded-full transition-colors">
                     <X size={24} className="text-secondary" />
                   </button>
                 </div>
-                <div className="flex-grow overflow-y-auto py-8 px-6 space-y-2">
+                <div className="grow overflow-y-auto py-8 px-6 space-y-2">
                   {navLinks.map((link, i) => (
                     <motion.div
                       key={link.path}
@@ -201,7 +223,7 @@ export default function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-white z-[60] flex flex-col"
+            className="fixed inset-0 bg-white z-60 flex flex-col"
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-10">
               <div className="flex justify-between items-center mb-20">
@@ -219,11 +241,21 @@ export default function Navbar() {
               <div className="max-w-4xl mx-auto">
                 <div className="relative group">
                   <Search size={32} className="absolute left-0 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-primary transition-colors" />
-                  <input 
-                    autoFocus
-                    type="text" 
-                    placeholder="Tìm kiếm sản phẩm, bài viết..." 
+                  <input
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const q = searchText.trim();
+                        if (q.length > 0) {
+                          setIsSearchOpen(false);
+                          navigate(`/products?search=${encodeURIComponent(q)}`);
+                        }
+                      }
+                    }}
                     className="w-full bg-transparent border-b-2 border-gray-100 py-6 pl-14 text-3xl md:text-5xl font-serif focus:outline-none focus:border-primary transition-all placeholder:text-gray-200"
+                    placeholder="Tìm kiếm sản phẩm, mệnh, ý nghĩa..."
                   />
                 </div>
                 
@@ -232,7 +264,15 @@ export default function Navbar() {
                     <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-6">Gợi ý tìm kiếm</h4>
                     <div className="flex flex-wrap gap-3">
                       {['Vòng tay', 'Thạch anh', 'Mệnh Kim', 'Tỳ hưu', 'Nhẫn nam'].map(tag => (
-                        <button key={tag} className="px-5 py-2 rounded-full bg-gray-50 text-sm hover:bg-primary hover:text-white transition-all">
+                        <button
+                          key={tag}
+                          onClick={() => {
+                            setSearchText(tag);
+                            setIsSearchOpen(false);
+                            navigate(`/products?search=${encodeURIComponent(tag)}`);
+                          }}
+                          className="px-5 py-2 rounded-full bg-gray-50 text-sm hover:bg-primary hover:text-white transition-all"
+                        >
                           {tag}
                         </button>
                       ))}

@@ -7,55 +7,39 @@ import { supabase } from '../service/supabaseClient';
 export default function Blog() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('');
+
+
 
   useEffect(() => {
     async function fetchPosts() {
+      setLoading(true);
+      setErrorMsg('');
       try {
         const { data, error } = await supabase
           .from('posts')
           .select('*')
           .order('created_at', { ascending: false });
-        
-        if (error) throw error;
+
+        console.log('Supabase posts query:', { data, error });
+
+        if (error) {
+          throw error;
+        }
+
         setPosts(data || []);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching posts:', err);
-        // Fallback mock data
-        setPosts([
-          { 
-            id: '1', 
-            title: 'Cách chọn vòng tay phong thủy theo mệnh Kim, Mộc, Thủy, Hỏa, Thổ', 
-            excerpt: 'Việc lựa chọn vòng tay phong thủy không chỉ dựa trên sở thích mà còn cần tuân theo quy luật ngũ hành để mang lại may mắn...',
-            image_url: 'https://picsum.photos/seed/blog1/800/500',
-            created_at: '2024-03-15T00:00:00Z',
-            author: 'Ngọc Nhất Linh',
-            slug: 'cach-chon-vong-tay-phong-thuy'
-          },
-          { 
-            id: '2', 
-            title: 'Ý nghĩa của Thạch Anh Tóc Vàng trong kinh doanh và tài lộc', 
-            excerpt: 'Thạch anh tóc vàng được mệnh danh là viên đá của doanh nhân. Hãy cùng tìm hiểu tại sao nó lại được ưa chuộng đến vậy...',
-            image_url: 'https://picsum.photos/seed/blog2/800/500',
-            created_at: '2024-03-10T00:00:00Z',
-            author: 'Chuyên gia Phong Thủy',
-            slug: 'y-nghia-thach-anh-toc-vang'
-          },
-          { 
-            id: '3', 
-            title: '5 vật phẩm phong thủy để bàn làm việc giúp thăng tiến sự nghiệp', 
-            excerpt: 'Bố trí bàn làm việc đúng phong thủy sẽ giúp bạn tập trung hơn, giảm căng thẳng và thu hút những cơ hội mới...',
-            image_url: 'https://picsum.photos/seed/blog3/800/500',
-            created_at: '2024-03-05T00:00:00Z',
-            author: 'Ngọc Nhất Linh',
-            slug: 'vat-pham-phong-thuy-ban-lam-viec'
-          }
-        ]);
+        setPosts([]);
+        setErrorMsg('Không thể tải bài viết. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
       }
     }
     fetchPosts();
   }, []);
+
+
 
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
@@ -87,16 +71,28 @@ export default function Blog() {
           </div>
         </div>
 
+
+
         {/* Blog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-10">
           {loading ? (
             Array(6).fill(0).map((_, i) => (
               <div key={i} className="animate-pulse space-y-4">
-                <div className="bg-accent/20 aspect-[16/10] rounded-2xl"></div>
+                <div className="bg-accent/20 aspect-square md:aspect-16/10 rounded-2xl"></div>
                 <div className="h-4 bg-accent/20 rounded w-3/4"></div>
                 <div className="h-4 bg-accent/20 rounded w-1/2"></div>
               </div>
             ))
+          ) : errorMsg ? (
+            <div className="col-span-full py-20 text-center">
+              <p className="text-red-600 font-bold text-lg mb-2">{errorMsg}</p>
+              <p className="text-secondary/70">Kiểm tra kết nối hoặc cấu hình Supabase.</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="col-span-full py-20 text-center">
+              <h3 className="text-xl font-serif font-bold mb-2 text-secondary">Chưa có bài viết</h3>
+              <p className="text-gray-500">Hiện chưa có bài viết nào. Vui lòng quay lại sau.</p>
+            </div>
           ) : (
             posts.map((post) => (
               <motion.article 
@@ -106,14 +102,14 @@ export default function Blog() {
                 className="group"
               >
                 <Link to={`/blog/${post.slug}`}>
-                  <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6 shadow-md border border-accent/10">
+                  <div className="relative aspect-square md:aspect-16/10 rounded-xl md:rounded-2xl overflow-hidden mb-3 md:mb-6 shadow-md border border-accent/10">
                     <img 
                       src={post.image_url} 
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       referrerPolicy="no-referrer"
                     />
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-2 left-2 md:top-4 md:left-4">
                       <span className="bg-white/90 backdrop-blur-sm text-secondary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm border border-accent/20">
                         Kiến thức
                       </span>

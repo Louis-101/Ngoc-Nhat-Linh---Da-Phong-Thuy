@@ -49,8 +49,8 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Contact Info */}
           <div className="lg:col-span-1 space-y-8">
-            <div className="bg-secondary text-white p-10 rounded-3xl space-y-10 relative overflow-hidden shadow-xl">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full -mr-10 -mt-10"></div>
+            <div className="bg-[#fdfaf5] text-secondary p-10 rounded-3xl space-y-10 relative overflow-hidden shadow-xl border border-accent/20">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full -mr-10 -mt-10"></div>
               <div className="absolute inset-0 bg-pattern-subtle opacity-10"></div>
               
               <div className="relative z-10">
@@ -58,50 +58,64 @@ export default function Contact() {
                 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white shadow-sm border border-accent/10 flex items-center justify-center shrink-0">
                       <Phone size={20} className="text-primary" />
                     </div>
                     <div>
-                      <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Hotline 24/7</p>
+                      <p className="text-xs text-secondary/40 uppercase tracking-widest mb-1">Hotline 24/7</p>
                       <p className="font-bold">0902 111 626</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white shadow-sm border border-accent/10 flex items-center justify-center shrink-0">
                       <Mail size={20} className="text-primary" />
                     </div>
-                    <div>
-                      <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Email</p>
-                      <p className="font-bold">contact@ngocnhatlinh.vn</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-secondary/40 uppercase tracking-widest mb-1">Email</p>
+                      <p className="font-bold break-all text-sm sm:text-base">daphongthuyngocnhatlinh@gmail.com</p>
                     </div>
                   </div>
                   
                   <div className="flex items-start space-x-4">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-white shadow-sm border border-accent/10 flex items-center justify-center shrink-0">
                       <MapPin size={20} className="text-primary" />
                     </div>
                     <div>
-                      <p className="text-xs text-white/40 uppercase tracking-widest mb-1">Địa chỉ</p>
-                      <p className="font-bold text-sm">Số 65 đường 3/2, phường Hưng Lợi, Quận Ninh Kiều, TP. Cần Thơ</p>
+                      <p className="text-xs text-secondary/40 uppercase tracking-widest mb-1">Địa chỉ</p>
+                      <p className="font-bold text-sm">65 Đường 3/2 Phường Tân An Thành Phố Cần Thơ</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-10 border-t border-white/10 mt-10">
-                  <p className="text-xs text-white/40 uppercase tracking-widest mb-4">Kết nối mạng xã hội</p>
+                <div className="pt-10 border-t border-accent/20 mt-10">
+                  <p className="text-xs text-secondary/40 uppercase tracking-widest mb-4">Kết nối mạng xã hội</p>
                   <div className="flex space-x-4">
-                    <a href="https://www.facebook.com/profile.php?id=61575224635423" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><Facebook size={20} /></a>
-                    <button className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><Instagram size={20} /></button>
-                    <a href="https://zalo.me/0902111626" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-all"><MessageCircle size={20} /></a>
+                    <a href="https://www.facebook.com/profile.php?id=61575224635423" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-accent/10 shadow-sm flex items-center justify-center hover:bg-primary hover:text-white transition-all"><Facebook size={20} /></a>
+                    <a href="https://www.tiktok.com/@ngocnhatlinh2108" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-accent/10 shadow-sm flex items-center justify-center hover:bg-primary hover:text-white transition-all">
+                      <svg fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.6-4.12-1.31a6.44 6.44 0 0 1-1.57-1.17v6.28c-.03 3.15-2.1 6.35-5.22 7.13-2.15.52-4.58.04-6.39-1.23A7.43 7.43 0 0 1 2 12.33c.02-3.76 3.46-7.25 7.21-7.25.88 0 1.74.19 2.54.55V9.65c-.84-.35-1.77-.5-2.66-.35-1.22.21-2.3.93-2.91 2.01-.57 1.08-.63 2.45-.08 3.5.55 1.05 1.61 1.83 2.79 2.05 1.35.25 2.87-.19 3.65-1.33.45-.65.66-1.44.64-2.22V0h.01z"/>
+                      </svg>
+                    </a>
+                    <a href="https://zalo.me/0902111626" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white border border-accent/10 shadow-sm flex items-center justify-center hover:bg-primary hover:text-white transition-all"><MessageCircle size={20} /></a>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="aspect-square rounded-3xl overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 shadow-md border border-accent/20">
-              <img src="https://picsum.photos/seed/map/600/600" alt="Map Placeholder" className="w-full h-full object-cover" />
-            </div>
+            <div className="aspect-4/3 rounded-3xl shadow-xl border border-accent/20 overflow-hidden">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3555.552830988385!2d105.75481205280464!3d10.01572032227409!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a089f9b67e85ff%3A0xb7931ccbde2bcddc!2zxJDDoSBQaG9uZyBUaOG7p3kgQ-G6p24gVGjGoSAtIE5n4buNYyBOaOG6pXQgTGluaA!5e1!3m2!1svi!2s!4v1774104483785!5m2!1svi!2s" 
+                  width="100%" 
+                  height="450" 
+                  style={{border:0}} 
+                  allowFullScreen={true} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Cửa hàng Ngọc Nhất Linh - 65 Đường 3/2 Phường Tân An, Cần Thơ"
+                  className="w-full h-full"
+                />
+              </div>
           </div>
 
           {/* Contact Form */}

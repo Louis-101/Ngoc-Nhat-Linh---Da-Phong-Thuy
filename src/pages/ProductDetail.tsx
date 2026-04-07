@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import { Product, DestinyResult } from '../types/product';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Facebook, Sparkles, Search } from 'lucide-react';
+import { Heart, Share2, Shield, Truck, RotateCcw, MessageCircle, Star, Facebook, Sparkles, Phone } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import { useWishlist } from '../Context/WishlistContext';
-import { calculateDestinyFromYear, DestinyResult } from '../service/destinyService';
+import { calculateDestinyFromYear } from '../service/destinyService';
+import Markdown from 'react-markdown';
+import SEO from '../components/SEO';
 
 export default function ProductDetail() {
   const { id } = useParams();
-  const [product, setProduct] = useState<any>(null);
+  const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [userDestiny, setUserDestiny] = useState<DestinyResult | null>(null);
+  const [userDestiny, setUserDestiny] = useState(null);
   const [birthYearInput, setBirthYearInput] = useState('');
-  const [suggestedProducts, setSuggestedProducts] = useState<any[]>([]);
+  const [suggestedProducts, setSuggestedProducts] = useState([]);
   const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('meaning');
+  const [mainImage, setMainImage] = useState('');
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
@@ -29,17 +34,18 @@ export default function ProductDetail() {
     }
   }, [userDestiny]);
 
-  async function fetchSuggestedProducts(elementName: string) {
+  async function fetchSuggestedProducts(elementName) {
     setSuggestionsLoading(true);
     try {
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .ilike('description', `%${elementName}%`)
-        .limit(4);
+        .limit(4)
+        .order('created_at', { ascending: false });
       
       if (error) throw error;
-      setSuggestedProducts(data || []);
+      setSuggestedProducts((data || []) as Product[]);
     } catch (err) {
       console.error('Error fetching suggestions:', err);
     } finally {
@@ -47,7 +53,7 @@ export default function ProductDetail() {
     }
   }
 
-  const handleDestinySubmit = (e: React.FormEvent) => {
+  const handleDestinySubmit = (e) => {
     e.preventDefault();
     const year = parseInt(birthYearInput);
     if (year >= 1950 && year <= 2026) {
@@ -68,24 +74,33 @@ export default function ProductDetail() {
         
         if (error) throw error;
         setProduct(data);
+        setMainImage(data?.image_url || '');
       } catch (err) {
         console.error('Error fetching product:', err);
-        // Fallback mock data
-        setProduct({
+        // Fallback data
+        const fallback = {
           id: id,
           name: 'Vòng Tay Thạch Anh Tóc Vàng 12ly',
           price: 4500000,
-          description: 'Pháp bảo chiêu tài, dẫn lộc và gia tăng vượng khí cho chủ nhân. Chế tác từ đá Thạch Anh Tóc Vàng tự nhiên 100%, chứa các sợi tinh thể rutil vàng rực rỡ như những tia nắng, tượng trưng cho sự thịnh vượng và quyền uy.',
-          image_url: 'https://picsum.photos/seed/gem1/800/800',
+          description: 'Pháp bảo chiêu tài, dẫn lộc và gia tăng vượng khí cho chủ nhân.',
+          image_url: '/images/fallback.jpg',
           category: 'Vòng tay',
-          meaning: 'Thạch anh tóc vàng (Golden Rutilated Quartz) là một trong những biến thể quý hiếm và quyền năng nhất trong dòng họ thạch anh. Những sợi tóc bên trong đá chính là các tinh thể Rutil hình kim, hình trụ có màu vàng rực rỡ dưới ánh sáng.',
+          meaning: 'Thạch anh tóc vàng quyền năng giúp tăng tài lộc, bình an và thịnh vượng.',
           specs: {
             material: 'Thạch anh tóc vàng tự nhiên',
             size: '12 ly',
-            count: '17-18 hạt (tùy size cổ tay)',
+            count: '17-18 hạt',
             certification: 'SJC / PNJ Lab'
-          }
-        });
+          },
+          images: [
+            'https://picsum.photos/seed/gem11/800/800', 
+            'https://picsum.photos/seed/gem12/800/800', 
+            'https://picsum.photos/seed/gem13/800/800', 
+            'https://picsum.photos/seed/gem14/800/800'
+          ]
+        };
+        setProduct(fallback);
+        setMainImage(fallback.image_url);
       } finally {
         setLoading(false);
       }
@@ -93,245 +108,274 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  if (loading) return <div className="pt-32 pb-20 text-center">Đang tải...</div>;
-  if (!product) return <div className="pt-32 pb-20 text-center">Không tìm thấy sản phẩm.</div>;
+  const handleThumbClick = (img) => {
+    setMainImage(img);
+  };
+
+  if (loading) return (
+    <div className="min-h-screen pt-24 pb-20 text-center bg-linear-to-b from-beige-subtle to-white">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="animate-pulse space-y-8">
+          <div className="aspect-square w-full max-w-md mx-auto bg-accent/20 rounded-3xl"></div>
+          <div className="space-y-4 max-w-2xl mx-auto">
+            <div className="h-12 bg-accent/20 rounded-2xl w-3/4 mx-auto"></div>
+            <div className="h-8 bg-accent/20 rounded-xl w-1/2 mx-auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (!product) return (
+    <div className="min-h-screen pt-24 pb-20 text-center">
+      <h1 className="text-2xl font-serif font-bold text-secondary">Không tìm thấy sản phẩm</h1>
+    </div>
+  );
 
   return (
-    <div className="pt-24 pb-20 bg-white bg-pattern-subtle">
+    <div className="pt-24 pb-20 min-h-screen bg-linear-to-b from-beige-subtle to-white">
+      <SEO 
+        title={product.name}
+        description={product.description || `Mua ${product.name} tự nhiên tại Ngọc Nhất Linh. Đá quý phong thủy chất lượng cao, có kiểm định, giao hàng toàn quốc.`}
+        image={product.image_url}
+        type="product"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumbs */}
-        <nav className="flex text-xs text-gray-400 mb-8 space-x-2">
-          <Link to="/" className="hover:text-primary">Trang chủ</Link>
-          <span>/</span>
-          <Link to="/products" className="hover:text-primary">Sản phẩm</Link>
-          <span>/</span>
-          <span className="text-secondary">{product.name}</span>
+        {/* Breadcrumb */}
+        <nav className="flex text-sm md:text-base text-gray-500 mb-8 space-x-2">
+          <Link to="/" className="hover:text-primary transition-colors font-medium">Trang chủ</Link>
+          <span> / </span>
+          <Link to="/products" className="hover:text-primary transition-colors font-medium">Sản phẩm</Link>
+          <span> / </span>
+          <span className="text-secondary font-bold">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
-          {/* Product Images */}
-          <div className="space-y-4">
-            <div className="aspect-square rounded-3xl overflow-hidden bg-accent/10 border border-accent/20 shadow-sm">
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16 items-start">
+          {/* Image Gallery */}
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-6 order-1 lg:order-1"
+          >
+            {/* Main Image */}
+            <div className="aspect-square rounded-3xl overflow-hidden bg-gray-50 shadow-xl group cursor-pointer">
               <img 
-                src={product.image_url} 
+                src={mainImage || '/images/fallback.jpg'} 
                 alt={product.name}
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => {
+                  console.log('Main image error');
+                  e.currentTarget.src = '/images/fallback.jpg';
+                }}
               />
             </div>
-            <div className="grid grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-square rounded-xl overflow-hidden bg-accent/5 border border-accent/10 cursor-pointer hover:border-primary transition-colors">
-                  <img src={`https://picsum.photos/seed/gem${i+10}/200/200`} alt="Gallery" className="w-full h-full object-cover" />
-                </div>
+            {/* Thumbnails */}
+            <div className="flex gap-3 no-scrollbar overflow-x-auto pb-2">
+              {(product.images || [product.image_url]).slice(0,5).map((imgUrl, i) => (
+                <motion.button
+                  key={i}
+                  className={`shrink-0 w-20 aspect-square rounded-xl overflow-hidden border-4 transition-all ${
+                    mainImage === imgUrl ? 'border-primary shadow-lg scale-105' : 'border-transparent hover:border-primary/50'
+                  }`}
+                  onClick={() => handleThumbClick(imgUrl)}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <img 
+                    src={imgUrl} 
+                    alt={`Thumbnail ${i+1}`} 
+                    className="w-full h-full object-cover" 
+                    onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}
+                  />
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Product Info */}
-          <div className="space-y-8">
-            <div>
-              <span className="bg-accent text-primary-dark text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block shadow-sm">Premium Edition</span>
-              <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-secondary">{product.name}</h1>
-              <p className="text-2xl font-bold text-primary mb-6">
-                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
-              </p>
-              <div className="flex items-center space-x-4 mb-6">
-                <span className="flex items-center text-xs text-primary"><Star size={14} className="fill-current mr-1" /> 4.9 (48 đánh giá)</span>
-                <span className="text-accent">|</span>
-                <span className="text-xs text-gray-400">Mã SP: NNL-{product.id?.slice(0, 5)}</span>
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-8 lg:max-w-lg order-2 lg:order-2"
+          >
+            <div className="space-y-4">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-gray-900 leading-tight">
+                {product.name}
+              </h1>
+              <div className="flex items-baseline space-x-2">
+                <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
+                  {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                </p>
+                <span className="text-sm text-gray-400 uppercase tracking-wider font-medium">{product.category}</span>
               </div>
-              <p className="text-gray-600 leading-relaxed font-light">
+              <p className="text-gray-600 leading-relaxed text-lg sm:text-xl">
                 {product.description}
               </p>
             </div>
 
-            <div className="space-y-4 pt-6 border-t border-accent">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <a 
-                  href="https://zalo.me/0902111626" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex-grow bg-[#0068FF] text-white py-4 rounded-full font-bold flex items-center justify-center space-x-3 hover:bg-[#0056d6] transition-all shadow-lg hover:shadow-xl active:scale-95"
-                >
-                  <MessageCircle size={22} />
-                  <span>TƯ VẤN QUA ZALO</span>
-                </a>
-                <button 
-                  onClick={() => toggleWishlist(product)}
-                  className={`p-4 rounded-full border transition-all flex items-center justify-center ${isInWishlist(product.id) ? 'bg-red-50 border-red-200 text-red-500' : 'border-accent text-gray-400 hover:border-primary hover:text-primary'}`}
-                >
-                  <Heart size={22} className={isInWishlist(product.id) ? 'fill-current' : ''} />
-                  <span className="sm:hidden ml-2 font-bold">Yêu thích</span>
-                </button>
-              </div>
-              
-              <a 
-                href="https://www.facebook.com/profile.php?id=61575224635423" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-full bg-secondary text-white py-4 rounded-full font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 flex items-center justify-center space-x-3"
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              <Link 
+                to="https://zalo.me/0902111626"
+                target="_blank"
+                className="w-full bg-gradient-gold text-secondary py-5 px-8 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center space-x-3"
               >
-                <Facebook size={22} />
-                <span>TƯ VẤN QUA FACEBOOK</span>
-              </a>
+                <Phone size={24} />
+                <span>TƯ VẤN ZALO NGAY</span>
+              </Link>
+              <button 
+                onClick={() => toggleWishlist(product)}
+                className="w-full p-5 border-2 border-primary/30 rounded-2xl flex items-center justify-center space-x-3 hover:bg-primary/5 hover:border-primary hover:shadow-lg transition-all font-semibold text-lg"
+              >
+                <Heart size={24} fill={isInWishlist(product.id) ? 'currentColor' : 'none'} className="text-primary" />
+                <span>{isInWishlist(product.id) ? 'ĐÃ THÊM VÀO YÊU THÍCH' : 'THÊM VÀO YÊU THÍCH'}</span>
+              </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-6">
-              <div className="flex items-center space-x-3 text-xs text-secondary/60">
-                <Shield size={18} className="text-primary" />
-                <span>Kiểm định PNJ/SJC</span>
-              </div>
-              <div className="flex items-center space-x-3 text-xs text-secondary/60">
-                <Truck size={18} className="text-primary" />
-                <span>Giao hàng hỏa tốc</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Details Tabs */}
-        <div className="border-t border-accent pt-16">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
-            <div className="lg:col-span-2 space-y-12">
-              <section>
-                <h2 className="text-2xl font-serif font-bold mb-6 text-secondary">Ý nghĩa đá {product.name}</h2>
-                <p className="text-gray-600 leading-relaxed font-light mb-6">
-                  {product.meaning || 'Đang cập nhật ý nghĩa phong thủy cho sản phẩm này...'}
-                </p>
-                <div className="aspect-video rounded-3xl overflow-hidden bg-accent/10 mb-8 border border-accent/20">
-                  <img src="https://picsum.photos/seed/detail/1200/800" alt="Detail" className="w-full h-full object-cover" />
-                </div>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-serif font-bold mb-6 text-secondary">Chế tác thủ công tinh xảo</h2>
-                <p className="text-gray-600 leading-relaxed font-light">
-                  Mỗi viên đá tại Ngọc Nhất Linh đều được tuyển chọn kỹ lưỡng về độ trong và mật độ tóc. Chúng tôi cam kết quá trình mài giũa hoàn toàn thủ công, giữ trọn năng lượng nguyên bản của đất trời.
-                </p>
-              </section>
-            </div>
-
-            <div className="space-y-8">
-              <div className="bg-accent/30 p-8 rounded-3xl border border-primary/20 relative overflow-hidden">
-                <div className="absolute inset-0 bg-pattern-subtle opacity-30"></div>
-                <div className="relative z-10">
-                  <h3 className="text-lg font-serif font-bold mb-6 flex items-center text-secondary">
-                    <Shield size={20} className="text-primary mr-2" /> Thông số sản phẩm
-                  </h3>
-                  <ul className="space-y-4 text-sm">
-                    <li className="flex justify-between border-b border-accent/50 pb-2">
-                      <span className="text-secondary/60">Loại đá</span>
-                      <span className="font-medium text-secondary">{product.specs?.material || 'Đá tự nhiên'}</span>
-                    </li>
-                    <li className="flex justify-between border-b border-accent/50 pb-2">
-                      <span className="text-secondary/60">Kích thước hạt</span>
-                      <span className="font-medium text-secondary">{product.specs?.size || 'Đang cập nhật'}</span>
-                    </li>
-                    <li className="flex justify-between border-b border-accent/50 pb-2">
-                      <span className="text-secondary/60">Số lượng hạt</span>
-                      <span className="font-medium text-secondary">{product.specs?.count || 'Đang cập nhật'}</span>
-                    </li>
-                    <li className="flex justify-between">
-                      <span className="text-secondary/60">Kiểm định</span>
-                      <span className="text-primary font-bold">{product.specs?.certification || 'PNJ / SJC'}</span>
-                    </li>
-                  </ul>
-                  <div className="mt-8 p-4 bg-white/50 rounded-xl text-[10px] text-secondary/40 leading-relaxed italic border border-accent/30">
-                    Sản phẩm đi kèm: Hộp đựng lót nhung cao cấp, dây dự phòng, kim xỏ, khăn lau đá chuyên dụng.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Destiny Suggestions Section */}
-        <div className="mt-20 pt-20 border-t border-accent">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif font-bold text-secondary mb-4">Sản Phẩm Hợp Bản Mệnh</h2>
-            <p className="text-secondary/60 max-w-2xl mx-auto">Khám phá những vật phẩm phong thủy được tuyển chọn riêng cho cung mệnh của bạn.</p>
-          </div>
-
-          {!userDestiny ? (
-            <div className="max-w-xl mx-auto bg-accent/20 p-8 rounded-3xl border border-primary/20 text-center">
-              <Sparkles className="text-primary mx-auto mb-4" size={32} />
-              <h3 className="text-xl font-serif font-bold text-secondary mb-4">Bạn thuộc mệnh gì?</h3>
-              <p className="text-sm text-secondary/60 mb-6">Nhập năm sinh để chúng tôi gợi ý những sản phẩm mang lại năng lượng tốt nhất cho bạn.</p>
-              <form onSubmit={handleDestinySubmit} className="flex flex-col sm:flex-row gap-4">
-                <input 
-                  type="number" 
-                  min="1950" 
-                  max="2026"
-                  value={birthYearInput}
-                  onChange={(e) => setBirthYearInput(e.target.value)}
-                  placeholder="Nhập năm sinh (VD: 1990)" 
-                  className="flex-grow px-6 py-4 rounded-xl border border-accent/30 bg-white focus:outline-none focus:border-primary text-secondary"
-                  required
-                />
-                <button 
-                  type="submit"
-                  className="bg-primary text-secondary px-8 py-4 rounded-xl font-bold hover:shadow-lg transition-all active:scale-95 whitespace-nowrap"
+            {/* Consult Section */}
+            <div className="pt-8 border-t border-gray-200">
+              <h3 className="text-2xl font-serif font-bold mb-6 text-secondary">Tư vấn miễn phí</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a 
+                  href="https://m.me/61575224635423"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group bg-blue-600 text-white p-5 rounded-xl flex items-center space-x-4 hover:bg-blue-700 hover:shadow-xl transition-all font-semibold shadow-lg"
                 >
-                  XEM GỢI Ý
-                </button>
-              </form>
-            </div>
-          ) : (
-            <div className="space-y-12">
-              <div className="flex flex-col md:flex-row items-center justify-between bg-white p-6 rounded-2xl border border-primary/20 shadow-sm gap-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Sparkles className="text-primary" size={24} />
-                  </div>
+                  <Facebook size={28} className="group-hover:scale-110 transition-transform" />
                   <div>
-                    <p className="text-xs text-secondary/40 font-bold uppercase tracking-widest">Bản mệnh của bạn</p>
-                    <h4 className="text-xl font-serif font-bold text-secondary">Mệnh {userDestiny.name} ({userDestiny.canChi} - {userDestiny.year})</h4>
+                    <div className="font-bold text-lg">Facebook Messenger</div>
+                    <div className="text-sm opacity-90">Tư vấn nhanh qua Messenger</div>
                   </div>
-                </div>
-                <button 
-                  onClick={() => setUserDestiny(null)}
-                  className="text-xs text-primary font-bold hover:underline"
+                </a>
+                <a 
+                  href="https://zalo.me/0902111626"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group bg-green-500 text-white p-5 rounded-xl flex items-center space-x-4 hover:bg-green-600 hover:shadow-xl transition-all font-semibold shadow-lg"
                 >
-                  Thay đổi năm sinh
-                </button>
+                  <MessageCircle size={28} className="group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="font-bold text-lg">Zalo</div>
+                    <div className="text-sm opacity-90">Chat Zalo 24/7</div>
+                  </div>
+                </a>
               </div>
+            </div>
+          </motion.div>
+        </div>
 
-              {suggestionsLoading ? (
-                <div className="text-center py-12 text-secondary/40">Đang tìm kiếm sản phẩm phù hợp...</div>
-              ) : suggestedProducts.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {suggestedProducts.map((item) => (
-                    <Link 
-                      key={item.id} 
-                      to={`/product/${item.id}`}
-                      className="group"
-                      onClick={() => window.scrollTo(0, 0)}
-                    >
-                      <div className="aspect-square rounded-2xl overflow-hidden bg-accent/10 mb-4 border border-accent/20 group-hover:border-primary transition-colors">
-                        <img 
-                          src={item.image_url} 
-                          alt={item.name} 
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                      <h5 className="font-serif font-bold text-secondary group-hover:text-primary transition-colors line-clamp-1">{item.name}</h5>
-                      <p className="text-primary font-bold text-sm mt-1">
-                        {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}
-                      </p>
-                    </Link>
+        {/* Tabs Section */}
+        <div className="max-w-6xl mx-auto">
+          <div className="flex bg-white/50 backdrop-blur-md rounded-3xl p-1 shadow-xl mb-12">
+            <button 
+              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${
+                activeTab === 'meaning' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
+              }`}
+              onClick={() => setActiveTab('meaning')}
+            >
+              Ý nghĩa phong thủy
+            </button>
+            <button 
+              className={`flex-1 py-4 px-6 rounded-2xl font-serif font-bold text-lg transition-all ${
+                activeTab === 'specs' ? 'bg-white shadow-lg text-secondary' : 'text-secondary/60 hover:text-secondary'
+              }`}
+              onClick={() => setActiveTab('specs')}
+            >
+              Thông số kỹ thuật
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="space-y-12">
+            {activeTab === 'meaning' && (
+              <motion.section 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className="prose prose-lg md:prose-xl max-w-none
+                  prose-headings:font-bold 
+                  prose-headings:mt-12 prose-headings:mb-6
+                  prose-h1:font-sans prose-h1:text-primary prose-h1:text-4xl md:prose-h1:text-5xl
+                  prose-h2:font-serif prose-h2:text-secondary prose-h2:text-2xl md:prose-h2:text-3xl
+                  prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-8
+                  prose-strong:text-primary prose-strong:font-bold
+                  prose-li:text-gray-600
+                  mb-12"
+                >
+                  <Markdown
+                    components={{
+                      h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
+                      h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
+                      p: ({...props}) => <p className="mb-6 leading-relaxed text-gray-600" {...props} />,
+                    }}
+                  >
+                    {product.meaning}
+                  </Markdown>
+                </div>
+                <div className="aspect-21/9 rounded-3xl overflow-hidden bg-accent/10 shadow-2xl border border-accent/20">
+                  <img 
+                    src="/images/bang-hieu.jpg"
+                    alt="Bảng hiệu Ngọc Nhất Linh"
+                    className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" 
+                    loading="lazy" 
+                    decoding="async" 
+                  />
+                </div>
+              </motion.section>
+            )}
+
+            {activeTab === 'specs' && (
+              <motion.section 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <h2 className="text-3xl font-serif font-bold mb-12 text-secondary">Thông số chi tiết</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl">
+                  {Object.entries(product.specs || {}).map(([key, value]) => (
+                    <div key={key} className="bg-white/50 backdrop-blur-sm p-6 rounded-2xl border border-accent/20 shadow-lg hover:shadow-xl transition-all group">
+                      <h4 className="font-serif font-bold text-lg text-secondary mb-2 capitalize">{key.replace('_', ' ')}:</h4>
+                      <p className="text-xl font-bold text-primary group-hover:text-primary-dark">{String(value)}</p>
+                    </div>
                   ))}
                 </div>
-              ) : (
-                <div className="text-center py-12 bg-accent/10 rounded-2xl border border-dashed border-accent/40">
-                  <p className="text-secondary/40 italic">Hiện chưa có sản phẩm gợi ý cụ thể cho mệnh {userDestiny.name}. Vui lòng liên hệ để được tư vấn trực tiếp.</p>
-                </div>
-              )}
-            </div>
-          )}
+              </motion.section>
+            )}
+          </div>
         </div>
+
+        {/* Suggested Products */}
+        {suggestedProducts.length > 0 && (
+          <motion.section 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="max-w-7xl mx-auto mt-32"
+          >
+            <h2 className="text-3xl font-serif font-bold mb-12 text-center text-secondary">
+              Sản phẩm phù hợp với mệnh của bạn
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {suggestedProducts.map((suggestion) => (
+                <Link key={suggestion.id} to={`/product/${suggestion.id}`} className="group">
+                  <div className="aspect-square rounded-3xl overflow-hidden bg-white shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
+                    <img 
+                      src={suggestion.image_url || '/images/fallback.jpg'} 
+                      alt={suggestion.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      onError={(e) => e.currentTarget.src = '/images/fallback.jpg'}
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <h4 className="font-serif font-bold text-lg group-hover:text-primary transition-colors mb-2 line-clamp-1">{suggestion.name}</h4>
+                    <p className="text-primary font-bold text-xl">
+                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(suggestion.price)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </motion.section>
+        )}
       </div>
     </div>
   );

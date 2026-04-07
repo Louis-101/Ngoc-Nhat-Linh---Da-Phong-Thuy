@@ -41,10 +41,10 @@ export default function Cart() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 p-6 bg-white border border-gray-100 rounded-3xl shadow-sm"
               >
-                <div className="w-full sm:w-24 aspect-square sm:h-24 rounded-2xl overflow-hidden bg-gray-50 flex-shrink-0">
+                <div className="w-full sm:w-24 aspect-square sm:h-24 rounded-2xl overflow-hidden bg-gray-50 shrink-0">
                   <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
                 </div>
-                <div className="flex-grow space-y-1 w-full">
+                <div className="grow space-y-1 w-full">
                   <h3 className="font-serif font-bold text-lg">{item.name}</h3>
                   <p className="text-primary font-bold">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</p>
                   <p className="text-xs text-gray-400 uppercase tracking-widest">{item.category}</p>

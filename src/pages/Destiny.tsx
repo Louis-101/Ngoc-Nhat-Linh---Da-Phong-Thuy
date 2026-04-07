@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DestinyResult } from '../types/product';
 import { motion } from 'motion/react';
 import { Search, Sparkles, Info, ArrowRight, User, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,7 +11,7 @@ export default function Destiny() {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [gender, setGender] = useState('Nam');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DestinyResult | null>(null);
 
   // Load saved destiny on mount
   React.useEffect(() => {
@@ -142,7 +143,7 @@ export default function Destiny() {
               </form>
 
               <div className="mt-8 flex items-start space-x-3 p-4 bg-white/30 rounded-xl border border-accent/20">
-                <Info size={20} className="text-primary flex-shrink-0 mt-1" />
+                <Info size={20} className="text-primary shrink-0 mt-1" />
                 <p className="text-xs text-secondary/60 leading-relaxed">
                   Kết quả tra cứu dựa trên thuyết Ngũ Hành tương sinh tương khắc (Can Chi). Dữ liệu được tối ưu cho các năm từ 1950 đến 2026.
                 </p>
