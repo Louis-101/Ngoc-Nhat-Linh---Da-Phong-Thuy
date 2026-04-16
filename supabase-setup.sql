@@ -101,6 +101,7 @@ drop policy if exists "Allow admin update posts" on posts;
 create policy "Allow admin update posts" on posts for update using (auth.role() = 'authenticated');
 drop policy if exists "Allow admin select posts" on posts;
 create policy "Allow admin select posts" on posts for select using (auth.role() = 'authenticated');
+drop policy if exists "Public read published posts" on posts;
 create policy "Public read published posts" on posts for select using (published = true);
 
 -- 1. Buckets Setup
