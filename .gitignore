@@ -1,6 +1,21 @@
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage
+
+# Production
+dist/
+
+# Misc
+.DS_Store
+.env
+*.local
+=======
 # Dependencies
 node_modules
-/.pnp
+.pnp
 .pnp.js
 
 # Testing
@@ -26,3 +41,19 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+=======
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage
+
+# Production
+dist/
+
+# Misc
+.DS_Store
+.env
+*.local
+>>>>>>> origin/main
