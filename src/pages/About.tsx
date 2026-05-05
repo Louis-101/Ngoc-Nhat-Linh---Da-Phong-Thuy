@@ -1,14 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Award, Users, Heart, ShieldCheck } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 export default function About() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTo(0, 0);
+      document.body.scrollTo(0, 0);
+    };
+
+    scrollToTop();
+    
+    const timer = setTimeout(scrollToTop, 10);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
   return (
     <div className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen">
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 md:mb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
             <span className="text-gradient-gold font-serif italic font-bold uppercase tracking-widest text-[10px] mb-4 block">Câu chuyện thương hiệu</span>
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-8 leading-tight text-secondary">
               <span className="text-gradient-gold">Ngọc Nhất Linh</span> – Nơi Hội Tụ Tinh Hoa Đá Quý
@@ -26,16 +47,34 @@ export default function About() {
                 <p className="text-xs text-secondary/40 uppercase tracking-widest font-bold">Khách hàng tin dùng</p>
               </div>
             </div>
-          </div>
-          <div className="relative">
-            <div className="aspect-4/5 rounded-3xl overflow-hidden shadow-2xl border border-accent/20">
-              <img src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t39.30808-6/651815993_122169936008840821_5944726563328748363_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFTP-sdAfGfDC1Kj6pAzRXNFo_OUG7YREgWj85QbthESLvkkQ6SG_XUfY1inhVeNFB6Tgp3lrS20yoMXCv9zPhP&_nc_ohc=JGZL9vC6SUgQ7kNvwHfuQrJ&_nc_oc=AdrKzKuXZBNgCOB0BBXqjWuVDD0OG34V3VHcoa3nSHYP_g0xpvnOCEyD3MGTkg7ufYc&_nc_zt=23&_nc_ht=scontent.fsgn2-7.fna&_nc_gid=DJDU6WInynKIq-obBXuzjw&_nc_ss=7a32e&oh=00_Afwgy8DU4mQih6PfOOwngU3qkon2mR6OurC3jMM7AAAg8g&oe=69C866BE" alt="Brand Story" className="w-full h-full object-cover" loading="lazy" decoding="async" />
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="aspect-4/5 rounded-[2.5rem] overflow-hidden shadow-2xl border border-accent/20 relative group">
+              <img 
+                src="https://vwdriocchpkvolkzbqmn.supabase.co/storage/v1/object/public/blog-images/DSC08597.JPG" 
+                alt="Brand Story" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" 
+                loading="lazy" 
+                decoding="async" 
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-secondary/40 to-transparent opacity-60"></div>
             </div>
-            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-gold rounded-3xl flex-col items-center justify-center text-secondary text-center p-6 hidden md:flex shadow-xl">
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="absolute -bottom-10 -left-10 w-48 h-48 bg-gradient-gold rounded-3xl flex-col items-center justify-center text-secondary text-center p-6 hidden md:flex shadow-xl"
+            >
               <Award size={40} className="mb-4" />
               <p className="text-xs font-bold uppercase tracking-widest">Cam kết chất lượng số 1</p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -53,13 +92,20 @@ export default function About() {
               { icon: <Users className="w-5 h-5 md:w-8 md:h-8" />, title: 'Tâm Huyết', desc: 'Đội ngũ nghệ nhân và chuyên gia phong thủy làm việc bằng cả trái tim.' },
               { icon: <Heart className="w-5 h-5 md:w-8 md:h-8" />, title: 'Sứ Mệnh', desc: 'Mang lại sự thịnh vượng và bình an cho cộng đồng thông qua năng lượng đá quý.' }
             ].map((item, i) => (
-              <div key={i} className={`bg-white p-2 sm:p-6 md:p-10 rounded-xl md:rounded-3xl text-center space-y-2 sm:space-y-4 md:space-y-6 shadow-sm hover:shadow-md transition-all border border-accent/20`}>
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                className="bg-white p-4 sm:p-6 md:p-10 rounded-xl md:rounded-3xl text-center space-y-2 sm:space-y-4 md:space-y-6 shadow-sm hover:shadow-md transition-all border border-accent/20 hover:border-primary/30 group"
+              >
                 <div className="w-10 h-10 md:w-16 md:h-16 bg-accent/50 rounded-full flex items-center justify-center mx-auto text-primary">
-                  {item.icon}
+                  <div className="group-hover:scale-110 transition-transform">{item.icon}</div>
                 </div>
                 <h3 className="text-[10px] sm:text-base md:text-xl font-serif font-bold text-secondary leading-tight">{item.title}</h3>
                 <p className="text-secondary/60 text-[10px] md:text-sm font-light leading-relaxed line-clamp-3 md:line-clamp-none">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
