@@ -120,27 +120,31 @@ Việc đeo vòng tay phong thủy không chỉ là làm đẹp mà còn là m�
         </div>
 
         {/* Content */}
-        <div className="prose prose-lg md:prose-xl max-w-none 
-          prose-headings:font-bold 
-          prose-headings:mt-12 prose-headings:mb-6
-          prose-h1:font-sans prose-h1:text-primary prose-h1:text-4xl md:prose-h1:text-5xl
-          prose-h2:font-serif prose-h2:text-[#4d241e] prose-h2:text-2xl md:prose-h2:text-3xl
-          prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-8
-          prose-strong:text-[#4d241e] prose-strong:font-bold 
-          prose-img:rounded-3xl 
-          prose-a:text-primary
-          prose-li:mb-2"
-        >
+        <article className="max-w-none">
           <Markdown
             components={{
-              h1: ({...props}) => <h1 className="text-4xl md:text-5xl font-bold text-primary mb-8 mt-12 font-sans" {...props} />,
-              h2: ({...props}) => <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6 mt-10 font-serif" {...props} />,
-              p: ({...props}) => <p className="mb-6 leading-relaxed text-gray-700" {...props} />,
+              h1: ({...props}) => <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#7a5c2e] mb-8 mt-12" {...props} />,
+              h2: ({...props}) => <h2 className="text-2xl md:text-4xl font-serif font-bold text-secondary mb-6 mt-10 border-l-4 border-primary pl-5 py-1" {...props} />,
+              h3: ({...props}) => <h3 className="text-xl md:text-2xl font-serif font-bold text-secondary mb-4 mt-8" {...props} />,
+              p: ({...props}) => <p className="mb-6 leading-[1.8] md:leading-loose text-[#333] text-justify font-light" {...props} />,
+              ul: ({...props}) => <ul className="list-disc pl-8 mb-8 space-y-3 text-[#333]" {...props} />,
+              ol: ({...props}) => <ol className="list-decimal pl-8 mb-8 space-y-3 text-[#333]" {...props} />,
+              li: ({...props}) => <li className="pl-2 marker:text-primary font-medium" {...props} />,
+              blockquote: ({...props}) => (
+                <blockquote className="border-l-4 border-accent bg-accent/10 p-8 my-10 italic text-secondary rounded-r-3xl shadow-sm text-lg" {...props} />
+              ),
+              img: ({...props}) => (
+                <div className="my-12">
+                  <img className="w-full rounded-4xl shadow-2xl border border-accent/10 object-cover" {...props} />
+                </div>
+              ),
+              strong: ({...props}) => <strong className="font-bold text-secondary" {...props} />,
+              a: ({...props}) => <a className="text-primary font-bold hover:underline" {...props} />,
             }}
           >
             {post.content}
           </Markdown>
-        </div>
+        </article>
 
         {/* Footer */}
         <footer className="mt-20 pt-12 border-t border-accent/20">

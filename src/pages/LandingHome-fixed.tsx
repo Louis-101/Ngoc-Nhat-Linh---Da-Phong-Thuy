@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Star, Sparkles, ShieldCheck, Truck, Heart } from 'lucide-react';
+import { ArrowRight, Star, Sparkles, ShieldCheck, Truck, Heart, Users, MessageCircle, Compass, Gem, Moon, Sun } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
 import type { Product, Post } from '../types';
 import SEO from '../components/SEO';
@@ -9,6 +9,23 @@ import SEO from '../components/SEO';
 const LandingHome: React.FC = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [latestPosts, setLatestPosts] = useState<Post[]>([]);
+
+  // Animation variants cho cảm giác mềm mại
+  const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8, ease: "easeOut" as const }
+  };
+
+  const staggerContainer = {
+    initial: {},
+    whileInView: {
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
 
   useEffect(() => {
     fetchFeatured();
@@ -18,9 +35,9 @@ const LandingHome: React.FC = () => {
   const fetchFeatured = async () => {
     const { data, error } = await supabase
       .from('products')
-      .select('*, images(*)')
+      .select('*')
       .eq('featured', true)
-      .limit(4)
+      .limit(8)
       .order('created_at', { ascending: false });
 
     if (error) console.error('Error fetching featured:', error);
@@ -30,7 +47,7 @@ const LandingHome: React.FC = () => {
   const fetchPosts = async () => {
     const { data, error } = await supabase
       .from('posts')
-      .select('title, slug, excerpt, image_url, created_at')
+      .select('id, title, slug, excerpt, image_url, created_at')
       .eq('published', true)
       .limit(3)
       .order('created_at', { ascending: false });
@@ -40,245 +57,338 @@ const LandingHome: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="bg-[#fdfbf7] selection:bg-primary/20">
       <SEO 
-        title="Ngọc Nhất Linh - Đá quý phong thủy mệnh Hỏa, mệnh Thủy cao cấp" 
-        description="Vòng tay thạch anh, cẩm thạch, aquamarine tự nhiên. Tư vấn phong thủy cá nhân hóa. Giao hàng toàn quốc."
+        title="Ngọc Nhất Linh - Tinh Hoa Đá Quý & Phong Thủy Cao Cấp" 
+        description="Năng lượng từ thiên nhiên, vẻ đẹp của sự an yên. Chuyên vòng tay thạch anh, vật phẩm phong thủy tự nhiên cao cấp."
       />
       
-      {/* Hero */}
-      <section className="relative min-h-screen bg-linear-to-br from-purple-900 via-indigo-900 to-blue-900 overflow-hidden">
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="relative z-10 container mx-auto px-4 h-screen flex items-center justify-center text-center text-white pt-20">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto"
-          >
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-linear-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent leading-tight">
-              Ngọc Nhất Linh
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed opacity-90">
-              Vòng tay đá quý phong thủy tự nhiên • Chọn theo mệnh Hỏa, Thủy • Năng lượng thịnh vượng vạn năm
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
-              <Link 
-                to="/products" 
-                className="group bg-linear-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-black font-bold py-4 px-8 rounded-xl text-lg shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 flex items-center gap-2"
+      {/* --- REFINED HERO SECTION --- */}
+      <section className="relative min-h-screen overflow-hidden flex items-center pt-20">
+        {/* Background Layer: Soft Jade Accents & Glows */}
+        <div className="absolute top-[-10%] right-[-5%] w-125 h-125 bg-emerald-100/30 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-100 h-100 bg-amber-100/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '2s' }} />
+        
+        {/* Floating Light Particles */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-primary/40 rounded-full hidden md:block"
+            initial={{ 
+              x: Math.random() * 100 + "%", 
+              y: Math.random() * 100 + "%", 
+              opacity: 0.1 
+            }}
+            animate={{ 
+              y: ["-10%", "110%"],
+              opacity: [0.1, 0.5, 0.1]
+            }}
+            transition={{ 
+              duration: Math.random() * 10 + 10, 
+              repeat: Infinity, 
+              ease: "linear" 
+            }}
+          />
+        ))}
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div 
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-left"
+            >
+              <span className="inline-block text-primary/70 uppercase tracking-[0.4em] text-[10px] md:text-xs font-bold mb-6">Tinh Hoa Đá Quý Thiên Nhiên</span>
+              <h1 className="text-5xl md:text-7xl font-serif font-bold text-secondary mb-8 leading-[1.1]">
+                Vẻ Đẹp Của <br />
+                <span className="text-primary italic">Sự An Yên</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-500 mb-10 max-w-lg leading-relaxed font-light">
+                Khởi nguồn năng lượng thịnh vượng và bình an từ sâu trong lòng đất, kiến tạo giá trị tâm linh cho riêng bản mệnh của bạn.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-5 items-start">
+                <Link 
+                  to="/products" 
+                  className="bg-secondary text-white py-4 px-10 rounded-full font-bold shadow-2xl shadow-secondary/20 hover:bg-primary transition-all duration-500 group flex items-center gap-3"
+                >
+                  Khám Phá Sản Phẩm
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link 
+                  to="/destiny" 
+                  className="border border-secondary/20 text-secondary py-4 px-10 rounded-full font-bold hover:bg-secondary/5 transition-all duration-500"
+                >
+                  Nhận Tư Vấn Phong Thuỷ
+                </Link>
+              </div>
+            </motion.div>
+
+            {/* Floating Image Collage */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2 }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative z-10 w-full aspect-square rounded-[4rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.15)] border-12 border-white/80 backdrop-blur-sm">
+                <img 
+                  src="https://vwdriocchpkvolkzbqmn.supabase.co/storage/v1/object/public/blog-images/DSC08597.JPG" 
+                  alt="Ngọc Nhất Linh Hero" 
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-[3s]"
+                />
+              </div>
+              {/* Decorative floating elements */}
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                className="absolute -top-10 -right-10 w-40 h-40 bg-white p-4 rounded-3xl shadow-xl border border-accent/20 z-20"
               >
-                Khám phá ngay
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                to="/destiny" 
-                className="group border-2 border-white/50 hover:border-white text-white font-bold py-4 px-8 rounded-xl text-lg hover:bg-white hover:text-gray-900 transition-all duration-300 flex items-center gap-2 backdrop-blur-sm"
-              >
-                Xem mệnh của bạn
-                <Sparkles className="w-5 h-5" />
-              </Link>
-            </div>
-          </motion.div>
+                <div className="w-full h-full rounded-2xl bg-primary/5 flex items-center justify-center">
+                  <Sparkles className="w-10 h-10 text-primary" />
+                </div>
+              </motion.div>
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Featured Products */}
-      <section className="py-24 bg-white">
+      {/* --- IMPROVED PRODUCT SECTION --- */}
+      <section className="py-40 bg-white">
         <div className="container mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-center mb-4 bg-linear-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent"
-          >
-            Sản phẩm nổi bật
-          </motion.h2>
-          <p className="text-xl text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            Đá quý tự nhiên cao cấp • Phù hợp phong thủy • Nguồn năng lượng tích cực
-          </p>
+          <div className="text-center mb-20">
+            <motion.span {...fadeInUp} className="text-primary font-bold tracking-[0.3em] text-[10px] uppercase mb-4 block">Vật phẩm tuyển chọn</motion.span>
+            <motion.h2 
+              {...fadeInUp}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-6xl font-serif font-bold text-secondary mb-6"
+            >
+              Tuyệt Tác Chọn Lọc
+            </motion.h2>
+            <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="w-24 h-px bg-primary/20 mx-auto" />
+          </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <motion.div 
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 lg:grid-cols-4 gap-12"
+          >
             {featuredProducts.map((product, idx) => (
               <motion.div 
                 key={product.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="group cursor-pointer hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 rounded-3xl p-8 bg-linear-to-br from-white to-gray-50 border border-gray-100"
+                variants={fadeInUp}
+                className="group"
               >
-                <Link to={`/products/${product.id}`} className="block">
-                  <div className="w-full h-64 bg-linear-to-br from-purple-50 to-indigo-50 rounded-2xl overflow-hidden mb-6 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
+                <Link to={`/product/${product.id}`} className="block">
+                  <div className="aspect-square bg-[#faf8f5] rounded-[2.5rem] overflow-hidden mb-8 group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-700 relative border border-secondary/5">
                     <img 
                       src={product.image_url} 
                       alt={product.name}
-                      className="w-full h-full object-cover group-hover:brightness-110 transition-all duration-500"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                      loading="lazy"
+                      decoding="async"
                     />
+                    <div className="absolute inset-0 bg-secondary/0 group-hover:bg-secondary/5 transition-colors" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2 leading-tight">{product.name}</h3>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-2xl font-bold bg-linear-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
+                  <div className="px-2">
+                    <h3 className="text-lg font-serif font-bold text-secondary mb-2 leading-tight group-hover:text-primary transition-colors">{product.name}</h3>
+                    <p className="text-primary font-bold tracking-wider">
                       {product.price.toLocaleString()}đ
-                    </span>
-                    <div className="flex gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={"w-5 h-5 " + (i < 4.8 ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300')} />
-                      ))}
-                    </div>
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>Chính hãng 100%</span>
-                  </div>
-                  <button className="w-full bg-linear-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                    Xem chi tiết
-                  </button>
                 </Link>
               </motion.div>
             ))}
-          </div>
-          
-          {featuredProducts.length === 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center py-20"
+          </motion.div>
+
+          <motion.div {...fadeInUp} className="mt-24 text-center">
+            <Link 
+              to="/products"
+              className="inline-flex items-center gap-3 text-secondary font-bold border-b-2 border-primary/30 pb-2 hover:border-primary transition-all group"
             >
-              <div className="w-32 h-32 bg-linear-to-br from-purple-100 to-indigo-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="w-16 h-16 text-purple-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-700 mb-2">Sắp có sản phẩm mới</h3>
-              <p className="text-lg text-gray-500">Theo dõi để cập nhật những viên đá quý đẹp nhất</p>
-            </motion.div>
-          )}
+              Xem toàn bộ sưu tập
+              <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* Blog Preview */}
-      <section className="py-24 bg-linear-to-b from-gray-50 to-white">
+      {/* --- NEW CONSULTATION SECTION --- */}
+      <section className="py-40 bg-[#fdfbf7]">
         <div className="container mx-auto px-4">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-center mb-4 bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"
-          >
-            Kiến thức phong thủy
-          </motion.h2>
-          <p className="text-xl text-gray-600 text-center mb-16 max-w-2xl mx-auto">
-            Hướng dẫn chọn đá quý theo mệnh • Bí quyết kích hoạt năng lượng
-          </p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="relative group"
+            >
+              <div className="aspect-4/5 rounded-[4rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] border-8 border-white">
+                <img src="/images/bang-hieu.jpg" alt="Advisor" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+              </div>
+              <div className="absolute -bottom-8 -right-8 bg-white/90 backdrop-blur-xl p-8 rounded-4xl shadow-2xl hidden md:block border border-white">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center text-primary">
+                    <MessageCircle size={24} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-400 font-bold uppercase">Hỗ trợ 24/7</p>
+                    <p className="font-bold text-secondary">Zalo: 0902 111 626</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
+              <span className="text-primary font-bold tracking-[0.2em] text-[10px] uppercase mb-4 block italic">Cá nhân hóa trải nghiệm</span>
+              <h2 className="text-4xl md:text-6xl font-serif font-bold text-secondary mb-8 leading-tight">
+                Chưa Biết Mình <br /> Hợp Loại Đá Nào?
+              </h2>
+              <p className="text-gray-500 text-lg mb-12 leading-relaxed font-light">
+                Mỗi bản mệnh, mỗi nhu cầu cảm xúc, tài chính hay bình an đều có những loại đá tương sinh khác nhau. Hãy để chúng tôi đồng hành cùng bạn tìm ra "viên đá định mệnh".
+              </p>
+              
+              <div className="grid gap-5">
+                {[
+                  { label: 'Chọn Đá Theo Mệnh', icon: <Compass />, link: '/destiny' },
+                  { label: 'Chọn Đá Theo Nhu Cầu', icon: <Gem />, link: '/products' },
+                  { label: 'Nhận Tư Vấn Riêng', icon: <MessageCircle />, link: '/contact' }
+                ].map((item, i) => (
+                  <Link 
+                    key={i} 
+                    to={item.link}
+                    className="flex items-center justify-between p-7 bg-white/50 backdrop-blur-md rounded-3xl border border-secondary/5 hover:border-primary/40 hover:bg-white hover:shadow-xl transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-primary group-hover:scale-110 transition-transform">{item.icon}</span>
+                      <span className="font-bold text-secondary text-lg">{item.label}</span>
+                    </div>
+                    <ArrowRight className="w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- WHY CHOOSE US --- */}
+      <section className="py-40 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-16">
+            {[
+              { icon: <Sparkles className="w-10 h-10" />, title: 'Đá thiên nhiên tuyển chọn', desc: '100% đá quý thiên nhiên, mang năng lượng tinh khiết từ đất trời.' },
+              { icon: <Sun className="w-10 h-10" />, title: 'Năng Lượng Thuần Khiết', desc: 'Mọi vật phẩm đều được thanh tẩy và kích hoạt năng lượng tích cực.' },
+              { icon: <Users className="w-10 h-10" />, title: 'Tư Vấn Tận Tâm', desc: 'Đội ngũ tư vấn giàu kinh nghiệm, thấu hiểu cung mệnh và tâm lý khách hàng.' },
+              { icon: <Truck className="w-10 h-10" />, title: 'Giao hàng toàn quốc', desc: 'Đóng gói chuyên nghiệp, bảo hiểm hàng hoá, giao nhanh 1-3 ngày.' }
+            ].map((usp, i) => (
+              <motion.div key={i} {...fadeInUp} transition={{ delay: i * 0.1 }} className="text-center group">
+                <div className="w-20 h-20 bg-[#fdfbf7] rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all duration-500 shadow-sm">
+                  {usp.icon}
+                </div>
+                <h3 className="text-xl font-serif font-bold text-secondary mb-4">{usp.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed font-light">{usp.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* --- BLOG SECTION --- */}
+      <section className="py-40 bg-[#fdfbf7]">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div className="text-left">
+              <motion.span {...fadeInUp} className="text-primary font-bold tracking-[0.3em] text-[10px] uppercase mb-4 block">Góc trí tuệ</motion.span>
+              <motion.h2 {...fadeInUp} className="text-4xl md:text-6xl font-serif font-bold text-secondary leading-tight">Kiến Thức <br /> Phong Thuỷ</motion.h2>
+            </div>
+            <Link to="/blog" className="text-secondary font-bold border-b border-primary/40 pb-2 flex items-center gap-2 hover:text-primary hover:border-primary transition-all group">
+              Xem tất cả bài viết <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {latestPosts.slice(0, 3).map((post, idx) => (
-              <motion.div 
-                key={post.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="group bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-              >
+          <motion.div 
+            variants={staggerContainer}
+            initial="initial"
+            whileInView="whileInView"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-12"
+          >
+            {latestPosts.map((post, idx) => (
+              <motion.div key={post.id} variants={fadeInUp} className="group">
                 <Link to={`/blog/${post.slug}`} className="block">
-                  <div className="h-56 bg-linear-to-br from-emerald-400 to-teal-500 relative overflow-hidden">
+                  <div className="aspect-4/3 rounded-4xl overflow-hidden mb-8 shadow-sm">
                     <img 
                       src={post.image_url} 
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 brightness-110"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]"
                     />
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <span className="inline-block bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold text-emerald-700">
-                        Phong thủy
-                      </span>
-                    </div>
                   </div>
-                  <div className="p-8">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-emerald-600 transition-colors">{post.title}</h3>
-                    <p className="text-gray-600 mb-6 line-clamp-2">{post.excerpt}</p>
-                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-                      <Heart className="w-4 h-4" />
-                      <span>Đọc thêm</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </div>
+                  <h3 className="text-2xl font-serif font-bold text-secondary mb-4 leading-tight group-hover:text-primary transition-colors line-clamp-2">{post.title}</h3>
+                  <p className="text-gray-500 mb-8 line-clamp-2 font-light leading-relaxed">{post.excerpt}</p>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary flex items-center gap-2 group-hover:gap-4 transition-all">
+                    Đọc Bài Viết <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </Link>
               </motion.div>
             ))}
-          </div>
-          
-          <div className="text-center mt-20">
-            <Link 
-              to="/blog"
-              className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-4 px-10 rounded-2xl text-lg shadow-xl hover:shadow-2xl transition-all duration-300 group"
-            >
-              Xem tất cả bài viết
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-linear-to-tl from-purple-600 via-indigo-600 to-blue-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto"
-          >
-            <div className="w-24 h-24 bg-white/20 rounded-3xl flex items-center justify-center mx-auto mb-8 backdrop-blur-sm">
-              <Sparkles className="w-12 h-12 text-yellow-300" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              Tìm đúng viên đá 
-              <span className="block bg-linear-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                cho vận mệnh của bạn
-              </span>
+      {/* --- TESTIMONIALS & BRAND QUOTE --- */}
+      <section className="py-40 bg-white">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <motion.div {...fadeInUp} className="text-center">
+            <Moon className="w-10 h-10 text-primary/30 mx-auto mb-12 rotate-[-15deg]" />
+            <h2 className="text-3xl md:text-5xl font-serif italic text-secondary leading-relaxed mb-12">
+              "Mỗi viên đá quý đều mang một câu chuyện của đất trời. <br />
+              Tại Ngọc Nhất Linh, chúng tôi giúp bạn viết tiếp <br />
+              câu chuyện bình an cho riêng mình."
             </h2>
-            <p className="text-xl mb-12 opacity-90 max-w-2xl mx-auto leading-relaxed">
-              Chọn đá quý theo năm sinh chính xác • Tư vấn phong thủy 1:1 • Cam kết năng lượng phù hợp mệnh
-            </p>
-            <div className="grid md:grid-cols-3 gap-8 mb-12 max-w-4xl mx-auto">
-              <div className="flex flex-col items-center p-6">
-                <ShieldCheck className="w-16 h-16 text-yellow-300 mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Chính hãng</h3>
-                <p>Đá tự nhiên 100%</p>
+            <div className="w-16 h-px bg-primary/40 mx-auto mb-12" />
+            <p className="text-xs uppercase tracking-[0.5em] font-bold text-secondary/30">Ngọc Nhất Linh • Est 2014</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* --- FINAL CTA SECTION --- */}
+      <section className="pb-40 bg-white px-4">
+        <div className="container mx-auto">
+          <motion.div 
+            {...fadeInUp}
+            className="bg-secondary rounded-[4rem] p-12 md:p-32 text-center text-white relative overflow-hidden shadow-2xl"
+          >
+            <div className="absolute top-0 right-0 w-125 h-125 bg-primary/5 rounded-full blur-[120px] -mr-48 -mt-48" />
+            <div className="absolute bottom-0 left-0 w-100 h-100 bg-white/5 rounded-full blur-[100px] -ml-48 -mb-48" />
+            
+            <div className="relative z-10 max-w-2xl mx-auto">
+              <span className="text-primary font-bold tracking-[0.4em] text-[10px] uppercase mb-8 block">Kiến tạo vận mệnh</span>
+              <h2 className="text-4xl md:text-7xl font-serif font-bold mb-10 leading-tight">Tìm Viên Đá Dành Riêng Cho Bạn</h2>
+              <p className="text-lg md:text-xl text-white/60 mb-14 font-light leading-relaxed">Bắt đầu hành trình tìm kiếm năng lượng bảo hộ và sự an yên cho bản thân ngay hôm nay.</p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Link 
+                  to="/products" 
+                  className="bg-primary text-secondary px-12 py-5 rounded-full font-bold shadow-2xl hover:bg-white hover:scale-105 transition-all duration-500"
+                >
+                  Xem Bộ Sưu Tập
+                </Link>
+                <Link 
+                  to="/contact" 
+                  className="border border-white/30 px-12 py-5 rounded-full font-bold hover:bg-white/10 hover:border-white transition-all duration-500"
+                >
+                  Liên Hệ Tư Vấn
+                </Link>
               </div>
-              <div className="flex flex-col items-center p-6">
-                <Truck className="w-16 h-16 text-yellow-300 mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Giao nhanh</h3>
-                <p>Toàn quốc 1-3 ngày</p>
-              </div>
-              <div className="flex flex-col items-center p-6">
-                <Heart className="w-16 h-16 text-yellow-300 mb-4" />
-                <h3 className="text-2xl font-bold mb-2">Tư vấn</h3>
-                <p>Miễn phí trọn đời</p>
-              </div>
-            </div>
-            <div className="flex flex-col lg:flex-row gap-4 justify-center items-center max-w-2xl mx-auto">
-              <Link 
-                to="/destiny" 
-                className="group bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center gap-3 w-full lg:w-auto justify-center"
-              >
-                Kiểm tra mệnh ngay
-                <Sparkles className="w-5 h-5 group-hover:scale-110 transition-transform" />
-              </Link>
-              <Link 
-                to="/products" 
-                className="group bg-linear-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold py-4 px-8 rounded-2xl text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center gap-2 w-full lg:w-auto justify-center"
-              >
-                Xem sản phẩm
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
             </div>
           </motion.div>
         </div>
       </section>
-    </>
+    </div>
   );
 };
 
 export default LandingHome;
-

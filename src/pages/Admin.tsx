@@ -22,6 +22,17 @@ import { supabase } from '../service/supabaseClient';
 import { uploadProductImage } from '../service/imageService';
 import { useNavigate } from 'react-router-dom';
 
+interface ProductSpecs {
+  material?: string;
+  bead_count?: string;
+  bead_size?: string;
+  height?: string;
+  width?: string;
+  depth?: string;
+  certification?: string;
+  [key: string]: string | undefined;
+}
+
 // Define types for better type safety
 interface Product {
   id: string;
@@ -33,7 +44,7 @@ interface Product {
   description: string;
   meaning: string;
   image_url: string;
-  specs: any; // Added for JSONB column
+  specs: ProductSpecs;
   created_at: string;
 }
 
@@ -105,7 +116,7 @@ export default function Admin() {
     description: string;
     meaning: string;
     image_url: string;
-    specs: any;
+    specs: ProductSpecs;
   }>({ // Renamed to avoid confusion
     name: '',
     slug: '',
@@ -143,8 +154,8 @@ export default function Admin() {
     const { count: poCount, data: poData } = await supabase.from('posts').select('*', { count: 'exact' }).order('created_at', { ascending: false });
     
     // Get current user session
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
+    const { data: authData } = await supabase.auth.getUser();
+    setUser(authData?.user || null);
     
     setStats({ products: pCount || 0, contacts: cCount || 0, posts: poCount || 0 });
     setProducts(pData || []);
@@ -1014,6 +1025,21 @@ export default function Admin() {
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold text-secondary/40 uppercase tracking-widest">Nội dung</label>
+                    <div className="bg-primary/5 p-4 rounded-xl border border-primary/10 mb-2">
+                      <p className="text-[9px] font-bold text-primary uppercase tracking-widest mb-2">QUY TẮC VIẾT ĐỂ HIỂN THỊ ĐẸP (MARKDOWN)</p>
+                      <div className="grid grid-cols-2 gap-4 text-[10px] text-secondary/60 font-medium">
+                        <div>
+                          <p># Tiêu đề chính</p>
+                          <p>## Tiêu đề phụ</p>
+                          <p>### Tiêu đề nhỏ</p>
+                        </div>
+                        <div>
+                          <p>- Gạch đầu dòng</p>
+                          <p>1. Danh sách số</p>
+                          <p>**Chữ in đậm**</p>
+                        </div>
+                      </div>
+                    </div>
                     <textarea 
                       rows={10}
                       value={postFormData.content}

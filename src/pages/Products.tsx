@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Filter, ChevronDown, Search, X } from 'lucide-react';
 import { supabase } from '../service/supabaseClient';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { uploadProductImage } from '../service/imageService';
+import { Product } from '../types/product';
+
+// Mở rộng interface Product để giải quyết lỗi 'menh' không tồn tại trên type 'Product'
+interface ProductWithMenh extends Product {
+  menh?: string;
+}
 
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductWithMenh[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tất cả');
@@ -19,6 +25,7 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('Mới nhất');
 
+  const { pathname } = useLocation();
 
   const [searchParams] = useSearchParams();
 
@@ -97,12 +104,19 @@ export default function Products() {
     }
 
     fetchProducts();
-    // Tự động cuộn lên đầu trang khi thay đổi trang hoặc bộ lọc
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeCategory, activeMenh, priceRange, searchQuery, currentPage, sortBy]);
 
+  // Đảm bảo cuộn lên đầu mỗi khi chuyển trang hoặc lọc
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname, currentPage, activeCategory, activeMenh]);
+
   return (
-    <div className="pt-24 pb-20 bg-white bg-pattern-subtle">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="pt-24 pb-20 bg-white bg-pattern-subtle min-h-screen"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
@@ -310,13 +324,15 @@ export default function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-10 px-2 md:px-0 auto-rows-fr">
+            <motion.div 
+              layout
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-10 px-2 md:px-0 auto-rows-fr"
+            >
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="animate-pulse space-y-4">
-                    <div className="bg-accent/20 aspect-square rounded-3xl"></div>
-                    <div className="h-4 bg-accent/20 rounded w-3/4"></div>
-                    <div className="h-4 bg-accent/20 rounded w-1/2"></div>
+                    <div className="bg-accent/10 aspect-square rounded-3xl"></div>
+                    <div className="h-4 bg-accent/10 rounded w-3/4 mx-auto"></div>
                   </div>
                 ))
               ) : errorMsg ? (
@@ -347,12 +363,14 @@ export default function Products() {
                 products.map((product) => (
                   <motion.div 
                     key={product.id}
+                    layout
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="group bg-white rounded-2xl shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 cursor-pointer border border-gray-100 hover:border-primary/20 p-3"
+                    whileHover={{ y: -8 }}
+                    className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-gray-50 hover:border-primary/20 p-4"
                   >
                     <Link to={`/product/${product.id}`} className="block">
-                      <div className="aspect-square rounded-xl overflow-hidden mb-5 bg-accent/5 group-hover:bg-primary/5 transition-all flex items-center justify-center">
+                      <div className="aspect-square rounded-2xl overflow-hidden mb-4 bg-accent/5 group-hover:bg-primary/5 transition-all flex items-center justify-center relative">
                         <img 
                           src={product.image_url || '/images/fallback.jpg'} 
                           alt={product.name}
@@ -362,13 +380,14 @@ export default function Products() {
                             e.currentTarget.src = '/images/fallback.jpg';
                           }}
                         />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
                       </div>
                       <div className="space-y-3 px-1">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest px-2 py-0.5 bg-accent/30 rounded-full inline-block">{product.category} {product.menh && `| ${product.menh}`}</span>
-                        <h3 className="font-serif font-semibold text-sm md:text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors h-10">
+                        <span className="text-[8px] md:text-[10px] text-primary/60 uppercase tracking-widest px-2 py-0.5 bg-primary/5 rounded-full inline-block font-bold border border-primary/10">{product.category} {product.menh && `| ${product.menh}`}</span>
+                        <h3 className="font-serif font-semibold text-xs md:text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors h-10">
                           {product.name}
                         </h3>
-                        <p className="text-primary font-bold text-lg md:text-xl">
+                        <p className="text-primary font-bold text-base md:text-xl">
                           {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
                         </p>
                       </div>
@@ -376,15 +395,15 @@ export default function Products() {
                   </motion.div>
                 ))
               )}
-            </div>
+            </motion.div>
 
             {/* Pagination */}
 {products.length > 0 && !loading && (
-              <div className="mt-16 flex justify-center items-center space-x-2">
+              <div className="mt-20 flex justify-center items-center space-x-3">
                 <button 
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-100 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm bg-white"
                 >
                   ‹
                 </button>
@@ -394,10 +413,10 @@ export default function Products() {
                     <button 
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-12 h-12 rounded-full flex items-center justify-center font-bold transition-all shadow-md ${
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold transition-all shadow-md ${
                         currentPage === page 
-                          ? 'bg-primary text-white border-primary shadow-lg scale-110' 
-                          : 'border-2 border-gray-200 hover:border-primary hover:text-primary hover:shadow-lg hover:scale-105'
+                          ? 'bg-primary text-white border-primary shadow-lg scale-110'
+                          : 'border-2 border-gray-200 bg-white hover:border-primary hover:text-primary'
                       }`}
                     >
                       {page}
@@ -407,7 +426,7 @@ export default function Products() {
                 <button 
                   onClick={() => setCurrentPage(p => Math.min(Math.ceil(totalCount / 12), p + 1))}
                   disabled={currentPage === Math.ceil(totalCount / 12)}
-                  className="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-gray-100 flex items-center justify-center text-lg font-bold hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm bg-white"
                 >
                   ›
                 </button>
@@ -416,6 +435,6 @@ export default function Products() {
           </main>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
